@@ -1,0 +1,61 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="alge-title txt-color-blueDark">
+			<i class="fa fa-list fa-fw "></i>
+				Clientes &gt; Buscar
+		</h1>
+	</div>
+</div>
+<br>
+<div class="row">
+	<div class="col-sm-12">
+		<div class="input-group">
+			<div class="input-group-btn">
+				<a href="#" ui-sref="root.clienteNuevo" class="btn btn-default btn-primary">
+					<i class="fa fa-plus"></i>
+				</a>
+			</div>
+			<input class="form-control" type="text" placeholder="Buscar..." id="buscar" ng-model="cl.buscar.nombre" ng-change="cl.buscarClientes()">
+			<div class="input-group-btn">
+				<a href="#" ng-click="cl.buscarClientes()" class="btn btn-default btn-primary">
+					<i class="fa fa-search"></i>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+<br/>
+<div class="row">
+	<div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 tarjetas-clientes" ng-repeat="cliente in cl.clientes" style="margin-bottom: 10px; padding-left: 5px; padding-right: 10px;">
+      <div class="contact-box center-version">
+	      <div class="ribbon-wrapper-alumno">
+		      <div class="ribbon-alumno {{cl.obtenerColorEstatus(cliente.profile.estatus)}}">{{cl.obtenerNombreEstatus(cliente.profile.estatus)}}</div>
+		    </div>
+
+        <a href="/clientes/{{cliente._id}}" style="text-decoration: none;">
+          <img alt="image" class="img-circle" ng-src="{{cl.tieneFoto(cliente.profile.sexo, cliente.profile.fotografia)}}">
+          <p class="lead font-xs text-center"><strong>{{cliente.profile.nombre}} <br/> {{cliente.profile.apPaterno}} {{cliente.profile.apMaterno}}</strong></p>
+          <div class="font-bold">{{cliente.username}}</div>
+          <address class="font-xs">
+              <strong>Cliente</strong><br>
+              {{cliente.profile.calleNum}}<br>
+              {{cliente.profile.colonia}}<br>
+              <abbr title="Teléfono">T:</abbr> {{cliente.profile.tel1}}
+          </address>
+        </a>
+        <button ui-sref="root.grupoDetalle({grupo_id : grupo._id})" ng-repeat="grupo in cliente.profile.grupos" class="btn btn-block {{grupo.classButton}}" style="text-decoration: none;" >
+	        <span class="pull-left"><i class="fa fa-group"></i> {{grupo.nombre}} - {{grupo.turno.nombre}}</span>
+	        <label class="badge {{grupo.classButton}} pull-right"> <i class="fa fa-check"></i> {{grupo.inasistenciasSemana}}/{{grupo.turno.inasistencias}}</label>
+        </button>
+<!--
+          <div class="contact-box-footer">
+              <div class="m-t-xs btn-group">
+                  <a href="/clientes/{{cliente._id}}" class="btn btn-xs btn-white"><i class="fa fa-eye"></i> Ver </a>
+                  <a href="/editarcliente/{{cliente._id}}" class="btn btn-xs btn-white"><i class="fa fa-pencil"></i> Editar</a>
+              </div>
+          </div>
+-->
+
+      </div>
+  </div>
+</div>

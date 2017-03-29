@@ -1,0 +1,49 @@
+<h2>Prospectos</h2>
+<div class="row">
+	<div class="col-sm-12">
+		<a class="btn btn-primary" href="/nuevoProspecto">
+		  Nuevo
+		</a>
+		<label>Buscar: <input ng-model="fa.buscar.nombre" class="form-control"></label>
+	</div>
+</div>
+<div class="row well">
+	<div class="btn-group btn-group-justified">
+		<a href="javascript:void(0);" ng-click="fa.filtrarEtapaVenta(etapaVenta._id, etapaVenta.nombre)" class="btn btn-primary" ng-repeat="etapaVenta in fa.etapasVenta">{{etapaVenta.nombre}}</a>
+	</div>
+</div>
+<br/>
+<!-- List -->
+<div class="row" style="font-size: 8pt;">
+  <div class="col-lg-12">
+    <h6 class="description">{{fa.titulo}}</h6>
+    <div class="row pt-md">
+      <div class="col-sm-12">
+        <table class="table table-bordered">
+	        <tr>
+		        <th>No.</th>
+		        <th>Nombre</th>
+		        <th>Fecha Nac.</th>
+		        <th>Teléfono</th>
+		        <th>Correo</th>
+		        <th>Información Adicional</th>
+		        <th>Acciones</th>
+	        </tr>
+	        <tr ng-repeat="prospecto in fa.prospectos">
+		        <td>{{$index + 1}}</td>
+		        <td><a href="./prospecto/{{prospecto._id}}">{{prospecto.profile.nombre}} {{prospecto.profile.apPaterno}} {{prospecto.profile.apMaterno}} </a></td>
+		        <td>{{prospecto.profile.fechaNac | date:"dd-MM-yyyy"}}</td>
+		        <td>{{prospecto.profile.tel1}}</td>
+		        <td>{{prospecto.profile.correoCalificaciones}}</td>
+		        <td>{{prospecto.profile.observacionesGenerales}}</td>
+			      <td>
+							<button class="btn btn-danger btn-xs" ng-confirm-click="Está seguro de eliminar el prospecto?" confirmed-click="fa.eliminar(prospecto)">
+								<i class="fa fa-trash"></i>
+							</button>
+		        </td>
+	        </tr>
+        </table>
+      </div>            
+    </div>
+  </div>
+</div>

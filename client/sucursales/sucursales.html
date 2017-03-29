@@ -1,0 +1,206 @@
+<h2>{{sc.region.nombre}} - <small>Sucursales</small></h2>
+<div class="row">
+	<div class="col-sm-12">
+		<a class="btn btn-{{sc.nuevo == true ? 'primary' : 'danger'}}" role="button" data-toggle="collapse" 
+			href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" ng-click="sc.nuevaSucursal()">
+		  {{sc.nuevo == true ? 'Nuevo' : 'Cancelar'}}
+		</a>
+		<a class="btn btn-primary" href="./regiones">
+		  Listar Regiones
+		</a>
+		<div class="collapse" id="collapseExample">
+			<form name="form" class="form-horizontal" role="form"  novalidate>
+				<section id="usuario" data-widget-grid="data-widget-grid1" >
+				  <div class="row">
+				    <div class="col-sm-12">
+				      <div data-widget-color="blue" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-jarvis-widget="data-jarvis-widget">
+				        <header>
+				          <h2>Información del Director de la Sucursal</h2>
+				        </header>
+				        <div>
+					        
+				          <div class="widget-body">							
+								    <div class="row">
+									    <div class="col-sm-2" valida>					    
+									    	<label>Nombre *</label>
+									    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="sc.sucursal.nombre" required>
+								    	</div>
+								    	<div class="col-sm-2" valida>
+									    	<label>Apellido Paterno *</label>
+									    	<input name="apPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="sc.sucursal.apPaterno" required>
+								    	</div>
+								    	<div class="col-sm-2">					    
+									    	<label>Apellido Materno</label>
+									    	<input name="apMaterno"  type="text" class="form-control" placeholder="Apellido Materno" ng-model="sc.sucursal.apMaterno" >
+								    	</div>
+								    	<div class="col-sm-2" valida>
+										    <label for="sexo">Sexo *</label>
+										    <select name="sexo" ng-model="sc.sucursal.sexo" data-placeholder="Seleccione" class="form-control" required>
+												    <option value=""></option>
+												    <option value="masculino">Masculino</option>
+												    <option value="femenino">Femenino</option>
+												</select>
+								    	</div>
+								    	<div class="col-sm-2" valida>					    
+									    	<label>Usuario *</label>
+									    	<input name="usuario" type="text" class="form-control" placeholder="Usuario" ng-model="sc.sucursal.username" required>
+								    	</div>
+								    	<div class="col-sm-2" valida>					    										
+									    	<label>Contraseña *</label>																	
+									    	<input name="password" type="password" class="form-control" placeholder="Contraseña" ng-model="sc.sucursal.password" required>
+								    	</div>
+								    </div>
+				          </div>
+				        </div>
+				      </div>
+				    </div>
+				  </div>
+					<div class="row">
+				    <div class="col-sm-12">
+				      <div data-widget-color="blue" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-jarvis-widget="data-jarvis-widget2">
+				        <header>
+				          <h2>Información de la Sucursal</h2>
+				        </header>
+			          <div class="widget-body">
+									<div class="row">
+							    	<div class="col-sm-2" valida>					    
+								    	<label>Clave *</label>
+								    	<input name="clave" type="text" class="form-control" placeholder="Clave" ng-model="sc.sucursal.clave" required="">
+							    	</div>
+							    	<div class="col-sm-4" valida>
+							    		<label>Nombre *</label>
+								    	<input name="nombreseccion" type="text" class="form-control" placeholder="Nombre Sucursal" ng-model="sc.sucursal.nombreSucursal" required="">
+							    	</div>
+							    	<div class="col-sm-6" valida>
+									    <label>Descripción *</label>
+									    <textarea name="descripcion" class="form-control" placeholder="Descripción" ng-model="sc.sucursal.descripcion" required=""></textarea>
+							    	</div>
+							    </div>
+				          <div class="row" valida>
+					          <div class="col-sm-2">
+								    	<label>Teléfono 1 *</label>
+								    	<input name="telefono1" type="number" class="form-control" placeholder="Teléfono 1" ng-model="sc.sucursal.telefono1" required>
+							    	</div>
+							    	<div class="col-sm-2">					    										
+								    	<label>Teléfono 2</label>																	
+								    	<input type="number" class="form-control" placeholder="Teléfono 2" ng-model="sc.sucursal.telefono2">
+							    	</div>
+							    	<div class="col-sm-8" valida>
+									    <label>Dirección *</label>
+									    <textarea name="direccion" class="form-control" placeholder="Dirección" ng-model="sc.sucursal.direccion" required></textarea>
+							    	</div>	    	
+							    </div>	
+							    <div class="row">
+							    	<div class="col-sm-6" valida>
+									    <label>Ciudad *</label>
+									    <input name="ciudad" type="text" class="form-control" placeholder="Ciudad" ng-model="sc.sucursal.ciudad" required="">
+							    	</div>
+							    	<div class="col-sm-6" valida>
+									    <label>Estado *</label>
+									    <input name="estado" type="text" class="form-control" placeholder="Estado" ng-model="sc.sucursal.estado" required="">
+							    	</div>
+							    </div>				
+							    <div class="row">
+								    <div class="col-sm-3">
+											<img src="{{sc.sucursal.logo}}" height="100" class="thumbnail" style="height: 100px !important"/>
+								    </div>
+								    <div class="col-sm-3" valida>
+								    	<label>Logo de la sucursal *</label>																	
+								    	<input name="logo" type="text" class="form-control" placeholder="http://" ng-model="sc.sucursal.logo" required>
+								    </div>
+								    <div class="col-sm-3">
+									    <button ng-click="sc.seleccionarLogo('/img/logoIcep.png')" class="btn btn-lg">
+												<img src="/img/logoIcep.png" class="thumbnail" style="height: 60px !important"/>
+									    </button>
+								    </div>
+							    </div>
+			          </div>
+				      </div>
+				    </div>
+				  </div>
+				</section>
+		    <div class="row">
+					<div class="col-sm-12">
+						<input type="submit" ng-click="sc.guardar(sc.sucursal,form)" value="Guardar" class="btn btn-primary" ng-show="sc.action" valida-form formulario="form">
+						<input type="submit" ng-click="sc.actualizar(sc.sucursal,form)" value="Actualizar" class="btn btn-primary" ng-show="!sc.action" valida-form formulario="form">				
+					</div>
+				</div>	  
+			</form>
+		</div>
+ 	</div>
+</div>
+<br/>
+
+<!-- List -->
+<div class="row">
+	<div class="col-sm-12">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th width="5%"><div class="text-center">Clave</div></th>
+					<th width="20%"><div class="text-center">Nombre</div></th>	
+					<th width="20%"><div class="text-center">Descripción</div></th>	
+<!-- 					<th width="10%"><div class="text-center">Departamento Académico</div></th> -->
+					<th width="10%"><div class="text-center">Región</div></th>		
+				    <th width="10%">
+						<div class="text-center">
+							Estatus
+						</div>
+					</th>
+					<th width="8%">
+						<div class="text-center">
+							Acciones
+						</div>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--{{getDeptoAcademicoById(sucursal.deptoAcademico_id).descripcionCorta}-->
+		    <tr ng-repeat="sucursal in sc.sucursales">
+			    <td>{{sucursal.clave}}</td>
+			    <td>{{sucursal.nombreseccion}}</td>
+			    <td>{{sucursal.descripcion}}</td>
+<!-- 			    <td>{{sc.getDeptoAcademico(sucursal.deptoAcademico_id)}}</td> -->
+			    <td>{{sc.getRegion(sucursal.region_id)}}</td>
+			    <td> 
+				    <div class="text-center">
+				    	<span ng-if="sucursal.estatus" class="label label-success">
+							  Activo
+							</span>
+							<span ng-if="!sucursal.estatus" class="label label-danger">
+							  Inactivo
+							</span>
+				    </div>
+			    </td>			   			   
+			    <td class="col-sm-1">
+				    <div class="text-center">
+					    <div class="btn-group">
+							  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							    <span class="caret"></span>
+							    <span class="sr-only">Toggle Dropdown</span>
+							  </button>
+							  <ul class="dropdown-menu text-left">
+							    <li><a href="#" ng-click="sc.editar(sucursal._id)"><i class="fa fa-pencil"></i> Editar</a></li>
+							    <li><a href="#" ng-click="sc.cambiarEstatus(sucursal._id)"><i class="fa fa-trash"></i> 
+								    		<span ng-if="sucursal.estatus">
+											  	Desactivar
+												</span>
+											  <span ng-if="!sucursal.estatus">
+											   	Activar
+												</span>
+							    		</a>
+							    </li>
+							  </ul>
+							</div>
+				    </div>				    
+			    </td>
+		    </tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+
+
+

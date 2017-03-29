@@ -1,0 +1,114 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="page-title txt-color-blueDark">
+			<i class="fa fa-list fa-fw "></i> 
+				Grupos 
+			<span>&gt; 
+				Listar
+			</span>
+		</h1>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<a class="btn btn-primary" href="./grupo" ng-click="gp.nuevoGrupo()">
+		  Nuevo
+		</a>
+	</div>
+</div>
+<br>
+<div class="row">
+	<div class="col-sm-12">
+		<table class="table table-bordered table-responsive" style="table-layout:fixed;">
+			<thead>
+				<tr>
+					<th width="2%"><div class="text-center">No.</div></th>
+					<th width="10%" class="hidden-xs visible-lg"><div class="text-center">Ciclo</div></th>
+					<th width="10%"><div class="text-center">Grupo</div></th>
+					<th width="5%"><div class="text-center">Alums.</div></th>
+					<th width="10%" class="hidden-xs visible-lg"><div class="text-center">Cupo</div></th>
+					<th width="10%" class="hidden-xs visible-lg"><div class="text-center">Turno</div></th>
+					<th width="30%"><div class="text-center">Asignaciones</div></th>
+					<th width="10%">
+						<div class="text-center">
+							Estatus
+						</div>
+					</th>
+					<th width="10%">
+						<div class="text-center">
+							Acciones
+						</div>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="grupo in gp.grupos">
+					<td>{{$index + 1}}</td>
+			    <td class="text-center hidden-xs visible-lg">{{gp.getCiclo(grupo.ciclo_id)}}</td>
+			    <td class="text-center"><a ui-sref="root.grupoDetalle({grupo_id : grupo._id})">{{grupo.nombre}}</a></td>
+			    <td class="text-center"><strong>{{grupo.alumnos.length}}/{{grupo.cupo}}</strong></td>
+			    <td class="text-center hidden-xs visible-lg">
+				    <div class="progress right">
+							<div class="progress-bar bg-color-blue" aria-valuetransitiongoal="75" aria-valuenow="75" style="width: {{grupo.alumnos.length/grupo.cupo*100}}%;">
+								{{grupo.alumnos.length/grupo.cupo*100 | number:00}}%
+							</div>
+						</div>
+					</td>
+			    <td class="text-center hidden-xs visible-lg">{{gp.getTurno(grupo.turno_id)}}</td>
+			    <td style="overflow: scroll; width: 100%">
+				    <div class="row" >
+							<table class="table-bordered font-xs">
+					  		<tbody>
+						  		<tr>
+							  		<td ng-repeat="asignacion in grupo.asignaciones" class="no-padding">
+								  		<table class="table no-padding" style="border-top: 0px; width: 130px;">
+									  		<tr>
+										  		<td class="text-center font-xs no-padding" ng-class="asignacion.estatus ? 'bg-color-green txt-white' : ''" ng-repeat="semana in asignacion.semanas">{{semana.semana}}</td>
+									  		</tr>
+								  		</table>
+								  	</td>
+						  		</tr>
+						  		<tr>
+							  		<td class="text-center bg-color-blue txt-color-white font-xs" ng-repeat="asignacion in grupo.asignaciones">
+								  		{{asignacion.materia.nombre}}
+								  	</td>
+						  		</tr>
+						  		<tr>
+							  		<td class="text-center bg-color-blueDark txt-color-white font-xs" ng-repeat="asignacion in grupo.asignaciones">
+								  		{{gp.getMaestro(asignacion.maestro_id)}}
+								  	</td>
+						  		</tr>
+					  		</tbody>
+							</table>
+						</div>
+			    </td>
+			    <td>
+				    <div class="text-center">
+					    <span class="onoffswitch">
+					    	<input type="checkbox" ng-model="grupo.estatus" ng-click="gp.cambiarEstatus(grupo._id)" name="start_interval" class="onoffswitch-checkbox" id="{{grupo._id}}">
+					    	<label class="onoffswitch-label" for="{{grupo._id}}">
+					    		<span class="onoffswitch-inner" data-swchon-text="Activo" data-swchoff-text="Inactivo"></span>
+					    		<span class="onoffswitch-switch"></span>
+					    	</label>
+					    </span>				    	
+				    </div>
+			    </td>
+			    <td>
+				    <div class="text-center">
+					    <div class="btn-group">
+							  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							    <span class="caret"></span>
+							    <span class="sr-only">Toggle Dropdown</span>
+							  </button>
+							  <ul class="dropdown-menu dropdown-menu-right text-left">
+							    <li><a href="./grupo/{{grupo._id}}"><i class="fa fa-pencil"></i> Editar</a></li>
+							    <li><a href="#" ng-click="gp.cambiarEstatus(grupo._id)"><i class="fa fa-trash"></i> {{gp.getEstatus(grupo.estatus)}}</a></li>
+							  </ul>
+							</div>
+				    </div>				    
+			    </td>
+		    </tr>
+			</tbody>
+		</table>
+  </div>
+</div>

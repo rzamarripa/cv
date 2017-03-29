@@ -1,0 +1,26 @@
+<h2>Listado de producción</h2>
+<div class="row">
+	<div class="col-sm-3 post-it {{arreglo.claseEstatus}}" ng-repeat="arreglo in p.listaProduccion">
+		<div class="titulo-post-it">			
+			<span ng-show="arreglo.estatus == 1">
+				<a href="#" ng-click="p.tomar(arreglo)"><i class="fa fa-hand-rock-o"></i></a>
+			</span>
+			<span ng-show="arreglo.estatus == 4">
+				<a href="#" ng-click="p.terminar(arreglo)"><i class="fa fa-times"></i></a>
+			</span>
+			<span ng-show="arreglo.estatus == 2">
+				<a href="#" ng-click="p.terminar(arreglo)"><i class="fa fa-check"></i></a>
+			</span>
+			<span ng-show="currenUser.roles[0] == 'gerente'">
+				<a href="#" ng-click="p.eliminar(arreglo)" ><i class="fa fa-trash"></i></a>
+			</span>
+		</div>
+		<div class="cuerpo-post-it">
+			{{arreglo.descripcion}}
+		</div>
+		<div class="post-it-pie label label-inverse pull-right" style="background-color : black;" ng-show="arreglo.tomado">
+			{{arreglo.produccion.nombre}} | {{arreglo.produccion.fecha | date:"dd HH:mm:ss"}}
+		</div>
+	</div>
+
+</div>

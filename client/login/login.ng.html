@@ -1,0 +1,38 @@
+<header id="header" style="height: 140px;">
+	<div id="logo-group" style="float: right !important">
+		<span id="logo"> <img src="https://scontent-dft4-1.xx.fbcdn.net/v/t1.0-9/16807784_10154734605458387_6321786546167490720_n.jpg?oh=c621240a2485fe991311171d4a87755e&oe=59310E70" /> </span>
+	</div>
+	<div id="logo-group">
+		<span id="logo"> <!-- <img src="/img/logoCasserole.png" alt="Escuelas"> --> </span>
+	</div>
+</header>
+<br/>
+<div class="row">
+	<div class="col-sm-offset-2 col-sm-8 col-md-offset-2 col-md-8 col-lg-4 col-lg-offset-4">
+		<div class="well no-padding">
+			<form id="login-form" class="smart-form client-form" novalidate>
+        <header>Iniciar Sesión</header>
+        <fieldset>
+          <section>
+            <label for="" class="label">Nombre de Usuario</label>
+            <label for="" class="input">
+              <i class="icon-append fa fa-user"></i>
+              <input type="text" name="username" ng-model="lc.credentials.username">
+            </label>
+          </section>	
+          <section>
+            <label for="" class="label">Contraseña</label>
+            <label class="input">
+              <i class="icon-append fa fa-lock"></i>
+              <input type="password" name="password" ng-model="lc.credentials.password">
+            </label>
+          </section>
+<!--           <a ui-sref="root.recuperar" href="javascript:void(0);"><label>Olvido su contraseña ?</label></a> -->
+        </fieldset>	
+        <footer>
+          <button class="btn btn-primary" type="submit" ng-click="lc.login()">Iniciar Sesión</button>
+        </footer>
+      </form>
+		</div>
+	</div>
+</div>

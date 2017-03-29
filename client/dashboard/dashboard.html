@@ -1,0 +1,82 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+		<h1 class="page-title txt-color-blueDark">
+			<i class="fa-fw fa fa-home"></i> {{da.campus.nombre}} - Semana {{da.semanaActual}} - Año {{da.anio}}
+		</h1>		
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-6 col-sm-offset-3 text-center">
+		<form class="form-inline">
+			<div class="form-group">
+				<label for="semanaActual">Semana</label>
+				<input name="semanaActual" type="number" min="0" max="52" ng-model="da.semanaActual" class="form-control"/>
+			</div>
+			<div class="form-group">
+				<label for="anio">Año</label>
+				<input name="anio" type="number" ng-model="da.anio" class="form-control"/>
+			</div>
+		</form>
+	</div>
+</div>
+<hr>
+<div class="row well">
+	<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+		<p class="lead">Activos</p>
+		<ul id="sparks" class="pull-left">
+			<li class="sparks-info">
+				<h5> Inscritos <span class="txt-color-blue"><i class="fa fa-graduation-cap"></i>&nbsp;{{da.cantidadAlumnosActivos | number}}</span></h5>
+			</li>
+			<li class="sparks-info">
+				<h5> Semanal <span class="txt-color-purple"><i class="fa fa-calendar-check-o"></i>&nbsp;{{da.semanales | number}}</span></h5>
+			</li>
+			<li class="sparks-info">
+				<h5> Mensual <span class="txt-color-greenDark"><i class="fa fa-calendar"></i>&nbsp;{{da.mensuales | number}}</span></h5>
+			</li>
+		</ul>
+	</div>
+	<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+		<p class="lead text-right">Activos de la semana</p>
+		<ul id="sparks" class="">
+			<li class="sparks-info">
+				<h5> Inscritos <span class="txt-color-blue"><i class="fa fa-graduation-cap"></i>&nbsp;{{da.inscripcionesActivasSemanaActual | number}}</span></h5>
+			</li>
+			<li class="sparks-info">
+				<h5> Semanal <span class="txt-color-purple"><i class="fa fa-calendar-check-o"></i>&nbsp;{{da.semanalesSemana | number}}</span></h5>
+			</li>
+			<li class="sparks-info">
+				<h5> Mensual <span class="txt-color-greenDark"><i class="fa fa-calendar"></i>&nbsp;{{da.mensualesSemana | number}}</span></h5>
+			</li>
+		</ul>
+	</div>
+</div>
+<hr>
+<div class="row">
+	<div class="col-sm-3 well" style="height: 390px;">
+		<h1 class="text-success"><small>Total: </small>{{da.totalGastos | currency}}</h1>
+		<table class="table table-striped table-bordered table-condensed table-hover" ng-show="da.totalGastos > 0">
+			<tr>
+				<th class="text-center">Tipo Gasto</th>
+				<th class="text-center">Monto</th>
+			</tr>
+			<tr ng-repeat="gastos in da.graficaGastos track by $index">
+				<td>{{gastos.name}}</td>
+				<td class="text-right">{{gastos.total | currency}}</td>
+			</tr>
+		</table>
+		<a type="button" class="btn btn-primary pull-right" ng-show="da.totalGastos > 0" ui-sref="root.detalleGastos({semana : da.semanaActual, anio : da.anio})"><i class="fa fa-eye"></i> Ver Detalle</a>
+	</div>
+	<div class="col-sm-9 well">
+		<div id="gastosGrafica" style="height: 350px;"></div>
+	</div>
+</div>
+<hr>
+<div class="row">
+	<div class="col-sm-3 well" style="height: 390px;">
+		<h1 class="text-success"><small>Total: </small>{{da.totalPagos | currency}}</h1>
+		<a type="button" class="btn btn-primary pull-right" ng-show="da.totalPagos > 0" ui-sref="root.pagosSemana({semana : da.semanaActual, anio : da.anio})"><i class="fa fa-eye"></i> Ver Detalle</a>
+	</div>
+	<div class="col-sm-9 well">
+		<div id="pagosPorGrupo" style="height: 350px;"></div>
+	</div>
+</div>

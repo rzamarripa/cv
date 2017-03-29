@@ -1,0 +1,153 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="page-title txt-color-blueDark">
+			<i class="fa fa-pencil-square-o fa-fw "></i> 
+				Clientes
+			<span>&gt; 
+				Nuevo
+			</span>
+		</h1>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<a class="btn btn-primary" ui-sref="root.clientes">
+		  <i class="fa fa-list"></i> Listar Clientes
+		</a>
+	</div>
+</div>
+<br/>
+<div class="row">
+	<div class="col-sm-12">
+		<form name="form" class="form-horizontal" role="form" novalidate>
+			<h4>Datos de Usuario</h4>
+			<div class="well">
+				<div class="row">
+					<div class="col-sm-3">
+						<label>Fotografía</label>
+						<button class="btn btn-primary" ng-click="cl.tomarFoto()"><i class="fa fa-camera"></i></button>
+						<img width="100px" ng-src="{{cl.cliente.profile.fotografia}}" ng-class="{'img-thumbnail': !!cl.cliente.profile.fotografia}" />
+					</div>
+					<div class="col-sm-3">
+				    <label for="password">Contraseña *</label>
+				    <span>{{cl.cliente.profile.pwd}}</span>
+					</div>
+				</div>
+			</div>			
+	  	<h4>Datos Personales</h4>
+	  	<div class="well">		
+		  	<div class="row">
+			    <div class="col-sm-3" valida>				    
+				    <label for="nombre">Usuario *</label>
+				    <input name="usuario" type="text" class="form-control" placeholder="Matrícula" ng-model="cl.cliente.profile.usuario" required="" readonly="">
+		    	</div>
+		    	<div class="col-sm-3" valida>				    
+				    <label for="nombre">Nombre *</label>
+				    <input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="cl.cliente.profile.nombre" required="">						
+		    	</div>
+		    	<div class="col-sm-3" valida>
+				    <label for="apPaterno">Apellido Paterno *</label>
+				    <input name="apPaterno" type="text" class="form-control" id="apPaterno" placeholder="Apellido Paterno" ng-model="cl.cliente.profile.apPaterno" required="">
+		    	</div>
+		    	<div class="col-sm-3">
+				    <label for="apMaterno">Apellido Materno</label>
+				    <input type="text" class="form-control" id="apMaterno" placeholder="Apellido Materno" ng-model="cl.cliente.profile.apMaterno">
+		    	</div>
+		    </div>		 
+				<div class="row">
+					<div class="col-sm-3">
+						<label for="fechaNac">Fecha de nacimiento</label>
+						<input name="fechaNac" date-time class="form-control" view="year" max-view="year" min-view="date" ng-model="cl.cliente.profile.fechaNac" />
+					</div>
+					<div class="col-sm-3" valida>
+				    <label for="sexo">Sexo *</label>
+				    <select name="sexo" ng-model="cl.cliente.profile.sexo" data-placeholder="Seleccione" class="form-control" required>
+						    <option value=""></option>
+						    <option value="masculino">Masculino</option>
+						    <option value="femenino">Femenino</option>
+						</select>
+		    	</div>
+					<div class="col-sm-3" valida>
+						<label for="ocupacion">Ocupación *</label>
+						<select name="ocupacion" class="form-control" placeholder="Seleccione" ng-model="cl.cliente.profile.ocupacion_id" required="">
+						  <option ng-repeat="ocupacion in cl.ocupaciones" value="{{ocupacion._id}}">
+						  	{{ocupacion.nombre}}
+						  </option>
+						</select>
+					</div>
+					<div class="col-sm-3">
+						<label for="nivelSocial">Nivel social</label><br/>
+				    <select ng-model="cl.cliente.profile.nivelSocial" class="form-control">
+						  <option value="Baja">Baja</option>
+						  <option value="Media">Media</option>
+						  <option value="Alta">Alta</option>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-3" valida>
+						<label for="correo">Correo electrónico</label>
+						<input name="correo" type="email" class="form-control" placeholder="Correo" ng-model="cl.cliente.profile.correo" required="">
+					</div>
+					<div class="col-sm-3">
+						<label for="medio">¿Cómo te enteraste de nosotros?</label>
+				    <select  id="objeto" class="form-control"  placeholder="Seleccione" ng-model="cl.cliente.profile.medio_id">
+							<option ng-repeat="objeto in cl.mediosPublicidad" value="{{objeto._id}}">
+								{{objeto.nombre}}
+							</option>
+						</select>
+					</div>
+				</div>
+	  	</div>
+		  <h4>Domicilio</h4>
+		  <div class="well">
+			  <div class="row">
+			  	<div class="col-sm-6" valida>
+			  		<label for="calleNum">Calle y número *</label>
+				    <input name="calleNum" type="text" class="form-control" id="calleNum" placeholder="Calle y Número" ng-model="cl.cliente.profile.calleNum" required="">
+			  	</div>
+			  	<div class="col-sm-6" valida>
+						<label for="colonia">Colonia *</label>
+						<input name="colonia" type="text" class="form-control" id="colonia" placeholder="Colonia" ng-model="cl.cliente.profile.colonia" required="">
+			  	</div>
+			  </div>
+			  <div class="row">
+			  	<div class="col-sm-12 col-sm-12 col-md-12 col-lg-12">
+			  		<label for="entreCalles">Entre calles</label>
+						<input type="text" class="form-control" id="entreCalles" placeholder="Entre calles" ng-model="cl.cliente.profile.entreCalles">
+			  	</div>
+			  </div>	
+			  <div class="row">
+			  	<div class="col-sm-6">
+			  		<label for="tel1">Tel. 1</label>
+						<input type="text" class="form-control" id="tel1" placeholder="Teléfono 1" ng-model="cl.cliente.profile.tel1">
+			  	</div>
+			  	<div class="col-sm-6">
+						<label for="tel2">Tel. 2</label>
+						<input type="text" class="form-control" id="tel2" placeholder="Teléfono 2" ng-model="cl.cliente.profile.tel2">
+			  	</div>
+			  </div>
+			  <div class="row">
+			  	<div class="col-sm-4">
+			  		<label for="estado">Estado</label>
+						<input type="text" class="form-control" id="estado" placeholder="Estado" ng-model="cl.cliente.profile.estado">
+			  	</div>
+			  	<div class="col-sm-4">
+				  	<label for="ciudad">Ciudad</label>
+				    <input type="text" class="form-control" id="ciudad" placeholder="Ciudad" ng-model="cl.cliente.profile.ciudad">
+			  	</div>
+			  	<div class="col-sm-4">
+						<label for="codigoPostal">Código Postal</label>
+				    <input type="text" class="form-control" id="codigoPostal" placeholder="Código Postal" ng-model="cl.cliente.profile.codigoPostal">
+			  	</div>
+			  </div>	
+		  </div>
+			<div class="row">
+				<div class="col-sm-12">
+					<input type="submit" ng-click="cl.guardar(cl.cliente,form)" value="Guardar" class="btn btn-primary" ng-show="cl.action" valida-form formulario="form">
+					<input type="submit" ng-click="cl.actualizar(cl.cliente,form)" value="Actualizar" class="btn btn-primary" ng-show="!cl.action" valida-form formulario="form">				
+				</div>
+			</div>	  
+	  </form>
+	</div>
+</div>

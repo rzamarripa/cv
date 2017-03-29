@@ -1,0 +1,120 @@
+<h2>Productos</h2>
+<div class="row">
+	<div class="col-sm-12">
+		<form class="form-horizontal" role="form" data-parsley-validate>
+	  	<div class="well">    
+			  <div class="row">
+          <div class="col-sm-3">
+				    <label>Nombre</label>
+			    	<input type="text" class="form-control" placeholder="Nombre" ng-model="pro.producto.nombre" capitalized>
+			    </div>
+			    <div class="col-sm-2">
+						<label >Unidad</label>
+						<select  class="form-control select2" placeholder="Seleccione" ng-model="pro.producto.unidad_id">
+							<option ng-repeat="unidad in pro.unidades" value="{{unidad._id}}">{{unidad.nombre}}</option>
+						</select>
+			    </div>
+			    <div class="col-sm-7">
+				    <label>Descripción</label>
+			    	<textarea type="text" class="form-control" placeholder="Descripción" ng-model="pro.producto.descripcion" capitalized ></textarea>
+					</div>
+				</div>
+	  	</div>
+	  	<div class="well">
+	  		<div class="row" ng-repeat="imagen in pro.producto.imagenes track by $index">
+	  			<div class="col-sm-12">
+						<input type="text" class="form-control" placeholder="Ruta de la imagen" ng-model="imagen.nombre" >
+					</div>
+	  		</div>
+	  		<div class="row">
+	  			<div class="col-sm-12">
+						<button class="btn btn-primary" ng-click="pro.agregarImagen()"><i class="fa fa-plus"></i></button>
+					</div>
+	  		</div>
+	  	</div>
+	  	<div class="well">
+    	 	<br/>
+    	 	<div class="row">
+    	 		<div class="col-sm-4">
+						<label for="id_label_single" >Insumos</label>
+						<select  ng-options="material._id as material.nombre for material in pro.materiales" 
+              ng-model="pro.materialSeleccionado._id" class="js-example-basic-single js-states form-control" placeholder="Seleccione" ng-change="pro.getMateriales(pro.materialSeleccionado._id)"></select>
+					</div>
+					<div class="col-sm-2">
+				    <label>Cantidad</label>
+			    	<input type="text" class="form-control" placeholder="Cantidad" ng-model="pro.materialSeleccionado.cantidad" >
+			    </div>
+				  <div class="col-sm-2">
+    	 			<label>Unidad</label>
+				    <div class="form-control">{{pro.materialSeleccionado.unidad.nombre}}</div>
+					</div>
+    	 		<div class="col-sm-2">
+    	 			<label>Precio</label>
+				    <div class="form-control">{{pro.materialSeleccionado.precio | currency}}</div>
+					</div>
+					<div class="col-sm-2"><br/>
+						<input type="submit" ng-show="pro.agregar" ng-click="pro.agregarMaterial(pro.materialSeleccionado)" value="Agregar" class="  btn btn-primary">
+						<input type="submit" ng-show="!pro.agregar" ng-click="pro.modificarMaterial(pro.materialSeleccionado)" value="Modificar" class="  btn btn-primary">
+					</div>
+					<div class="col-sm-2"><br/>
+						<input type="submit" ng-show="pro.cancelar" ng-click="pro.cancelarMaterial(pro.materialSeleccionado)" value="Cancelar" class="  btn btn-danger">
+					</div>
+    	 	</div><br/>
+			 	<!-- ////////////////////////////////////////  TABLA DE MATERIALES   ///////////////////////////// -->				
+				<div class="row">
+					<div class="col-sm-12">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+								  <th width="10%"><div class="text-center">No.</div></th>
+									<th width="20%"><div class="text-center">Insumos</div></th>
+									<th width="20%"><div class="text-center">Cantidad</div></th>
+									<th width="20%"><div class="text-center">Unidad</div></th>
+									<th width="30%"><div class="text-center">Importe</div></th>
+									<th width="30%"><div class="text-center">Acciones</div></th>
+								</tr>
+							</thead>
+							<tbody>
+						    <tr ng-repeat="material in pro.producto.detalleProducto">
+						      <td><div class="text-center">{{$index + 1}}</div></td>
+							    <td><div class="text-center">{{material.nombre}}</div></td>
+							    <td><div class="text-center">{{material.cantidad}}</div></td>
+							    <td><div class="text-center">{{pro.getUnidad(material.unidad_id)}}</div></td>
+							    <td><div class="text-center">{{material.precio * material.cantidad | currency}}</div></td>
+							    <td>
+								    <div class="text-center">
+									    <div class="btn-group">
+											  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											    <span class="caret"></span>
+											    <span class="sr-only">Toggle Dropdown</span>
+											  </button>
+											  <ul class="dropdown-menu text-left">
+											    <li><a href="#" ng-click="pro.editarMaterial($index)"><i class="fa fa-pencil"></i> Editar</a></li>
+													<li><a href="#" ng-click="pro.eliminarMaterial($index)"><i class="fa fa-trash"></i> Desactivar</a></li>
+											  </ul>
+											</div>
+								    </div>				    
+							    </td>
+						    </tr>
+						  <!--   <tr ><td colspan="6"> Total:{{pro.SumaPrecioProductos()}}</td></tr> -->
+						    <tr >
+							    <td colspan="4"><div class="pull-right"> <strong>Total</strong></div></td>
+							    <td><div class="text-center">{{pro.SumaPrecioProductos() | currency}}</div></td>
+							    <td></td>
+						    </tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+         <!--  //////////////// boton guardar de productos ////////////// -->
+				<div class="row">
+					<div class="col-sm-12">
+						<input type="submit" ng-click="pro.guardar(pro.producto)" value="Guardar" class="btn btn-primary" ng-if="!pro.producto._id">
+						<input type="submit" ng-click="pro.actualizar(pro.producto)" value="Actualizar" class="btn btn-primary" ng-if="pro.producto._id">	
+					</div>
+				</div>
+	  	</div>
+  	</form>
+	</div>
+</div>
+<br/>

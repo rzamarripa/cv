@@ -1,0 +1,42 @@
+<h2>Materiales</h2>
+<div class="row">
+	<div class="col-sm-12">
+		<form class="form-horizontal" role="form" data-parsley-validate>
+	  	<div class="well"> 
+		    <div class="row">
+          <div class="col-sm-4">
+				    <label>Nombre</label>
+			    	<input type="text" class="form-control" placeholder="Nombre" ng-model="mat.material.nombre" capitalized>
+			    </div>
+			     <div class="col-sm-4">
+						<label >Unidad</label>
+						<select  class="form-control select2" placeholder="Seleccione" ng-model="mat.material.unidad_id" >
+							<option ng-repeat="unidad in mat.unidades"  value="{{unidad._id}}">{{unidad.nombre}}</option>
+						</select>
+				</div>
+			     
+			     <div class="col-sm-4">
+				    <label>Precio</label>
+			    	<input type="number" class="form-control" placeholder="Precio" ng-model="mat.material.precio"  >
+			    </div>
+			     <div class="col-sm-6">
+					    <label>Descripción</label>
+				    	<textarea type="text" class="form-control" placeholder="Descripción" ng-model="mat.material.descripcion" capitalized >
+				    </textarea>
+	    	         </div>
+    	  </div>
+    	 
+    	 <br>
+				<div class="row">
+					
+					<div class="col-sm-12">
+						<input type="submit" ng-click="mat.guardar(mat.material)" value="Guardar" class="btn btn-primary"  ng-if="!mat.material._id">
+						<input type="submit" ng-click="mat.actualizar(mat.material)" value="Actualizar" class="btn btn-primary"  ng-if="mat.material._id">	
+					</div>
+				</div>
+	  	</div>
+  	</form>
+	</div>
+</div>
+<br/>
+<!-- List -->

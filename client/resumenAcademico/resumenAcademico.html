@@ -1,0 +1,36 @@
+
+<h2>Resumen Académico</h2>
+<div class="well">
+	<div class="table-responsive">
+		<table class="table table-bordered" style="font-size: 8pt;">
+			<thead>
+				<tr >
+					<th>
+						 Horario
+					</th>
+					<th>
+						Grupo
+					</th>
+					<th width="400" ng-repeat ="sm in ra.semanal(0) ">
+						{{sm.numero}}
+					</th>
+				</tr>
+			</thead>
+  	<tbody>	
+  		<tr ng-repeat= "hora in ra.horarios()">
+  			<td ng-repeat = "col in hora" rowspan="{{col.rowspan}}" colspan="{{col.colspan}}" class="{{col.bgcolor}}" >
+	  			<p ng-if="!col.isBar">
+	  			{{col.texto}}
+	  			</p>
+	  			<div ng-if="col.isBar">
+	  				Asistencias		  			
+						<div class="progress-striped" >
+							<div class="{{col.class}}" aria-valuetransitiongoal="{{col.texto}}" aria-valuenow="{{col.texto}}" style="min-width: 2em;width: {{col.texto}}%;">{{col.texto}}%</div>
+						</div>
+					</div>
+  			</td>
+  		</tr>
+  	</tbody>
+		</table>
+	</div>
+</div>

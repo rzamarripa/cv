@@ -1,0 +1,111 @@
+<header id="header">
+	<div id="logo-group">
+		<span id="logo" style="margin-top: 0px !important;"> <img ng-if="ro.seccion.logo != undefined" ng-src="{{ro.seccion.logo}}" style="width: 110px;" alt="Escuelas"> </span>
+		<!-- Pánel de mensajes para directores -->
+		<div ng-if="ro.usuarioActual.roles[0] == 'director'">
+			<div ng-include="'client/layouts/avisosDirector.html'"></div>
+		</div>
+		
+		<!-- Pánel de mensajes para vendedores -->
+		<div ng-if="ro.usuarioActual.roles[0] == 'vendedor'">
+			<div ng-include="'client/layouts/avisosVendedor.html'"></div>
+		</div>
+		
+		<div ng-if="currentUser.roles[0] == 'alumno'">
+			<div ng-include="'client/layouts/avisosAlumnos.html'"></div>
+		</div>
+	</div>
+	
+  <div class="pull-right">
+	  
+	  <ul id="mobile-profile-img" class="header-dropdown-list hidden-xs padding-5">
+			<li class="">
+				<a href="#" class="dropdown-toggle no-margin userdropdown" data-toggle="dropdown" aria-expanded="false"> 
+					<img src="{{ro.tieneFoto(currentUser.profile.sexo, currentUser.profile.foto)}}" alt="{{currentUser.profile.nombreCompleto}}" class="online">  
+				</a>
+				<ul class="dropdown-menu pull-right">
+					<li>
+						<a href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0"><i class="fa fa-user"></i> {{currentUser.profile.nombreCompleto}}</a>
+					</li>
+					<li class="divider"></li>
+					<li>
+						<a href="javascript:void(0);" ui-sref="root.cambiarSeccion" class="padding-10 padding-top-0 padding-bottom-0" ><i class="fa fa-building"></i> Cambiar <u>E</u>scuela</a>
+					</li>
+					<li class="divider"></li>
+					<li>
+						<a full-screen href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0" data-action="launchFullscreen"><i class="fa fa-arrows-alt"></i> Pantalla <u>C</u>ompleta</a>
+					</li>
+					<li class="divider"></li>
+					<li>
+						<a ui-sref="anon.logout" href="#" class="padding-10 padding-top-5 padding-bottom-5" data-action="userLogout"><i class="fa fa-sign-{{ro.isLoggedIn() ? 'out' : 'in'}}"></i> <strong><u>C</u>errar Sesión</strong></a>
+					</li>
+				</ul>
+			</li>
+		</ul>
+		
+    <div id="hide-menu" class="btn-header pull-right">
+      <span>
+        <a toggle-menu title="Collapse Menu">
+          <i class="fa fa-reorder"></i>
+        </a>
+      </span>
+    </div>
+    
+    
+    
+    <div class="btn-header transparent pull-right" ng-show="currentUser.roles[0] != 'alumno'">
+      <span>
+        <a ui-sref="root.cambiarSeccion" title="Cambiar Sección">
+          <i class="fa fa-building"></i>
+        </a>
+      </span>
+    </div>
+    
+    <div class="btn-header transparent pull-right">
+      <span>
+        <a ui-sref="anon.logout" title="Cerrar Sesión">
+          <i class="fa fa-sign-{{ro.isLoggedIn() ? 'out' : 'in'}}"></i>
+        </a>
+      </span>
+    </div>
+
+    <div id="fullscreen" class="btn-header transparent pull-right">
+      <span>
+        <a full-screen title="Pantalla Completa">
+          <i class="fa fa-arrows-alt"></i>
+        </a>
+      </span>
+    </div>
+  </div>
+</header>
+
+<aside id="left-panel">
+  <div class="login-info">
+		<span ng-if="ro.usuarioActual._id">
+			<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
+				<img ng-if="ro.usuarioActual.profile.fotografia" ng-src="{{ro.usuarioActual.profile.fotografia}}" alt="yo" class="online"> 
+				<img ng-if="!ro.usuarioActual.profile.fotografia" src="/img/avatars/male.png" alt="yo" class="online"> 
+				<span>
+					{{ro.usuarioActual.profile.nombre}} {{ro.usuarioActual.profile.apPaterno}} {{ro.usuarioActual.profile.apMaterno}}
+				</span>
+			</a>			
+		</span>
+	</div>
+  <div ng-include=" 'client/layouts/left-nav.ng.html' "></div>
+</aside>
+
+<div id="main" role="main">
+  <div id="ribbon">
+	  <span class="ribbon-button-alignment"> 
+			<span id="backbutton" back-button class="btn btn-ribbon" data-action="resetWidgets" data-title="refresh" rel="tooltip" data-placement="bottom" data-original-title="">
+				<i class="fa fa-arrow-left"></i> <span class="hidden-xs">Regresar
+			</span>
+		</span> 
+		</span>
+	  <ol class="breadcrumb pull-right" ng-show="currentUser.roles[0] != 'alumno'">
+		  <li>{{ro.seccion.descripcion}}</li>
+			<li class="hidden-xs">{{ro.campus.clave}} - {{ro.campus.descripcion}}</li>
+		</ol>
+  </div>
+  <div id="content" ui-view></div>
+</div>

@@ -1,0 +1,258 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="page-title txt-color-blueDark">
+			<i class="fa fa-pencil-square-o fa-fw "></i> 
+				Grupos
+			<span>&gt; 
+				Nuevo
+			</span>
+		</h1>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<a class="btn btn-primary" href="./grupos">
+		  Listar Grupos
+		</a>
+	</div>
+</div>
+<br/>
+<div class="row">
+	<div class="col-sm-12">
+		<form name="form" class="form-horizontal" role="form" novalidate >
+	  	<div class="well">	 
+		  	<div class="row">
+		  		<div class="col-sm-4" valida>
+		  			<label for="grupo">Grupo *</label>
+				    <input name="grupo" type="text" class="form-control" placeholder="Grupo" ng-model="gp.grupo.nombre" required="">
+		  		</div>
+		  		<div class="col-sm-4" valida>
+		  			<label for="identificador">Identificador *</label>
+					<input name="identificador" type="text" class="form-control" id="identificador" placeholder="Identificador" ng-model="gp.grupo.identificador" required="">
+		  		</div>
+		  		<div class="col-sm-4" valida>
+						<label>Ciclo Escolar *</label>
+						<select name="cicloescolar" class="form-control" placeholder="Seleccione" ng-model="gp.grupo.ciclo_id" required="">
+							<option ng-repeat="ciclo in gp.ciclos" value="{{ciclo._id}}">{{ciclo.nombre}}</option>
+						</select>
+					</div>	
+		  	</div>			 
+				<div class="row">						
+					<div class="col-sm-4" valida>
+						<label>Plan de Estudios *</label>
+						<select name="planestudios" class="form-control" ng-model="gp.grupo.planEstudios_id" required="" ng-change="gp.getGrados(gp.grupo.planEstudios_id)">
+							<option value=""></option>
+							<option ng-repeat="plan in gp.planes" value="{{plan._id}}">{{plan.descripcion}}</option>
+						</select>
+					</div>
+		    	<div class="col-sm-4" valida>
+				    <label for="cupo">Cupo *</label>
+				    <input name="cupo" type="number" class="form-control" id="cupo" min="0" placeholder="Cupo" ng-model="gp.grupo.cupo" required="">
+		    	</div>
+					<div class="col-sm-4" valida>
+						<label >Turno *</label>
+						<select name="turno" class="form-control" placeholder="Seleccione" ng-model="gp.grupo.turno_id" required="">
+							<option ng-repeat="turno in gp.turnos" value="{{turno._id}}">{{turno.nombre}} {{turno.horaInicio}}-{{turno.horaFin}}</option>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-4">
+						<label for="fecha">Fecha de inicio</label>
+						<input name="fechaInicio" date-time format="dd-MM-yyyy" class="form-control" view="year" max-view="year" min-view="date" ng-model="gp.grupo.fechaInicio" required="" />
+					</div>
+					<div class="col-sm-2" valida>
+				    <label for="semanaInicio">Semana Inicio *</label>
+				    <input name="semanaInicio" type="number" class="form-control" id="semanaInicio" min="0" ng-model="gp.grupo.semanaInicio" required="">
+		    	</div>
+		    	<div class="col-sm-2" valida>
+				    <label for="semanaFin">Semana Fin *</label>
+				    <input name="semanaFin" type="number" class="form-control" id="semanaFin" min="0" ng-model="gp.grupo.semanaFin" required="">
+		    	</div>
+		    	<div class="col-sm-4" valida>
+				    <label for="anio">Año *</label>
+				    <input name="anio" type="number" class="form-control" id="anio" min="0" ng-model="gp.grupo.anio" required="">
+		    	</div>
+									
+				</div>
+	  	</div>
+	  	<div class="row">
+				<div class="col-sm-12">
+					<div class="well">
+						<form name="form2" class="form-horizontal" role="form" novalidate >
+							<div class="row">
+					  		<div class="col-sm-2" valida>
+									<label >Maestro *</label>
+									<select name="maestro" class="form-control" ng-model="gp.asignacion.maestro_id">
+										<option ng-repeat="maestro in gp.maestros" value="{{maestro._id}}">{{maestro.nombre}} {{maestro.apPaterno}} {{maestro.apMaterno}}</option>
+									</select>
+								</div>
+					    	
+								<div class="col-sm-1" valida>
+									<label>Grado*</label>
+									<select name="grados" class="form-control" ng-model="gp.asignacion.grado" ng-change="gp.getMaterias(gp.grupo.planEstudios_id, gp.asignacion.grado)">
+										<option ng-repeat="grado in gp.grados" value="{{grado}}">{{grado}}</option>
+									</select>	
+								</div>
+								<div class="col-sm-1 text-center">
+									<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+									<button class="btn btn-info" ng-click="gp.getGrados(gp.grupo.planEstudios_id)">
+										<i class="fa fa-refresh fa-lg"></i>
+									</button>
+								</div>
+								<div class="col-sm-3" valida>
+									<label>Materia *</label>
+									<select name="materia" class="form-control" ng-model="gp.asignacion.materia" ng-change="gp.getSemanas(gp.asignacion.materia)">
+										<option ng-repeat="materia in gp.materias" value="{{materia}}">{{materia.nombre}}</option>
+									</select>
+								</div>
+								<div class="col-sm-3">
+									<label>Semana *</label>
+									<input type="number" class="form-control" ng-model="gp.asignacion.semanas"/>
+								</div>
+								<div class="col-sm-1 text-center">
+									<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+									<button class="btn btn-primary" ng-click="gp.agregarAsignacion(gp.asignacion, form2)">
+										<i class="fa fa-plus fa-lg"></i>
+									</button>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="well">
+						<div class="row" style="overflow: scroll; font-size: 8pt;">
+							<table class="table table-bordered">
+					  		<tbody>
+						  		<tr>
+							  		<td ng-repeat="asignacion in gp.grupo.asignaciones" class="no-padding">
+								  		<table class="table no-padding" style="border-top: 0px; width: 170px;">
+									  		<tr>
+										  		<td class="text-center" ng-repeat="semana in asignacion.semanas">
+											  		<strong>{{semana.semana}}</strong>
+											  	</td>
+									  		</tr>
+								  		</table>
+								  	</td>
+						  		</tr>
+						  		<tr>
+							  		<td class="text-center bg-color-blue txt-color-white" ng-repeat="asignacion in gp.grupo.asignaciones">
+								  		<span class="txt-color-white" style="font-size: 8pt;">{{asignacion.materia.nombre}}</span>
+								  	</td>
+						  		</tr>
+						  		<tr>
+							  		<td class="text-center bg-color-blueDark txt-color-white" ng-repeat="asignacion in gp.grupo.asignaciones">
+											<span class="bg-color-blueDark txt-color-white font-xs">{{gp.getMaestro(asignacion.maestro_id)}}</span>
+								  	</td>
+						  		</tr>
+						  		<tr>
+							  		<td ng-repeat="asignacion in gp.grupo.asignaciones">
+								  		<div class="pull-left smart-form">
+								  			<label class="toggle">						  			
+													<input type="checkbox" ng-change="gp.cambiarEstatus(asignacion)" name="estatus" class="onoffswitch-checkbox txt-color-white" ng-model="asignacion.estatus">
+													<i data-swchon-text="Activa" data-swchoff-text="Inactiva"></i>													
+												</label>
+								  		</div>
+								  		<div class="pull-right">
+								  			<div class="input-group">												
+													<div class="input-group-btn">
+														<button class="btn btn-danger btn-xs" ng-click="gp.quitarAsignacion($index)">
+															<i class="fa fa-times fa-xs"></i>
+														</button>
+													</div>													
+												</div>	
+								  		</div>
+							  		</td>
+						  		</tr>
+					  		</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+	  	<div class="well">
+	  		<div class="row">
+	  			<div class="panel panel-default">
+					<div class="panel-heading">Inscripción</div>
+					<div class="panel-body">
+						<div class="row" ng-repeat='concepto in gp.grupo.inscripcion.conceptos'>
+				  		<div class="col-sm-4">
+								<label >{{concepto.nombre}}</label>
+			  				<input class="form-control" type="number" ng-model="concepto.importe">
+				  		</div>
+				  		<div class="col-sm-4">
+								<label >Activo			
+									<input type="checkbox" ng-model="concepto.estatus">
+								</label>
+				  		</div>
+						</div>
+						<div class="row">
+					    <div class="col-sm-4" >
+					    	<label>Recargo *</label>
+					    	<input class="form-control" name="recargo" type="number"  ng-model="gp.grupo.inscripcion.importeRecargo" required=""/>
+					    </div>
+					    <div class="col-sm-8" >
+					    	<label>Días para realizar Recargo *</label>
+					    	<input class="form-control" name="diasRecargo" type="number" ng-model="gp.grupo.inscripcion.diasRecargo" required=""/>
+					    </div>					  
+						</div>
+						<div class="row">
+						    <div class="col-sm-4" >
+						    	<label>Descuento *</label>
+						    	<input class="form-control" name="descuento" type="number" ng-model="gp.grupo.inscripcion.importeDescuento" required=""/>
+						    </div>
+						    <div class="col-sm-8" >
+						    	<label>Días para realizar Descuento *</label>
+						    	<input class="form-control" name="diasDescuento" type="number" ng-model="gp.grupo.inscripcion.diasDescuento" required=""/>
+						    </div>					  
+						</div>
+					</div>
+				</div>
+	  		</div>
+	  		<div class="row" ng-repeat='tipo in gp.tiposColegiatura'>
+	  			<div class="panel panel-default">
+					<div class="panel-heading">Colegiatura {{tipo}}</div>
+					<div class="panel-body">
+						<div class="row" ng-repeat='cpa in gp.grupo.colegiatura[tipo].conceptos'>							
+					  		<div class="col-sm-4">
+									<label >{{cpa.nombre }}</label>
+					  			<input class="form-control" type="number" ng-model="cpa.importe">
+					  		</div>
+					  		<div class="col-sm-4">
+									<label >Activo			
+										<input type="checkbox" ng-model="cpa.estatus">
+					  			</label>
+					  		</div>
+						</div>
+						<div class="row">
+						    <div class="col-sm-4" >
+						    	<label>Recargo *</label>
+						    	<input name="recargo" type="number" class="form-control"  ng-model="gp.grupo.colegiatura[tipo].importeRecargo" required=""/>
+						    </div>
+						    <div class="col-sm-8" >
+						    	<label>Días para realizar Recargo *</label>
+						    	<input class="form-control" name="diasRecargo" type="number" ng-model="gp.grupo.colegiatura[tipo].diasRecargo" required=""/>
+						    </div>					  
+						</div>
+						<div class="row">
+						    <div class="col-sm-4" >
+						    	<label>Descuento *</label>
+						    	<input class="form-control" name="descuento" type="number" ng-model="gp.grupo.colegiatura[tipo].importeDescuento" required=""/>
+						    </div>
+						    <div class="col-sm-8" >
+						    	<label>Días para realizar Descuento *</label>
+						    	<input class="form-control" name="diasDescuento" type="number" ng-model="gp.grupo.colegiatura[tipo].diasDescuento" required=""/>
+						    </div>					  
+						</div>
+					</div>
+				</div>
+	  		</div>
+	  	</div>	  	
+			<div class="row">
+				<div class="col-sm-12">
+					<input type="submit" ng-click="gp.guardar(gp.grupo,form)" value="Guardar" class="btn btn-primary" ng-show="gp.action" valida-form formulario="form">
+					<input type="submit" ng-click="gp.actualizar(gp.grupo,form)" value="Actualizar" class="btn btn-primary" ng-show="!gp.action" valida-form formulario="form">				
+				</div>
+			</div>	  
+	  </form>
+	</div>
+</div>

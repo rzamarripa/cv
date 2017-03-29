@@ -1,0 +1,87 @@
+<h2>Unidades</h2>
+<div class="row">
+	<div class="col-sm-12">
+		<!-- <a class="btn btn-{{uni.nuevo == true ? 'primary' : 'danger'}}" role="button" data-toggle="collapse" 
+			href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" id="nuevoobra" ng-click="uni.nuevoObra()">
+		 {{uni.nuevo == true ? 'Nuevo' : 'Cancelar'}}
+		</a> -->
+	
+			<form class="form-horizontal" role="form" data-parsley-validate>
+	    	 <div class="well">
+	    	 	<div class="row">
+	    	 		<div class="col-sm-12">
+	    	 			<div class="col-sm-3">
+	    	 				<label>Nombre</label>
+					    	<input type="text" class="form-control" placeholder="Nombre de Unidad" ng-model="uni.unidad.nombre" capitalized >
+	    	 			</div>
+	    	 		</div>
+	    	 	</div><br/>
+
+					<div class="row">
+						
+						<div class="col-sm-12">
+							<input type="submit" ng-click="uni.guardar(uni.unidad)" value="Guardar" class="btn btn-primary" ng-show="uni.action">
+							<input type="submit" ng-click="uni.actualizar(uni.unidad)" value="Actualizar" class="btn btn-primary" ng-show="!uni.action">	
+						</div>
+					</div>
+
+
+
+		  	</div>
+	  	</form>
+		
+	</div>
+</div>
+<br/>
+<!-- List -->
+<div class="row">
+	<div class="col-sm-12">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th width="20%"><div class="text-center">Nombre</div></th>
+					<th width="10%">
+						<div class="text-center">
+							Estatus
+						</div>
+					</th>
+					<th width="10%">
+						<div class="text-center">
+							Acciones
+						</div>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+		    <tr ng-repeat="unidad in uni.unidades">
+			    <td><div class="text-center">{{unidad.nombre}}</div></td>
+
+			    <td>
+				    <div class="text-center">
+				    	<span ng-if="unidad.estatus" class="label label-success">
+							  Activo
+							</span>
+							<span ng-if="!unidad.estatus" class="label label-danger">
+							  Inactivo
+							</span>
+				    </div>
+			    </td>
+			    <td>
+				    <div class="text-center">
+					    <div class="btn-group">
+							  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							    <span class="caret"></span>
+							    <span class="sr-only">Toggle Dropdown</span>
+							  </button>
+							  <ul class="dropdown-menu text-left">
+							    <li><a href="#" ng-click="uni.editar(unidad._id)"><i class="fa fa-pencil"></i> Editar</a></li>
+							  <li><a href="#" ng-click="uni.cambiarEstatus(unidad._id)"><i class="fa fa-trash"></i> Desactivar</a></li>
+							  </ul>
+							</div>
+				    </div>				    
+			    </td>
+		    </tr>
+			</tbody>
+		</table>
+	</div>
+</div>

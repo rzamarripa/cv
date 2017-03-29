@@ -1,0 +1,65 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+		<h1 class="page-title txt-color-blueDark">
+			<i class="fa fa-list fa-fw "></i> 
+				Catálogo 
+			<span>&gt; 
+				Nuevo
+			</span>
+		</h1>
+	</div>
+	<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8 text-right">
+		
+		<a href="javascript:void(0);" class="btn btn-default shop-btn">
+			<i class="fa fa-3x fa-shopping-cart"></i>
+			<span class="air air-top-right label-danger txt-color-white padding-5">{{np.miCarrito.productos.length}}</span>
+		</a>
+		<a href="javascript:void(0);" class="btn btn-default">
+			<i class="fa fa-3x fa-print"></i>
+		</a>
+		
+	</div>
+</div>
+<section id="widget-grid" class="">
+	<div class="row">
+		<div class="col-sm-6 col-md-6 col-lg-6" ng-repeat="producto in np.productos">
+			<!-- product -->
+			<div class="product-content product-wrap clearfix">
+				<div class="row">
+						<div class="col-md-5 col-sm-12 col-xs-12">
+							<div class="product-image"> 
+								<img src="{{producto.imagenes[0].nombre}}" alt="194x228" class="img-responsive"> 
+								<span class="tag2 hot">
+									MAMÁ
+								</span> 
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-12 col-md-7 col-lg-6">
+						<div class="product-deatil">
+								<h5 class="name">
+									<a href="#">
+										{{producto.nombre}} <span>{{producto.categoria}}</span>
+									</a>
+								</h5>
+								<p class="price-container">
+									<span>{{producto.precio | currency}}</span>
+								</p>
+								<span class="tag1"></span> 
+						</div>
+						<div class="description">
+							<p>{{producto.descripcion}} </p>
+						</div>
+						<div class="product-info smart-form">
+							<div class="row">
+								<div class="col-md-6 col-sm-6 col-xs-6"> 
+									<a href="javascript:void(0);" class="btn btn-success">Agregar al carrito</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- end product -->
+		</div>	
+	</div>
+</section>
