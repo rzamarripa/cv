@@ -215,7 +215,7 @@ angular.module('casserole').config(['$injector', function ($injector) {
       resolve: {
 				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
 					return $meteor.requireValidUser(function(user) {
-						if(user.roles[0] == "admin" || user.roles[0] == "coordinadorAcademico" || user.roles[0] == "coordinadorFinanciero" || user.roles[0] == "director" || user.roles[0] == "recepcionista"){
+						if(user.roles[0] == "admin" || user.roles[0] == "gerente"){
 							return true;
 						}else{
 							return 'UNAUTHORIZED'; 
@@ -1741,7 +1741,7 @@ angular.module('casserole').config(['$injector', function ($injector) {
       resolve: {
 				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
 					return $meteor.requireValidUser(function(user) {
-						if(user.roles[0] == "gerenteVenta" || user.roles[0] == "director"){
+						if(user.roles[0] == "gerente" || user.roles[0] == "director"){
 							return true;
 						}else{
 							return 'UNAUTHORIZED'; 
@@ -1878,6 +1878,22 @@ angular.module('casserole').config(['$injector', function ($injector) {
        }]
       }
     })
+    .state('root.pedidos', {
+      url: '/pedidos',
+      templateUrl: 'client/pedidos/pedidos.html',
+      controller: 'PedidosCtrl as p',
+      resolve: {
+        "currentUser": ["$meteor", "toastr", function($meteor, toastr){
+          return $meteor.requireValidUser(function(user) {
+            if(user.roles[0] == "gerente" || user.roles[0] == "produccion"){
+              return true;
+            }else{
+              return 'UNAUTHORIZED'; 
+            }           
+         });
+       }]
+      }
+    })
     .state('root.catalogo', {
       url: '/catalogo',
       templateUrl: 'client/catalogo/catalogo.html',
@@ -1910,7 +1926,23 @@ angular.module('casserole').config(['$injector', function ($injector) {
        }]
       }
     })
-    .state('root.produccion', {
+    .state('root.usuariosReparto', {
+      url: '/usuariosReparto',
+      templateUrl: 'client/usuariosReparto/usuariosReparto.html',
+      controller: 'UsuariosRepartoCtrl as ur',
+      resolve: {
+        "currentUser": ["$meteor", "toastr", function($meteor, toastr){
+          return $meteor.requireValidUser(function(user) {
+            if(user.roles[0] == "gerente"){
+              return true;
+            }else{
+              return 'UNAUTHORIZED'; 
+            }           
+         });
+       }]
+      }
+    })
+    .state('anon.produccion', {
       url: '/produccion',
       templateUrl: 'client/produccion/produccion.html',
       controller: 'ProduccionCtrl as p',
@@ -1919,6 +1951,23 @@ angular.module('casserole').config(['$injector', function ($injector) {
           return $meteor.requireValidUser(function(user) {
 	          console.log(Meteor.user())
             if(user.roles[0] == "produccion"){
+              return true;
+            }else{
+              return 'UNAUTHORIZED'; 
+            }           
+         });
+       }]
+      }
+    })
+    .state('anon.repartidor', {
+      url: '/repartidor',
+      templateUrl: 'client/repartidor/repartidor.html',
+      controller: 'RepartidorCtrl as r',
+      resolve: {
+        "currentUser": ["$meteor", "toastr", function($meteor, toastr){
+          return $meteor.requireValidUser(function(user) {
+	          console.log(Meteor.user())
+            if(user.roles[0] == "repartidor"){
               return true;
             }else{
               return 'UNAUTHORIZED'; 

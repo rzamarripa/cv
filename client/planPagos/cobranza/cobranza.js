@@ -10,21 +10,22 @@ function CobranzaCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr)
   this.fechaFinal = new Date();
   this.otrosCobros = [];
   this.totales = 0.00;
-  this.modulo = "todos";
+  this.cobrosPorFormaPago = {};
+  window.rc = rc;
   
   this.subscribe('todosUsuarios',()=>{
-		return [{seccion_id : Meteor.user() != undefined ? Meteor.user().profile.seccion_id : "" }]
+		return [{sucursal_id : Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "" }]
 	});
 	
 	this.helpers({
 		usuarios : () => {
 			return Meteor.users.find().fetch();
 		},
-		usuariosSeccion : () => {
+		usuariosSucursal : () => {
 			var usuariosDeAqui = [];
 			if(this.getReactively("usuarios") != undefined){
 				_.each(rc.getReactively("usuarios"), function(usuario, index){
-					if(usuario.profile.seccion_id == Meteor.user().profile.seccion_id){
+					if(usuario.profile.sucursal_id == Meteor.user().profile.sucursal_id){
 						usuariosDeAqui.push(usuario);
 					}
 				})
@@ -33,7 +34,8 @@ function CobranzaCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr)
 		}
 	});
 	
-	this.calcularCobros = function(fechaInicial, fechaFinal, usuario_id, form){
+	this.calcularCobros = function(fechaInicial, fechaFinal, usuario_id, formaPago, form){
+		console.log(usuario_id);
 		NProgress.set(0.5);
 		if(form.$invalid){
 			toastr.error('Error al enviar los datos, por favor llene todos los campos.');
@@ -41,19 +43,23 @@ function CobranzaCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr)
 			return;
     }
 		this.totales = 0.00;
-		Meteor.apply('historialCobranza', [this.fechaInicial, this.fechaFinal, Meteor.user().profile.seccion_id, usuario_id, this.modulo], function(error, result){
+		Meteor.apply('historialCobranza', [this.fechaInicial, this.fechaFinal, Meteor.user().profile.sucursal_id, usuario_id, formaPago], function(error, result){
+		  var cobrosPorFormaPago = {};
 		  _.each(result, function(cobro){
-			  rc.totales += cobro.importe;
-		  })
+			  rc.totales += cobro.pago;
+			  if(cobrosPorFormaPago[cobro.formaPago] == undefined){
+					cobrosPorFormaPago[cobro.formaPago] = {};
+					cobrosPorFormaPago[cobro.formaPago].formaPago = cobro.formaPago;
+					cobrosPorFormaPago[cobro.formaPago].total = cobro.pago;
+				}else{
+					cobrosPorFormaPago[cobro.formaPago].total += cobro.pago;
+				}
+		  });
+		  
+			rc.cobrosPorFormaPago = cobrosPorFormaPago;
 		  rc.otrosCobros = result;
 		  NProgress.set(1);
 	    $scope.$apply();
 	  });
-	}
-	
-	this.calcularSemana = function(w, y) {
-    var simple = new Date(y, 0, 1 + (w - 1) * 7);
-    rc.fechaInicial = new Date(simple);
-    rc.fechaFinal = new Date(moment(simple).add(7,"days"));
 	}
 };

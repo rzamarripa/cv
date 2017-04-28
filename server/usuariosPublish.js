@@ -19,7 +19,7 @@ Meteor.publish("usuariosMensajes", function(options){
 });
 
 Meteor.publish("todosUsuarios", function(options){
-	return Roles.getUsersInRole(['coordinadorAcademico', 'coordinadorFinanciero', 'director']);
+	return Roles.getUsersInRole(['gerente', 'director']);
 });
 
 Meteor.publish("validaUsuarios", function(){
@@ -28,6 +28,10 @@ Meteor.publish("validaUsuarios", function(){
 
 Meteor.publish("usuariosProduccion", function(){
 	return Roles.getUsersInRole( ['produccion'] );
+});
+
+Meteor.publish("usuariosReparto", function(){
+	return Roles.getUsersInRole( ['repartidor'] );
 });
 
 Meteor.publish("gerentesVenta", function(options){

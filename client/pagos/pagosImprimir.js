@@ -58,7 +58,6 @@ function PagosImprimirCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
   ]
 */
 	
-
   this.subTotal = 0.00;
   this.iva = 0.00;
   this.total = 0.00;

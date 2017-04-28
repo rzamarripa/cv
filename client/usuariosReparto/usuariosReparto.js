@@ -1,7 +1,7 @@
 angular
 .module("casserole")
-.controller("UsuariosProduccionCtrl", UsuariosProduccionCtrl);
-function UsuariosProduccionCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr) {
+.controller("UsuariosRepartoCtrl", UsuariosRepartoCtrl);
+function UsuariosRepartoCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr) {
 	
 	let rc = $reactive(this).attach($scope);
   this.action = true;
@@ -10,13 +10,13 @@ function UsuariosProduccionCtrl($scope, $meteor, $reactive,  $state, $stateParam
 	this.validaContrasena = false;
 	this.cambiarPassword = true;
 	
-	this.subscribe('usuariosProduccion', ()=>{
+	this.subscribe('usuariosReparto', ()=>{
 		return [{}]
 	});	
 
   this.helpers({
 	  usuariosProduccion : () => {
-		  return Meteor.users.find({"profile.sucursal_id" : Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "", roles : ["produccion"]});
+		  return Meteor.users.find({"profile.sucursal_id" : Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "", roles : ["repartidor"]});
 	  }
   });  
   
@@ -40,7 +40,7 @@ function UsuariosProduccionCtrl($scope, $meteor, $reactive,  $state, $stateParam
 		usuario.profile.usuarioInserto = Meteor.userId();
 		usuario.profile.nombreCompleto = usuario.profile.nombre  + " " + usuario.profile.apPaterno + " " + (usuario.profile.apMaterno ? usuario.profile.apMaterno : "");
 		console.log(usuario);
-		Meteor.call('createUsuario', usuario, 'produccion', function(error, result){
+		Meteor.call('createUsuario', usuario, 'repartidor', function(error, result){
 			if(error){
 				toastr.error('Error al guardar los datos.');
 				console.log(error);
@@ -72,7 +72,7 @@ function UsuariosProduccionCtrl($scope, $meteor, $reactive,  $state, $stateParam
 		
 		usuario.profile.nombreCompleto = usuario.profile.nombre  + " " + usuario.profile.apPaterno + " " + (usuario.profile.apMaterno ? usuario.profile.apMaterno : "");
 		console.log(usuario);
-		Meteor.call('updateUsuario', usuario, "produccion");
+		Meteor.call('updateUsuario', usuario, "repartidor");
 		toastr.success('Actualizado correctamente.');
 		$('.collapse').collapse('hide');
 		this.nuevo = true;
@@ -114,7 +114,7 @@ function UsuariosProduccionCtrl($scope, $meteor, $reactive,  $state, $stateParam
 			usuario.profile.estatus = false;
 		else
 			usuario.profile.estatus = true;
-		Meteor.call('modificarUsuario', usuario, "produccion");
+		Meteor.call('modificarUsuario', usuario, "repartidor");
   };
 	
 };

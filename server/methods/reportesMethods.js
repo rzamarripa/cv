@@ -1,42 +1,31 @@
 Meteor.methods({
-	prospectosPorEtapaVenta: function (fechaInicial, fechaFinal) {
-    var etapasVenta = EtapasVenta.find().fetch();
+	prospectosPorMediosPublicidad1: function (fechaInicial, fechaFinal) {
     var medios = MediosPublicidad.find().fetch();
     var arreglo = {};
-    _.each(etapasVenta, function(etapaVenta){
-	    if(arreglo[etapaVenta.nombre] == undefined){
-				arreglo[etapaVenta.nombre] = {};
-				arreglo[etapaVenta.nombre].etapaVenta = etapaVenta.nombre;
-				arreglo[etapaVenta.nombre].medios = {};
-		    _.each(medios, function(medio){
-			    arreglo[etapaVenta.nombre].medios[medio.nombre] = {};
-					arreglo[etapaVenta.nombre].medios[medio.nombre].nombre = medio.nombre;
-					arreglo[etapaVenta.nombre].medios[medio.nombre].cantidad = Prospectos.find({"profile.fecha" : {$gte : new Date(fechaInicial), $lte: new Date(fechaFinal)}, "profile.medio_id" : medio._id, "profile.etapaVenta_id" : etapaVenta._id}).count();
-				});
-			}
-    });
+    fechaInicial = moment(fechaInicial).add(-1, "days");
     
-    _.each(arreglo, function(arr){
-	    arr.medios = _.toArray(arr.medios);
-    });
+    _.each(medios, function(medio){
+	    arreglo[medio.nombre] = {};
+			arreglo[medio.nombre].nombre = medio.nombre;
+			arreglo[medio.nombre].cantidad = Meteor.users.find({roles : ["cliente"], "profile.fechaCreacion" : {$gte : new Date(fechaInicial), $lte: new Date(fechaFinal)}, "profile.medio_id" : medio._id}).count();
+		});
+    
     var arregloFinal = {};
-    arregloFinal.etapasVenta = [];
     arregloFinal.medios = {};
-    _.each(arreglo, function(etapa){
-	    arregloFinal.etapasVenta.push(etapa.etapaVenta);
-	    _.each(etapa.medios, function(medio){
-		    if(arregloFinal.medios[medio.nombre] == undefined){
-			    arregloFinal.medios[medio.nombre] = {};
-			    arregloFinal.medios[medio.nombre].name = medio.nombre;
-			    arregloFinal.medios[medio.nombre].data = [];
-			    arregloFinal.medios[medio.nombre].data.push(medio.cantidad);
-		    }else{
-			    arregloFinal.medios[medio.nombre].data.push(medio.cantidad);
-		    }
-	    })
+    
+    _.each(arreglo, function(medio){
+	    if(arregloFinal.medios[medio.nombre] == undefined){
+		    arregloFinal.medios[medio.nombre] = {};
+		    arregloFinal.medios[medio.nombre].name = medio.nombre;
+		    arregloFinal.medios[medio.nombre].data = [];
+		    arregloFinal.medios[medio.nombre].data.push(medio.cantidad);
+	    }else{
+		    arregloFinal.medios[medio.nombre].data.push(medio.cantidad);
+	    }
     })
-
-		arregloFinal.medios = _.toArray(arregloFinal.medios);
+		
+		arregloFinal[medios] = _.toArray(arregloFinal.medios);
+		
 
     return _.toArray(arregloFinal);
   },
@@ -56,30 +45,29 @@ Meteor.methods({
 		arregl = _.toArray(arreglo);
     return _.toArray(arreglo);
   },
-  historialCobranza : function (fechaInicial, fechaFinal, seccion_id, usuario_id, modulo) {
+  historialCobranza : function (fechaInicial, fechaFinal, sucursal_id, usuario_id, formaPago) {
 	  fechaInicial = moment(fechaInicial).add(-1, "days");
 	  var query = {};
+		console.log(formaPago);
 	  if(usuario_id == "todos" || usuario_id == undefined){
-		  if(modulo == "todos"){
-			  query = {seccion_id : seccion_id, fechaPago : {$gte : new Date(fechaInicial), $lt: new Date(fechaFinal.setHours(24))}}
+		  if(formaPago == "todos" || formaPago == undefined){
+			  query = {sucursal_id : sucursal_id, fechaPago : {$gte : new Date(fechaInicial), $lt: new Date(fechaFinal.setHours(24))}}
 		  }else{
-			  query = {modulo : modulo, seccion_id : seccion_id, fechaPago : {$gte : new Date(fechaInicial), $lt: new Date(fechaFinal.setHours(24))}}
+			  query = {formaPago : formaPago, sucursal_id : sucursal_id, fechaPago : {$gte : new Date(fechaInicial), $lt: new Date(fechaFinal.setHours(24))}}
 		  }
 	  }else{
-		  if(modulo == "todos"){
-			  query = {usuarioInserto_id : usuario_id, seccion_id : seccion_id, fechaPago : {$gte : new Date(fechaInicial), $lt: new Date(fechaFinal.setHours(24))}}
+		  if(formaPago == "todos"  || formaPago == undefined){
+			  query = {usuario_id : usuario_id, sucursal_id : sucursal_id, fechaPago : {$gte : new Date(fechaInicial), $lt: new Date(fechaFinal.setHours(24))}}
 		  }else{
-			  query = {usuarioInserto_id : usuario_id, modulo : modulo, seccion_id : seccion_id, fechaPago : {$gte : new Date(fechaInicial), $lt: new Date(fechaFinal.setHours(24))}}
+			  query = {usuario_id : usuario_id, formaPago : formaPago, sucursal_id : sucursal_id, fechaPago : {$gte : new Date(fechaInicial), $lt: new Date(fechaFinal.setHours(24))}}
 		  }
 	  }	  
 	  
-		 var otrosPagos = PlanPagos.find(query).fetch(); 
+		 var otrosPagos = Pagos.find(query).fetch(); 
 	  
 	  _.each(otrosPagos, function(pago){
-		  pago.concepto = ConceptosPago.findOne({_id : pago.concepto_id});
-		  pago.alumno = Meteor.users.findOne({_id : pago.alumno_id});
-		  pago.cuenta = Cuentas.findOne({_id : pago.cuenta_id});
-		  pago.usuarioInserto = Meteor.users.findOne({_id : pago.usuarioInserto_id});
+		  pago.cliente = Meteor.users.findOne({_id : pago.cliente_id});
+		  pago.usuarioInserto = Meteor.users.findOne({_id : pago.usuario_id});
 	  })
 	  return otrosPagos;
   },

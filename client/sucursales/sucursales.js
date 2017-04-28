@@ -53,6 +53,7 @@ function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
 		sucursal.estatus = true;
 		sucursal.region_id = $stateParams.region_id;
 		sucursal.usuarioInserto = Meteor.userId();
+		sucursal.folioActual = 0;
 		
 		sucursal_id = Sucursales.insert(this.sucursal);
 		var nombre = sucursal.nombre != undefined ? sucursal.nombre + " " : "";

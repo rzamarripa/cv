@@ -1,0 +1,143 @@
+<div class="content" style="padding: 20px;">
+	<div class="row">
+		<div class="col-sm-12">
+			<h2><i class="fa fa-calendar-check-o fa-lg"></i> Listado de reparto hoy</h2>
+			<div class="row fondo-corcho" style="min-height: 300px;">
+				<div class="col-sm-3 post-it {{arreglo.claseEstatus}}" ng-repeat="arreglo in r.listaRepartoHoy">
+					<div class="titulo-post-it">
+						<a href="#" ng-click="r.llevarArreglo(arreglo)" ng-show="arreglo.estatus == 3"><i class="fa fa-car"></i></a>
+						<span ng-show="arreglo.estatus == 3">&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			    	<a href="#" ng-click="r.cancelar(arreglo)" ng-show="arreglo.estatus == 2"><i class="fa fa-times"></i></a>
+			    	<a href="#" ng-click="r.ver(arreglo)"><i class="fa fa-file"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+			    	<img class="pull-right" src="/img/chincheta.png" style="margin-top:-25px; margin-left:20px;">
+			    </div>
+					<div class="cuerpo-post-it">
+						<p>El <strong>{{arreglo.descripcion | cut:true:130:' ...'}}</strong> tiene que ser entregado a <strong>{{arreglo.entrega.nombre}}</strong> en la dirección <strong>{{arreglo.entrega.direccion}}</strong> en la fecha <strong>{{arreglo.entrega.fecha | date:"dd-MM-yyyy HH:mm"}}.</strong></p>
+					</div>
+					<div class="post-it-pie label label-inverse pull-right" style="background-color : black;">
+						{{r.duracion(arreglo.entrega.fecha)}}
+					</div>
+					<div class="post-it-pie pull-right" ng-show="!arreglo.tomado">
+						<div class="project-members">
+							<a href="javascript:void(0)" ng-repeat="productor in r.productores" ng-click="r.elegirProductor(arreglo, productor)" title="{{productor.profile.nombreCompleto}}"><img style="width: 50px;" src="{{r.tieneFoto(productor.profile.sexo, productor.profile.fotografia)}}" class="online"></a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<h2><i class="fa fa-car fa-lg"></i> Listado de enviados</h2>
+			<div class="row fondo-corcho" style="min-height: 300px;">
+				<div class="col-sm-3 post-it-xs {{arreglo.claseEstatus}}" ng-repeat="arreglo in r.listaEnviados">
+					<div class="titulo-post-it">
+						<a href="#" ng-click="r.llevarArreglo(arreglo)" ng-show="arreglo.estatus == 3"><i class="fa fa-car"></i></a>
+						<span ng-show="arreglo.estatus == 3">&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						<a href="#" ng-click="r.entregarArreglo(arreglo)" ng-show="arreglo.estatus == 4"><i class="fa fa-gift"></i></a>
+						<span ng-show="arreglo.estatus == 4">&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			    	<a href="#" ng-click="r.cancelar(arreglo)" ng-show="arreglo.estatus == 4"><i class="fa fa-times"></i></a>
+			    	<span ng-show="arreglo.estatus == 4">&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			    	<a href="#" ng-click="r.ver(arreglo)"><i class="fa fa-file"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+			    	<img class="pull-right" src="/img/chincheta.png" style="margin-top:-25px; margin-left:20px;">
+			    </div>
+					<div class="cuerpo-post-it">
+						<p>El <strong>{{arreglo.descripcion | cut:true:130:' ...'}}</strong> tiene que ser entregado a <strong>{{arreglo.entrega.nombre}}</strong> en la dirección <strong>{{arreglo.entrega.direccion}}</strong> en la fecha <strong>{{arreglo.entrega.fecha | date:"dd-MM-yyyy HH:mm"}}.</strong></p>
+					</div>
+					<div class="post-it-pie label label-inverse pull-right" style="background-color : black;">
+						{{r.duracion(arreglo.entrega.fecha)}}
+					</div>
+					<div class="post-it-pie pull-right" ng-show="!arreglo.tomado">
+						<div class="project-members">
+							<a href="javascript:void(0)" ng-repeat="productor in r.productores" ng-click="r.elegirProductor(arreglo, productor)" title="{{productor.profile.nombreCompleto}}"><img style="width: 50px;" src="{{r.tieneFoto(productor.profile.sexo, productor.profile.fotografia)}}" class="online"></a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<h2><i class="fa fa-gift fa-lg"></i> Listado de entregados</h2>
+			<div class="row fondo-corcho" style="min-height: 300px;">
+				<div class="col-sm-3 post-it-xs {{arreglo.claseEstatus}}" ng-repeat="arreglo in r.listaEntregados">
+					<div class="titulo-post-it">
+						<a href="#" ng-click="r.llevarArreglo(arreglo)" ng-show="arreglo.estatus == 3"><i class="fa fa-car"></i></a>
+						<span ng-show="arreglo.estatus == 3">&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						<a href="#" ng-click="r.entregarArreglo(arreglo)" ng-show="arreglo.estatus == 4"><i class="fa fa-gift"></i></a>
+						<span ng-show="arreglo.estatus == 4">&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			    	<a href="#" ng-click="r.cancelar(arreglo)" ng-show="arreglo.estatus == 4"><i class="fa fa-times"></i></a>
+			    	<span ng-show="arreglo.estatus == 4">&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			    	<a href="#" ng-click="r.ver(arreglo)"><i class="fa fa-file"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+			    	<img class="pull-right" src="/img/chincheta.png" style="margin-top:-25px; margin-left:20px;">
+			    </div>
+					<div class="cuerpo-post-it">
+						<p>El <strong>{{arreglo.descripcion | cut:true:130:' ...'}}</strong> tiene que ser entregado a <strong>{{arreglo.entrega.nombre}}</strong> en la dirección <strong>{{arreglo.entrega.direccion}}</strong> en la fecha <strong>{{arreglo.entrega.fecha | date:"dd-MM-yyyy HH:mm"}}.</strong></p>
+					</div>
+					<div class="post-it-pie label label-inverse pull-right" style="background-color : black;">
+						{{r.duracion(arreglo.entrega.fecha)}}
+					</div>
+					<div class="post-it-pie pull-right" ng-show="!arreglo.tomado">
+						<div class="project-members">
+							<a href="javascript:void(0)" ng-repeat="productor in r.productores" ng-click="r.elegirProductor(arreglo, productor)" title="{{productor.profile.nombreCompleto}}"><img style="width: 50px;" src="{{r.tieneFoto(productor.profile.sexo, productor.profile.fotografia)}}" class="online"></a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<h2><i class="fa fa-calendar fa-lg"></i> Listado de reparto después</h2>
+			<div class="row fondo-corcho" style="min-height: 300px;">
+				<div class="col-sm-3 post-it {{arreglo.claseEstatus}}" ng-repeat="arreglo in r.listaRepartoDespues">
+					<div class="titulo-post-it">
+						<a href="#" ng-click="r.llevarArreglo(arreglo)" ng-show="arreglo.estatus == 3"><i class="fa fa-car"></i></a>
+						<span ng-show="arreglo.estatus == 3">&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			    	<a href="#" ng-click="r.cancelar(arreglo)" ng-show="arreglo.estatus == 2"><i class="fa fa-times"></i></a>
+			    	<a href="#" ng-click="r.ver(arreglo)"><i class="fa fa-file"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+			    	<img class="pull-right" src="/img/chincheta.png" style="margin-top:-25px; margin-left:20px;">
+			    </div>
+					<div class="cuerpo-post-it">
+						<p>{{arreglo.descripcion | cut:true:130:' ...'}}</p>
+						<p>{{arreglo.entrega.direccion}}</p>
+						<p>{{arreglo.entrega.nombre}}</p>
+						<p>{{arreglo.entrega.fecha | date:"dd-MM-yyyy HH:mm"}}</p>
+					</div>
+					<div class="post-it-pie label label-inverse pull-right" style="background-color : black;">
+						{{r.duracion(arreglo.entrega.fecha)}}
+					</div>
+					<div class="post-it-pie pull-right" ng-show="!arreglo.tomado">
+						<div class="project-members">
+							<a href="javascript:void(0)" ng-repeat="productor in r.productores" ng-click="r.elegirProductor(arreglo, productor)" title="{{productor.profile.nombreCompleto}}"><img style="width: 50px;" src="{{r.tieneFoto(productor.profile.sexo, productor.profile.fotografia)}}" class="online"></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content modal-backdrop">
+      <div class="modal-body">
+	      <div class="col-sm-8 col-sm-offset-2 post-it-lg {{r.postitSeleccionado.claseEstatus}}">
+					<div class="titulo-post-it">
+						<a href="#" ng-click="r.llevarArreglo(arreglo)" ng-show="arreglo.estatus == 3"><i class="fa fa-car"></i></a>
+						<span ng-show="arreglo.estatus == 3">&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			    	<a href="#" ng-click="r.cancelar(arreglo)" ng-show="arreglo.estatus == 2"><i class="fa fa-times"></i></a>
+			    	<a href="#" ng-click="r.ver(arreglo)"><i class="fa fa-file"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+			    	<img class="pull-right" src="/img/chincheta.png" style="margin-top:-25px; margin-left:20px;">
+			    </div>
+					<div class="cuerpo-post-it">
+						<p>{{r.postitSeleccionado.descripcion}}</p>
+						<p>{{r.postitSeleccionado.entrega.direccion}}</p>
+						<p>{{r.postitSeleccionado.entrega.nombre}}</p>
+						<p>{{r.postitSeleccionado.entrega.fecha | date:"dd-MM-yyyy HH:mm"}}</p>
+					</div>
+					<div class="post-it-pie label label-inverse pull-right" style="background-color : black;">
+						{{r.duracion(r.postitSeleccionado.entrega.fecha)}}
+					</div>
+					<div class="post-it-pie pull-right" ng-show="!arreglo.tomado">
+						<div class="project-members">
+							<a href="javascript:void(0)" ng-repeat="productor in r.productores" ng-click="r.elegirProductor(arreglo, productor)" title="{{productor.profile.nombreCompleto}}"><img style="width: 50px;" src="{{r.tieneFoto(productor.profile.sexo, productor.profile.fotografia)}}" class="online"></a>
+						</div>
+					</div>
+				</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="r.postitSeleccionado = {};">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

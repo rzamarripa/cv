@@ -67,6 +67,23 @@ Meteor.methods({
 		);
 		return usuario_id;
 	},
+	createGerenteVenta: function (usuario, rol) {	  
+	  usuario.profile.friends = [];
+	  
+		if(usuario.maestro_id != undefined)
+			profile.maestro_id = usuario.maestro_id;
+		
+		var usuario_id = Accounts.createUser({
+			username: usuario.username,
+			password: usuario.password,			
+			profile: usuario.profile
+		});
+		
+		Roles.addUsersToRoles(usuario_id, rol);
+		
+		return usuario_id;
+		
+	},
 	updateUsuario: function (usuario, rol) {		
 		var user = Meteor.users.findOne(usuario._id);
 	  Meteor.users.update({_id: user._id}, {$set:{

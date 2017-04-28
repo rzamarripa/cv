@@ -1,0 +1,81 @@
+<h2>Listado de Pedidos</h2>
+<div class="row">
+	<div class="col-sm-12">
+		<table class="table">
+			<tr>
+				<th>No.</th>
+				<th>Clientes</th>
+				<th>Fecha Entrega</th>
+				<th>Estatus Prod.</th>
+				<th>Estatus Pago.</th>
+				<th>Fecha Pedido</th>
+				<th>Pagado</th>
+				<th>Saldo</th>
+				<th>Acciones</th>
+			</tr>
+			<tr ng-repeat="venta in p.ventas">
+				<td>{{$index + 1}}</td>
+				<td>{{venta.clienteSeleccionado.nombre}} {{venta.clienteSeleccionado.apPaterno}} {{venta.clienteSeleccionado.apMaterno}}</td>
+				<td>{{venta.entrega.fecha | date:"dd-MM-yyyy"}} {{venta.entrega.hora | date:"HH:mm"}}</td>
+				<td><span ng-class="">{{venta.estatusNombre}}</span></td>
+				<td><span ng-class="">{{venta.estatusNombrePago}}</span></td>
+				<td>{{venta.fechaCreacion | date:"dd-MM-yyyy HH:mm"}}</td>
+				<td>{{venta.anticipo + venta.pagado | currency}}</td>
+				<td>{{venta.saldo | currency}}</td>
+				<td>
+					<div class="btn-group">
+					  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					    <span class="caret"></span>
+					    <span class="sr-only">Toggle Dropdown</span>
+					  </button>
+					  <ul class="dropdown-menu  dropdown-menu-right text-left">
+					    <li><a href="#" ng-click="p.editar(venta._id)"><i class="fa fa-pencil"></i> Editar</a></li>
+					    <li ng-show="venta.saldo > 0"><a href="#" ng-click="p.mostrarModalPago(venta._id)"><i class="fa fa-dollar"></i> Pagar</a></li>
+					    <li><a href="#" ng-click="p.cambiarEstatus(venta._id)">
+					    				<i class="fa fa-{{venta.estatus ? 'trash' : 'check' }}"></i> {{venta.estatus ? "Desactivar" : "Activar" }}
+					    		</a>
+					    </li>
+					  </ul>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="pagar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{p.ventaSeleccionada.cliente.profile.nombreCompleto}}</h4>
+      </div>
+      <div class="modal-body">
+        <form name="form" class="form-horizontal" role="form"  novalidate>
+	        <div class="row">
+			    	<div class="col-sm-12" valida>
+					    <label>Importe a pagar *</label>
+					    <input name="importeAPagar" type="number" class="form-control" ng-model="p.importeAPagar" required="">
+			    	</div>
+			    </div>
+			    
+	        <address>
+					  <strong>Saldo: {{p.ventaSeleccionada.saldo | currency}}.</strong><br>
+					  Tipo: {{p.ventaSeleccionada.tipoEnvio}}<br>
+					  Dirección : {{p.ventaSeleccionada.cliente.profile.calleNum + " " + p.ventaSeleccionada.cliente.profile.colonia + ", " + p.ventaSeleccionada.cliente.profile.codigoPostal}}<br>
+					  <abbr title="Teléfono">T:</abbr> {{p.ventaSeleccionada.cliente.profile.tel1}}
+					</address>
+					
+					<address>
+					  <strong>{{p.ventaSeleccionada.cliente.profile.nombreCompleto}}</strong><br>
+					  <a href="mailto:{{p.ventaSeleccionada.cliente.profile.correo}}">{{p.ventaSeleccionada.cliente.profile.correo}}</a>
+					</address>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+	        <button type="button" class="btn btn-primary" ng-click="p.pagar(p.ventaSeleccionada, p.importeAPagar, form)" valida-form formulario="form">Pagar</button>
+	      </div>
+			</form>
+    </div>
+  </div>
+</div>

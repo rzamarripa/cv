@@ -11,6 +11,7 @@
 		<table class="table table-bordered">
 			<thead>
 				<tr>
+					<th width="10%">No.</th>
 					<th width="20%"><div class="text-center">Nombre</div></th>
 					<th width="20%"><div class="text-center">Descripción</div></th>
 					<th width="10%">
@@ -27,6 +28,7 @@
 			</thead>
 			<tbody>
 		    <tr ng-repeat="producto in pro.productos">
+			    <td><div class="text-center">{{$index + 1}}</div></td>
 			    <td><div class="text-center">{{producto.nombre}}</div></td>
 			    <td><div class="text-center">{{producto.descripcion}}</div></td>
 			    <td>

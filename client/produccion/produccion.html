@@ -1,26 +1,44 @@
-<h2>Listado de producción</h2>
-<div class="row">
-	<div class="col-sm-3 post-it {{arreglo.claseEstatus}}" ng-repeat="arreglo in p.listaProduccion">
-		<div class="titulo-post-it">			
-			<span ng-show="arreglo.estatus == 1">
-				<a href="#" ng-click="p.tomar(arreglo)"><i class="fa fa-hand-rock-o"></i></a>
-			</span>
-			<span ng-show="arreglo.estatus == 4">
-				<a href="#" ng-click="p.terminar(arreglo)"><i class="fa fa-times"></i></a>
-			</span>
-			<span ng-show="arreglo.estatus == 2">
-				<a href="#" ng-click="p.terminar(arreglo)"><i class="fa fa-check"></i></a>
-			</span>
-			<span ng-show="currenUser.roles[0] == 'gerente'">
-				<a href="#" ng-click="p.eliminar(arreglo)" ><i class="fa fa-trash"></i></a>
-			</span>
-		</div>
-		<div class="cuerpo-post-it">
-			{{arreglo.descripcion}}
-		</div>
-		<div class="post-it-pie label label-inverse pull-right" style="background-color : black;" ng-show="arreglo.tomado">
-			{{arreglo.produccion.nombre}} | {{arreglo.produccion.fecha | date:"dd HH:mm:ss"}}
+<div class="content" style="padding: 20px;">
+	<h2>Listado de producción</h2>
+	<div class="row fondo-corcho" style="min-height: 300px;">
+		<div class="col-sm-3 post-it {{arreglo.claseEstatus}}" ng-repeat="arreglo in p.listaProduccion">
+			<div class="titulo-post-it">
+				<a href="#" ng-click="p.terminar(arreglo)" ng-show="arreglo.estatus == 2"><i class="fa fa-check"></i></a>
+				<span ng-show="arreglo.estatus == 2">&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;</span>
+	    	<a href="#" ng-click="p.cancelar(arreglo)" ng-show="arreglo.estatus == 2"><i class="fa fa-times"></i></a>
+	    	<a href="#" ng-click="p.noTerminada(arreglo)" ng-show="arreglo.estatus == 3"><i class="fa fa-caret-square-o-left"></i></a>
+	    	&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;
+	    	<a href="#" ng-click="p.ver(arreglo)"><i class="fa fa-file"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+	    	<img class="pull-right" src="/img/chincheta.png" style="margin-top:-25px; margin-left:20px;">
+	    </div>
+			<div class="cuerpo-post-it">
+				{{arreglo.descripcion | cut:true:130:' ...'}}
+			</div>
+			<div class="post-it-pie label label-inverse pull-right" style="background-color : black;" ng-show="arreglo.tomado">
+				<img style="width: 50px;" src="{{p.tieneFotoProductorArreglo(arreglo.produccion.productor_id)}}" class="online"> | {{p.duracion(arreglo.produccion.fecha)}}
+			</div>
+			<div class="post-it-pie pull-right" ng-show="!arreglo.tomado">
+				<div class="project-members">
+					<a href="javascript:void(0)" ng-repeat="productor in p.productores" ng-click="p.elegirProductor(arreglo, productor)" title="{{productor.profile.nombreCompleto}}"><img style="width: 50px;" src="{{p.tieneFoto(productor.profile.sexo, productor.profile.fotografia)}}" class="online"></a>
+				</div>
+			</div>
 		</div>
 	</div>
-
+</div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Vista General del Postit</h4>
+      </div>
+      <div class="modal-body">
+        {{p.postitSeleccionado.descripcion}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
 </div>

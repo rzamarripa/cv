@@ -12,21 +12,34 @@
 			<label for="fechaFinal">Usuario *</label>
 			<select name="usuarios" class="form-control" ng-model="oc.usuario_id">
 				<option value="todos" selected="selected">Todos</option>
-				<option value="{{usuario._id}}" ng-repeat="usuario in oc.usuariosSeccion">{{usuario.profile.nombreCompleto}}</option>
+				<option value="{{usuario._id}}" ng-repeat="usuario in oc.usuariosSucursal">{{usuario.profile.nombreCompleto}}</option>
 			</select>
 		</div>
 		<div class="col-sm-3 text-center" valida>
-			<label for="fechaFinal">Módulo *</label>
-			<select name="usuarios" class="form-control" ng-model="oc.modulo">
+			<label for="formaPago">Forma pago *</label>
+			<select id="formaPago" name="formaPago" class="form-control" ng-model="oc.formaPago">
 				<option value="todos" selected="selected">Todos</option>
-				<option value="colegiatura">Colegiatura</option>
-				<option value="Otro">Otros</option>
+				<option value="Efectivo">Efectivo</option>
+				<option value="Tarjeta">Tarjeta</option>
+				<option value="Oxxo/Trans">Oxxo/Trans</option>
+				<option value="Intercambio">Intercambio</option>
 			</select>
 		</div>
 		<div class="col-sm-2 text-center">
-			<button ng-click="oc.calcularCobros(oc.fechaIncial, oc.fechaFinal, oc.usuario_id, form);" class="btn btn-primary" valida-form formulario="form"><i class="fa fa-search"></i> Calcular</button>
+			<button ng-click="oc.calcularCobros(oc.fechaIncial, oc.fechaFinal, oc.usuario_id, oc.formaPago, form);" class="btn btn-primary btn-labeled" valida-form formulario="form">
+				<span class="btn-label">
+					<i class="fa fa-search"></i>
+				</span>
+				Calcular
+			</button>
 		</div>
 	</form>
+</div>
+<div class="row">
+	<div class="well col-sm-3" ng-repeat="pago in oc.cobrosPorFormaPago">
+		<h1>{{pago.formaPago}}</h1>
+		<h2 class="text-gree">{{pago.total | currency}}</h2>
+	</div>
 </div>
 <div class="row">
 	<div class="col-sm-12">
@@ -35,12 +48,9 @@
 			<thead class="thead">
 				<tr>
 					<th class="text-center">No.</th>
-					<th class="text-center">Fecha</th>
-					<th class="text-center">Cant.</th>
-					<th class="text-center">Semana</th>
-					<th class="text-center">Concepto</th>
-					<th class="text-center">Alumno</th>
-					<th class="text-center">Cuenta</th>
+					<th class="text-center">Fecha Pago</th>
+					<th class="text-center">Forma Pago</th>
+					<th class="text-center">Cliente</th>
 					<th class="text-center">Usuario</th>
 					<th class="text-center">Total</th>
 				</tr>
@@ -48,17 +58,14 @@
 			<tbody>
 				<tr ng-repeat="cobro in oc.otrosCobros">
 					<th class="text-center">{{$index + 1}}</th>	
-					<td class="text-center">{{cobro.fecha | date:"dd-MM-yyyy hh:mm:ss"}}</td>
-					<td class="text-center">{{cobro.modulo == "Otro" ? cobro.cantidad : 1}}</td>
-					<td class="text-center">{{cobro.semana}}</td>
-					<td >{{cobro.descripcion}}</td>
-					<td >{{cobro.alumno.profile.nombreCompleto}}</td>
-					<td class="text-right">{{cobro.cuenta.nombre}}</td>
+					<td class="text-center">{{cobro.fechaPago | date:"dd-MM-yyyy hh:mm:ss"}}</td>
+					<td >{{cobro.formaPago}}</td>
+					<td >{{cobro.cliente.profile.nombreCompleto}}</td>
 					<td >{{cobro.usuarioInserto.profile.nombreCompleto}}</td>
-					<td class="text-right">{{cobro.importe | currency}}</td>
+					<td class="text-right">{{cobro.pago | currency}}</td>
 				</tr>
 				<tr>
-					<td colspan="8" class="text-right text-success negritas">Total</td>
+					<td colspan="5" class="text-right text-success negritas">Total</td>
 					<td class="text-right text-success negritas">{{oc.totales | currency}}</td>
 				</tr>
 			</tbody>

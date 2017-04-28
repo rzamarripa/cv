@@ -17,9 +17,14 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
   this.cancelar = false;
   this.nuevo = true; 
   this.clienteSeleccionado = {};
+  this.anticipoCero = false;
 
 	this.subscribe('productos',()=>{
 		return [{estatus:true, sucursal_id : Meteor.user() ? Meteor.user().profile.sucursal_id : ""}] 
+  });
+  
+  this.subscribe('sucursales',()=>{
+		return [{_id : Meteor.user() ? Meteor.user().profile.sucursal_id : ""}] 
   });
 
   this.subscribe('clientesNombre',()=>{
@@ -59,12 +64,56 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 			delete producto.$$hashKey;
 		});	
 		
+		//Aumentar folio sucursal
+		var sucursal = Sucursales.findOne();
+		var folioActual = sucursal.folioActual + 1;
+				
 		var total = 0;
 		rc.venta.sucursal_id = Meteor.user().profile.sucursal_id;
 		rc.venta.estatus = 1;
+		rc.venta.fechaCreacion = new Date();
+		rc.venta.folio = folioActual;
+		rc.venta.pagado = 0;
+		
 		console.log("datos del pedido", rc.venta);
-		Ventas.insert(rc.venta);
+		
+		if(rc.venta.anticipo <= 0 && rc.anticipoCero == false){
+			rc.anticipoCero = true;
+			return
+		}
+		
+		if(rc.venta.anticipo <= 0){
+			//No pagó nada
+			rc.venta.estatusPago = 0;
+		}else if(rc.venta.saldo == 0){
+			//Pago todo
+			rc.venta.estatusPago = 2;
+		}else{
+			//Pago anticipo
+			rc.venta.estatusPago = 1;
+		}
+
+		var venta_id = Ventas.insert(rc.venta);
+		
+		Pagos.insert({
+			folio : folioActual,
+			venta_id : venta_id,
+			pago : venta.anticipo,
+			saldo : venta.saldo,
+			total : venta.total,
+			fechaPago : new Date(),
+			sucursal_id : venta.sucursal_id,
+			estatus : 1,
+			cliente_id : venta.cliente_id,
+			formaPago : venta.formaPago,
+			usuario_id : Meteor.userId()			
+		});
+		
+		Sucursales.update({_id : sucursal._id},{$set: {folioActual : folioActual}});
+		
 		toastr.success('Venta realizada.');
+		this.clienteSeleccionado = {};
+		this.buscar.nombreCliente = "";
 		this.venta = {};
 		this.venta.detalle = [];
 		this.venta.total = 0;
@@ -86,7 +135,7 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 	this.seleccionar = function(cliente){
 		console.log(cliente);
 		rc.clienteSeleccionado = cliente;
-		rc.venta.clienteSeleccionado = cliente.profile;
+		//rc.venta.clienteSeleccionado = cliente.profile;
 		rc.venta.cliente_id = cliente._id;
 		rc.buscar.nombreCliente = cliente.profile.nombreCompleto;
 		rc.buscando = false;
@@ -152,6 +201,6 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
   }
   
   this.calcularSaldo = function(){
-	  rc.venta.saldo = rc.venta.anticipo - rc.venta.total;
+	  rc.venta.saldo = (rc.venta.anticipo - rc.venta.total) * -1;
   }
 };

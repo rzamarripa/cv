@@ -31,7 +31,9 @@ function LoginCtrl($scope, $meteor, $reactive, $state, toastr) {
 				  if(result != 6){
 					  toastr.success("Bienvenido al Sistema");
 			      if(Meteor.user().roles[0] == "produccion"){
-				      $state.go('root.produccion');
+				      $state.go('anon.produccion');
+			      }else if(Meteor.user().roles[0] == "repartidor"){
+				      $state.go('anon.repartidor');
 			      }else{
 				      $state.go('root.home');
 			      }

@@ -109,8 +109,8 @@
 								    	<input name="logo" type="text" class="form-control" placeholder="http://" ng-model="sc.sucursal.logo" required>
 								    </div>
 								    <div class="col-sm-3">
-									    <button ng-click="sc.seleccionarLogo('/img/logoIcep.png')" class="btn btn-lg">
-												<img src="/img/logoIcep.png" class="thumbnail" style="height: 60px !important"/>
+									    <button ng-click="sc.seleccionarLogo('/img/logo.png')" class="btn btn-lg">
+												<img src="/img/logo.png" class="thumbnail" style="height: 60px !important"/>
 									    </button>
 								    </div>
 							    </div>
@@ -141,7 +141,7 @@
 					<th width="20%"><div class="text-center">Nombre</div></th>	
 					<th width="20%"><div class="text-center">Descripción</div></th>	
 <!-- 					<th width="10%"><div class="text-center">Departamento Académico</div></th> -->
-					<th width="10%"><div class="text-center">Región</div></th>		
+					<th width="10%"><div class="text-center">Ciudad</div></th>		
 				    <th width="10%">
 						<div class="text-center">
 							Estatus
@@ -158,10 +158,10 @@
 				<!--{{getDeptoAcademicoById(sucursal.deptoAcademico_id).descripcionCorta}-->
 		    <tr ng-repeat="sucursal in sc.sucursales">
 			    <td>{{sucursal.clave}}</td>
-			    <td>{{sucursal.nombreseccion}}</td>
+			    <td>{{sucursal.nombreSucursal}}</td>
 			    <td>{{sucursal.descripcion}}</td>
 <!-- 			    <td>{{sc.getDeptoAcademico(sucursal.deptoAcademico_id)}}</td> -->
-			    <td>{{sc.getRegion(sucursal.region_id)}}</td>
+			    <td>{{sucursal.ciudad}}</td>
 			    <td> 
 				    <div class="text-center">
 				    	<span ng-if="sucursal.estatus" class="label label-success">
