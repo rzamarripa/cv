@@ -12,6 +12,7 @@
 			<div class="form-group" valida>
 				<label for="estatus">Estatus *</label>
 				<select name="estatus" class="form-control" ng-model="ape.estatus" required="">
+					<option value="0">Todos</option>
 					<option value="1">Registrado</option>
 					<option value="2">Activo</option>
 					<option value="3">Preferente</option>
@@ -29,7 +30,7 @@
 			<thead class="thead">
 				<tr>
 					<th class="text-center">No.</th>
-					<th class="text-center">Fecha Cambio</th>
+					<th class="text-center">Fecha Creación</th>
 					<th class="text-center">Usuario</th>
 					<th class="text-center">Nombre</th>
 					<th class="text-center">Estatus Actual</th>
@@ -38,10 +39,10 @@
 			<tbody>
 				<tr ng-repeat="cliente in ape.clientes">
 					<td class="text-center">{{$index + 1}}</td>	
-					<td class="text-center">{{cliente.fechaCreacion | date:"dd-MM-yyyy"}}</td>
-					<td class="text-center">{{cliente.cliente.username}}</td>			
-					<td>{{cliente.cliente.profile.nombreCompleto}}</td>
-					<td class="text-center"><span class="label {{cliente.cliente.profile.estatusObj.classLabel}}">{{cliente.cliente.profile.estatusObj.nombre}}</label></td>					
+					<td class="text-center">{{cliente.createdAt | date:"dd-MM-yyyy"}}</td>
+					<td class="text-center">{{cliente.username}}</td>			
+					<td>{{cliente.profile.nombreCompleto}}</td>
+					<td class="text-center"><span class="label {{cliente.profile.estatusColor}}">{{cliente.profile.estatusNombre}}</label></td>					
 				</tr>
 			</tbody>
 		</table>

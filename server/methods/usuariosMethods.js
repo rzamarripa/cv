@@ -73,16 +73,21 @@ Meteor.methods({
 		Meteor.users.update({_id : cliente_id}, {$set : {"profile.semanaEstatus " : moment().isoWeek(), "profile.estatus" : estatus, "profile.estatusObj.classLabel" : classLabel, "profile.estatusObj.nombre" : estatusNombre, "profile.estatusObj.codigo" : estatus}});
 		return estatus;
 	},
-	getClientesPorEstatus : function(fechaInicio, fechaFin, estatus, sucursal_id){
-		var estatusNombre = obtenerEstatusNombre(estatus);
-		var bitacoras = BitacoraEstatus.find({fechaCreacion : { $gte : fechaInicio, $lt : fechaFin}, estatusActual : parseInt(estatus), sucursal_id : sucursal_id}).fetch();
-		if(bitacoras.length > 0){
-			_.each(bitacoras, function(bitacora){
-				bitacora.cliente = Meteor.users.findOne({_id : bitacora.cliente_id}, { fields : {"profile.nombreCompleto" : 1, "username" : 1, "profile.estatus" : 1, "profile.estatusObj" : 1}});
-				bitacora.estatusNombre = estatusNombre;
+	getClientesPorEstatus : function(fechaInicio, fechaFin, estatus, sucursal_id){		
+		if(estatus == "0"){
+			var clientes = Meteor.users.find({createdAt : { $gte : fechaInicio, $lt : fechaFin}, "profile.sucursal_id" : sucursal_id, roles : ["cliente"]}, {profile : 1, "profile.fotografia" : 0}).fetch();
+		}else{		
+			var clientes = Meteor.users.find({createdAt : { $gte : fechaInicio, $lt : fechaFin}, "profile.estatus" : estatus, "profile.sucursal_id" : sucursal_id, roles : ["cliente"]}, {profile : 1, "profile.fotografia" : 0}).fetch();
+		}
+		
+		if(clientes.length > 0){
+			_.each(clientes, function(cliente){
+				cliente.profile.estatusNombre = obtenerEstatusNombre(cliente.profile.estatus);
+				cliente.profile.estatusColor = obtenerColorEstatus(cliente.profile.estatus);
 			})
 		}
-		return bitacoras;
+
+		return clientes;
 	},
 	getCantClientesPorEstatus : function(fechaInicio, fechaFin, estatus, sucursal_id){
 		
@@ -126,26 +131,31 @@ Meteor.methods({
 
 function obtenerEstatusNombre(estatus){
 	var estatusNombre = "";
-	if(estatus == 1){ //Registrado
+	if(estatus == "1"){ //Registrado
 	  var estatusNombre = "Registrado";
-  }else if(estatus == 2){
+  }else if(estatus == "2"){
 	  var estatusNombre = "Activo";
-  }else if(estatus == 3){
+  }else if(estatus == "3"){
 	  var estatusNombre = "Preferente";
-  }else if(estatus == 4){
+  }else if(estatus == "4"){
 	  var estatusNombre = "Baja";
-  }  
+  }
+  
   return estatusNombre;
 }
 
 function obtenerColorEstatus(estatus){
-	if(estatus == 1){
-	  return "#57889c";
-  }else if(estatus == 2){
-	  return "#6e587a";
-  }else if(estatus == 3){
-	  return "#b09b5b";
-  }else if(estatus == 4){
-	  return "#92a2a8";
-  }
+	var result = "";
+	  if(estatus == 1){
+		  result = "bg-color-blue txt-white";
+	  }else if(estatus == 2){
+		  result = "bg-color-purple txt-white"
+	  }else if(estatus == 3){
+		  result = "bg-color-greenLight txt-white"
+	  }else if(estatus == 4){
+		  result = "bg-color-red txt-white"
+	  }else if(estatus == 5){
+		  result = "bg-color-greenLight txt-white"
+	  }
+	  return result;
 }

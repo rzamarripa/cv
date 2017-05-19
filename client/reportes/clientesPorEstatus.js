@@ -15,8 +15,11 @@ function ClientesPorEstatusCtrl($scope, $meteor, $reactive, $state, toastr) {
 	
   this.getClientes = function(semana, anio){
 	  Meteor.apply('getClientesPorEstatus', [new Date(this.fechaInicio.setHours(0,0,0,0)), new Date(this.fechaFin.setHours(23,59,59,0)), this.estatus, Meteor.user().profile.sucursal_id], function(error, result){
-		  rc.clientes = result;
-	    $scope.$apply();
+		  if(result){
+			  console.log(result);
+			  rc.clientes = result;
+		    $scope.$apply();
+		  }
 	  });
   }
   
