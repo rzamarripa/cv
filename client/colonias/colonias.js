@@ -3,8 +3,8 @@ angular.module("casserole")
 function ColoniasCtrl($scope, $meteor, $reactive, $state, $stateParams, toastr){
 let rc = $reactive(this).attach($scope);
 
-	this.subscribe('colonias',()=>{
-		return [{}] 
+	this.subscribe('colonias', ()=>{
+		return [{sucursal_id : Meteor.user() ? Meteor.user().profile.sucursal_id : "", estatus : true}] 
   }); 
 	
   this.action = true;

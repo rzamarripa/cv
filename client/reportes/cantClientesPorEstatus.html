@@ -13,22 +13,18 @@
 				<label for="estatus">Estatus *</label>
 				<select name="estatus" class="form-control" ng-model="ape.estatus" required="">
 					<option value="1">Registrado</option>
-					<option value="2">Inicio</option>
-					<option value="3">Inicio Pospuesto</option>
-					<option value="4">Fantasma</option>
-					<option value="5">Activo</option>
-					<option value="6">Baja</option>
-					<option value="7">Terminación de Pago</option>
-					<option value="8">Egresado</option>
+					<option value="2">Activo</option>
+					<option value="3">Preferente</option>
+					<option value="4">Baja</option>
 				</select>
 			</div>
-			<button class="btn btn-primary" ng-click="ape.getCantAlumnos()">Buscar Alumnos</button>
+			<button class="btn btn-primary" ng-click="ape.getCantClientes()">Buscar Alumnos</button>
 		</div>
 	</div>
 </form>
 <div class="row">
 	<div class="col-sm-12">
-		<div id="cantAlumnos">
+		<div id="cantClientes">
 			
 		</div>
 	</div>

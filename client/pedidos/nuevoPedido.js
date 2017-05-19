@@ -36,7 +36,7 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 		  return [{nombreCompleto : this.getReactively("buscar.nombreCliente"), estatus : "1"}] 
 	  }else{
 		  return [{}];
-	  }		
+	  }
   });
 
   this.subscribe('unidades',()=>{
@@ -60,7 +60,7 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 		  return Unidades.find();
 	  },
 	  colonias : () => {
-		  return Colonias.find();
+		  return Colonias.find({},{sort : {nombre : 1}});
 	  }
   });
   
@@ -74,15 +74,6 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 		//Aumentar folio sucursal
 		var sucursal = Sucursales.findOne();
 		var folioActual = sucursal.folioActual + 1;
-				
-		var total = 0;
-		rc.venta.sucursal_id = Meteor.user().profile.sucursal_id;
-		rc.venta.estatus = 1;
-		rc.venta.fechaCreacion = new Date();
-		rc.venta.folios = [folioActual];
-		rc.venta.pagado = 0;
-		rc.venta.anticipo = parseFloat(rc.venta.anticipo);
-		rc.venta.entrega.nombreCliente = rc.clienteSeleccionado.profile.nombreCompleto;
 		
 		console.log("datos del pedido", rc.venta);
 		
@@ -101,6 +92,15 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 			return;
 		}
 		
+		var total = 0;
+		rc.venta.sucursal_id = Meteor.user().profile.sucursal_id;
+		rc.venta.estatus = 1;
+		rc.venta.fechaCreacion = new Date();
+		rc.venta.folios = [folioActual];
+		rc.venta.pagado = 0;
+		rc.venta.anticipo = parseFloat(rc.venta.anticipo);
+		rc.venta.entrega.nombreCliente = rc.clienteSeleccionado.profile.nombreCompleto;
+		
 		if(rc.venta.anticipo <= 0){
 			//No pagó nada
 			rc.venta.estatusPago = 0;
@@ -113,6 +113,7 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 		}
 		
 		if(rc.clienteSeleccionado.profile.estatus == "1"){
+			console.log("Entré");
 			rc.clienteSeleccionado.profile.estatus == "2";
 			
 			Meteor.users.update({_id : rc.clienteSeleccionado._id},{$set : {profile : rc.clienteSeleccionado.profile}});
@@ -146,7 +147,6 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 		this.venta.saldo = 0;
 		$('.collapse').collapse('hide');
 		this.nuevo = true;
-		//$state.go('root.productos');
 		
 		var url = $state.href("anon.pagosImprimir",{sucursal_id : venta.sucursal_id, folioActual : folioActual, cliente_id : venta.cliente_id},{newTab : true});
 		window.open(url,'_blank');

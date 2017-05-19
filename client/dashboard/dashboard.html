@@ -1,45 +1,31 @@
 <div class="row">
 	<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 		<h1 class="page-title txt-color-blueDark">
-			<i class="fa-fw fa fa-home"></i> {{da.campus.nombre}} - Semana {{da.semanaActual}} - Año {{da.anio}}
+			<i class="fa-fw fa fa-home"></i> {{da.sucursal.nombre}} - Semana {{da.semanaActual}} - Año {{da.anio}}
 		</h1>		
 	</div>
 </div>
 <div class="row">
-	<div class="col-sm-6 col-sm-offset-3 text-center">
-		<form class="form-inline">
-			<div class="form-group">
-				<label for="semanaActual">Semana</label>
-				<input name="semanaActual" type="number" min="0" max="52" ng-model="da.semanaActual" class="form-control"/>
-			</div>
-			<div class="form-group">
-				<label for="anio">Año</label>
-				<input name="anio" type="number" ng-model="da.anio" class="form-control"/>
-			</div>
-		</form>
-	</div>
+	<form name="form" class="form-horizontal" role="form" novalidate style="margin: auto;">
+		<div class="col-sm-2 col-sm-offset-4 text-center" valida>
+			<label for="fechaInicial">Fecha Inicial *</label>
+			<input name="fechaInicial" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="da.fechaInicial" required="" />
+		</div>
+		<div class="col-sm-2 text-center" valida>
+			<label for="fechaFinal">Fecha Final *</label>
+			<input name="fechaFinal" date-time format="dd-MM-yyyy" class="form-control" view="date" max-view="year" min-view="date" ng-model="da.fechaFinal" required="" />
+		</div>
+	</form>
 </div>
 <hr>
 <div class="row well">
 	<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-		<p class="lead">Activos</p>
-		<ul id="sparks" class="pull-left">
-			<li class="sparks-info">
-				<h5> Inscritos <span class="txt-color-blue"><i class="fa fa-graduation-cap"></i>&nbsp;{{da.cantidadAlumnosActivos | number}}</span></h5>
-			</li>
-			<li class="sparks-info">
-				<h5> Semanal <span class="txt-color-purple"><i class="fa fa-calendar-check-o"></i>&nbsp;{{da.semanales | number}}</span></h5>
-			</li>
-			<li class="sparks-info">
-				<h5> Mensual <span class="txt-color-greenDark"><i class="fa fa-calendar"></i>&nbsp;{{da.mensuales | number}}</span></h5>
-			</li>
-		</ul>
 	</div>
 	<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-		<p class="lead text-right">Activos de la semana</p>
+		<p class="lead text-right">Ventas de la semana</p>
 		<ul id="sparks" class="">
 			<li class="sparks-info">
-				<h5> Inscritos <span class="txt-color-blue"><i class="fa fa-graduation-cap"></i>&nbsp;{{da.inscripcionesActivasSemanaActual | number}}</span></h5>
+				<h5> Diario <span class="txt-color-blue"><i class="fa fa-calendar-o"></i>&nbsp;{{da.inscripcionesActivasSemanaActual | number}}</span></h5>
 			</li>
 			<li class="sparks-info">
 				<h5> Semanal <span class="txt-color-purple"><i class="fa fa-calendar-check-o"></i>&nbsp;{{da.semanalesSemana | number}}</span></h5>

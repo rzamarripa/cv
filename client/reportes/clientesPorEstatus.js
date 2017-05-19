@@ -1,8 +1,8 @@
 angular
   .module('casserole')
-  .controller('AlumnosPorEstatusCtrl', AlumnosPorEstatusCtrl);
+  .controller('ClientesPorEstatusCtrl', ClientesPorEstatusCtrl);
  
-function AlumnosPorEstatusCtrl($scope, $meteor, $reactive, $state, toastr) {
+function ClientesPorEstatusCtrl($scope, $meteor, $reactive, $state, toastr) {
 	let rc = $reactive(this).attach($scope);
 	this.fechaInicio = new Date();
 	this.fechaFin = new Date();
@@ -13,65 +13,62 @@ function AlumnosPorEstatusCtrl($scope, $meteor, $reactive, $state, toastr) {
 	
 	window.rc = rc;
 	
-  this.getAlumnos = function(semana, anio){
-	  Meteor.apply('getAlumnosPorEstatus', [new Date(this.fechaInicio.setHours(0,0,0,0)), new Date(this.fechaFin.setHours(23,59,59,0)), this.estatus, Meteor.user().profile.seccion_id], function(error, result){
-		  console.log(result);
-		  rc.alumnos = result;
+  this.getClientes = function(semana, anio){
+	  Meteor.apply('getClientesPorEstatus', [new Date(this.fechaInicio.setHours(0,0,0,0)), new Date(this.fechaFin.setHours(23,59,59,0)), this.estatus, Meteor.user().profile.sucursal_id], function(error, result){
+		  rc.clientes = result;
 	    $scope.$apply();
 	  });
   }
   
-  this.getCantAlumnos = function(semana, anio){
-	  Meteor.apply('getCantAlumnosPorEstatus', [new Date(this.fechaInicio.setHours(0,0,0,0)), new Date(this.fechaFin.setHours(23,59,59,0)), this.estatus, Meteor.user().profile.seccion_id], function(error, result){
-		  console.log("cant. ", result);
-		  
-
-		  $('#cantAlumnos').highcharts( {
+  this.getCantClientes = function(semana, anio){
+	  Meteor.apply('getCantClientesPorEstatus', [new Date(this.fechaInicio.setHours(0,0,0,0)), new Date(this.fechaFin.setHours(23,59,59,0)), this.estatus, Meteor.user().profile.sucursal_id], function(error, result){
+		  console.log(result);
+		  $('#cantClientes').highcharts( {
 			  chart: {
-            type: 'line'
+          type: 'column'
         },
         title: {
-            text: 'Alumnos por estatus por semana ',
-            x: -20 //center
+          text: 'Clientes por estatus por semana ',
+          x: -20 //center
         },
         subtitle: {
-            text: (rc.campus != undefined) ? rc.campus.nombre : '',
-            x: -20
+          text: (rc.campus != undefined) ? rc.campus.nombre : '',
+          x: -20
         },
         xAxis: {
-            categories: result[0],
-            plotBands: [{ // visualize the weekend
-                from: 4.5,
-                to: 6.5,
-                color: 'rgba(68, 170, 213, .2)'
-            }]
+          categories: result[0],
+          plotBands: [{ // visualize the weekend
+            from: 4.5,
+            to: 6.5,
+            color: 'rgba(68, 170, 213, .2)'
+          }]
         },
         yAxis: {
-            title: {
-                text: 'Cantidad de Alumnos'
-            },
-            plotLines: [{
-                value: 0,
-                width: 1,
-                color: '#808080'
-            }]
+          title: {
+            text: 'Cantidad de Clientes'
+          },
+          plotLines: [{
+            value: 0,
+            width: 1,
+            color: '#808080'
+          }]
         },
         tooltip: {
-            valueSuffix: ' Alumnos'
+          valueSuffix: ' Clientes'
         },
         legend: {
-            layout: 'horizontal',
-            align: 'center',
-            verticalAlign: 'bottom',
-            borderWidth: 0
+          layout: 'horizontal',
+          align: 'center',
+          verticalAlign: 'bottom',
+          borderWidth: 0
         },
         plotOptions: {
-            line: {
-                dataLabels: {
-                    enabled: true
-                },
-                enableMouseTracking: true
-            }
+          line: {
+            dataLabels: {
+              enabled: true
+            },
+            enableMouseTracking: true
+          }
         },
         series: result[1]
 	    });

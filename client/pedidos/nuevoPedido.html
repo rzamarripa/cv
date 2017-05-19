@@ -205,8 +205,8 @@
 				          <input class="form-control" ng-model="np.venta.entrega.direccion" placeholder="Calle / Num de envío" type="text">
 				        </div>
 				        <label class="col-md-2 control-label">Colonia *</label>
-				        <div class="col-md-4" valida>				          
-				          <select name="colonia" ng-model="np.venta.entrega.colonia" style="width: 100%;" class="form-control select2" required>
+				        <div class="col-md-4">				          
+				          <select name="colonia" ng-model="np.venta.entrega.colonia" style="width: 100%;" class="form-control select2">
 									  <option value="{{colonia._id}}" ng-repeat="colonia in np.colonias">{{colonia.nombre}}</option>
 									</select>
 				        </div>

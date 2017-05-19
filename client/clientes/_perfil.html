@@ -14,8 +14,8 @@
 												<select class="form-control" ng-model="cl.cliente.profile.estatus" ng-change="cl.cambiarEstatus(cl.cliente.profile.estatus)">
 													<option value="1">Registrado</option>
 													<option value="2">Activo</option>
-													<option value="3">Baja</option>
-													<option value="4">Preferente</option>
+													<option value="3">Preferente</option>
+													<option value="4">Baja</option>
 												</select>
 											</div>
 											<a ng-if="currentUser.roles[0] == 'gerente'" ui-sref="root.editarCliente({cliente_id : cl.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
@@ -40,7 +40,7 @@
 									<div class="col-sm-2 profile-pic" style="text-align:left;width:initial;">
 								    <img style="max-width:200px;" src="{{cl.tieneFoto(cl.cliente.profile.sexo, cl.cliente.profile.fotografia)}}" >
 								    <div class="ribbon-wrapper-alumno-profile" style="z-index: 10">
-								      <div class="ribbon-alumno {{cl.obtenerColorEstatus(cl.cliente.profile.estatus)}}">{{cl.obtenerNombreEstatus(cl.cliente.profile.estatus)}}</div>
+								      <div class="ribbon-alumno {{cl.getEstatusNombreColor(cl.cliente.profile.estatus)}}">{{cl.getEstatusNombre(cl.cliente.profile.estatus)}}</div>
 								    </div>
 										<div class="padding-10">
 											<h4 class="font-md"><strong>{{cl.compras.length}}</strong>

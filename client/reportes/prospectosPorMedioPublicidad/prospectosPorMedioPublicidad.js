@@ -13,7 +13,7 @@ function ProspectosPorMedioPublicidadCtrl($scope, $meteor, $reactive,  $state, $
     
     Meteor.apply('prospectosPorMediosPublicidad1', [fechaInicial, fechaFinal], function(error, result){
 	    if(result){
-		    console.log(result);
+		    console.log(result); 
 	    }
       
       var nombres = _.pluck(result, "medio");
@@ -32,19 +32,22 @@ function ProspectosPorMedioPublicidadCtrl($scope, $meteor, $reactive,  $state, $
                 text: ''
             },
             xAxis: {
-                categories: "Medios de Publicidad",
-                crosshair: true
+	            title: {
+		            text: 'Cantidad de Clientes'
+		          },
+              crosshair: false
             },
             yAxis: {
-                min: 0,
-                title: {
-                    text: 'Cantidad de Clientes'
-                }
+	            allowDecimals: false,
+              min: 0,
+              title: {
+                  text: 'Cantidad de Clientes'
+              }
             },
             tooltip: {
                 headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y:.0f} p</b></td></tr>',
+                pointFormat: 	'<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    					'<td style="padding:0"><b>{point.y:.0f} p</b></td></tr>',
                 footerFormat: '</table>',
                 shared: true,
                 useHTML: true

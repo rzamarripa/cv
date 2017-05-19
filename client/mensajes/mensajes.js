@@ -5,15 +5,19 @@ angular
 function MensajesCtrl($scope, $meteor, $reactive, $state, toastr) {
 	let rc = $reactive(this).attach($scope);
 	this.action = true;
-    this.nuevo = true;
+  this.nuevo = true;
+	this.viendoMensajesRecibidos = false;
+	this.viendoMensajesEnviados = false;
+	this.verTipoMensajes = "recibidos";
 	this.viendoMensaje = false;
 	this.mensaje = {};
+	window.rc = rc;
 
 	this.perPage = 10;
-    this.page = 1;
-    this.sort = {
-      fechaEnvio: -1
-    };
+  this.page = 1;
+  this.sort = {
+    fechaEnvio: -1
+  };
 	
 	$(document).ready(function() {
  	  $('#summernote').summernote({
@@ -27,30 +31,31 @@ function MensajesCtrl($scope, $meteor, $reactive, $state, toastr) {
 	this.subscribe('usuariosMensajes');
 	
 	this.subscribe('mensajes',()=>{
-		return [{para_id : Meteor.user() != undefined ? Meteor.userId() : "" },{
+		return [{$or : [{ para_id : Meteor.user() != undefined ? Meteor.userId() : ""}, {de_id : Meteor.user() != undefined ? Meteor.userId() : ""}] },{
       limit: parseInt(this.perPage),
       skip: parseInt((this.getReactively('page') - 1) * this.perPage),
       sort: this.getReactively('sort')}]
 	});
   
   this.helpers({
-		mensajes : () => {
-		  return Mensajes.find({}, { sort: this.getReactively('sort')});
-	  },
 	  destinatarios : () => {
 		  return Meteor.users.find({"profile.estatus" : true, "profile.campus_id" : Meteor.user().profile.campus_id})
 	  },
 	  mensajesNuevos : () => {
-		  return Mensajes.find({estatus : 1});
+		  return Mensajes.find({para_id : Meteor.userId()});
 	  },
-	  mensajesCount() {
-        return Counts.get('numberOfMensajes');
-      }
+	  mensajesCount : () => {
+      return Counts.get('numberOfMensajes');
+    },
+	  mensajesEnviados : () => {
+		  return Mensajes.find({de_id : Meteor.userId()});
+	  },
   });
 
   this.nuevoMensaje = function()
   {
-	  this.viendoMensaje = false;
+	  this.viendoMensajesRecibidos = false;
+		this.viendoMensajesEnviados = false;
     this.action = true;
     this.nuevo = !this.nuevo;
     this.mensaje = {};
@@ -79,7 +84,8 @@ function MensajesCtrl($scope, $meteor, $reactive, $state, toastr) {
 			});				
 		});
 		mensaje = {};
-		this.viendoMensaje = false;
+		this.viendoMensajesRecibidos = false;
+		this.viendoMensajesEnviados = false;
 		this.nuevo = true;
 		$('.collapse').collapse('hide');
 		toastr.success('Se enviaron los mensajes correctamente.');
@@ -87,7 +93,9 @@ function MensajesCtrl($scope, $meteor, $reactive, $state, toastr) {
 	
 	this.verMensaje = function(mensaje){
 		$('.collapse').collapse('hide');
-		rc.viendoMensaje = true;
+		this.viendoMensajesRecibidos = false;
+		this.viendoMensajesEnviados = false;
+		this.viendoMensaje = true;
 		rc.nuevo = true;
 		rc.mensaje = mensaje;
 		Mensajes.update(mensaje._id, { $set : { estatus : 2 }});
@@ -151,5 +159,10 @@ function MensajesCtrl($scope, $meteor, $reactive, $state, toastr) {
 
   	if(newPage>0 && newPage<=numeroPaginas)
     this.page = newPage;
+  }
+  
+  this.filtrarTipoMensajes = function(tipo){
+	  rc.viendoMensaje = false;
+	  rc.verTipoMensajes = tipo;
   }
 };

@@ -1,37 +1,4 @@
 Meteor.methods({
-/*
-  createUsuario: function (usuario, rol) {
-  	usuario.contrasena = Math.random().toString(36).substring(2,7);
-	  profile = {
-				email: usuario.correo,
-				nombre: usuario.nombre,
-				apellidos: usuario.apPaterno + " " + usuario.apMaterno,
-				nombreCompleto : usuario.nombre  + " " + usuario.apPaterno + " " + (usuario.apMaterno ? usuario.apMaterno : ""),
-				fotografia : usuario.fotografia,
-				sexo : usuario.sexo,
-				estatus:true,
-				campus_id : usuario.campus_id,
-				seccion_id : usuario.seccion_id
-			}
-		if(usuario.maestro_id != undefined)
-			profile.maestro_id = usuario.maestro_id;
-		
-		var usuario_id = Accounts.createUser({
-			username: usuario.nombreUsuario,
-			password: usuario.contrasena,
-			profile: profile
-		});
-		
-		Roles.addUsersToRoles(usuario_id, rol);
-		Meteor.call('sendEmail',
-			profile.email,
-			'sistema@casserole.edu.mx',
-			'Bienvenido a Casserole',
-			'Usuario: '+ usuario.nombreUsuario + ' contraseña: '+ usuario.contrasena
-		);
-		return usuario_id;
-	},
-*/
 	sendEmail: function (to, from, subject, text) {
     this.unblock();
     Email.send({
@@ -47,11 +14,10 @@ Meteor.methods({
 	  }
 	},
 	createUsuario: function (usuario, rol) {
-		console.log(usuario);
 		usuario.contrasena = Math.random().toString(36).substring(2,7);
 		usuario.profile.pwd = usuario.contrasena;
 	  usuario.profile.friends = [];
-	  console.log(usuario);
+
 		var usuario_id = Accounts.createUser({
 			username: usuario.username,
 			password: usuario.contrasena,
@@ -67,23 +33,6 @@ Meteor.methods({
 		);
 		return usuario_id;
 	},
-	createGerenteVenta: function (usuario, rol) {	  
-	  usuario.profile.friends = [];
-	  
-		if(usuario.maestro_id != undefined)
-			profile.maestro_id = usuario.maestro_id;
-		
-		var usuario_id = Accounts.createUser({
-			username: usuario.username,
-			password: usuario.password,			
-			profile: usuario.profile
-		});
-		
-		Roles.addUsersToRoles(usuario_id, rol);
-		
-		return usuario_id;
-		
-	},
 	updateUsuario: function (usuario, rol) {		
 		var user = Meteor.users.findOne(usuario._id);
 	  Meteor.users.update({_id: user._id}, {$set:{
@@ -94,17 +43,6 @@ Meteor.methods({
 		
 		Accounts.setPassword(user._id, usuario.password, {logout: false});		
 	},
-	updateGerente: function (usuario, rol) {		
-		var usuarioViejo = Meteor.users.findOne({"profile.sucursal_id" : usuario.profile.sucursal_id});
-		var idTemp = usuarioViejo._id;
-	  Meteor.users.update({_id: idTemp}, {$set:{
-			username: usuario.username,
-			roles: [rol],
-			profile: usuario.profile
-		}});
-		
-		Accounts.setPassword(idTemp, usuario.password, {logout: false});		
-	},
 	buscarClientes : function(options){
 		if(options.where.nombreCompleto.length > 0){
 			var semanaActual = moment().isoWeek();
@@ -113,7 +51,7 @@ Meteor.methods({
 		  	"profile.nombreCompleto": { '$regex' : '.*' + options.where.nombreCompleto || '' + '.*', '$options' : 'i' },
 		  	roles : ["cliente"]
 			}
-			
+			console.log(selector)
 			var clientes = Meteor.users.find(selector, options.options).fetch();	
 			_.each(clientes, function(cliente){
 				cliente.profile.region = Regiones.findOne(cliente.profile.region_id);
@@ -133,22 +71,22 @@ Meteor.methods({
 		
 		BitacoraEstatus.insert({cliente_id : cliente_id, estatusAnterior : parseInt(cliente.profile.estatus), estatusActual : parseInt(estatus), fechaCreacion : new Date(), diaSemana : diaSemana, dia : dia, semana : semana, mes : mes, anio : anio, sucursal_id : sucursal_id });
 		Meteor.users.update({_id : cliente_id}, {$set : {"profile.semanaEstatus " : moment().isoWeek(), "profile.estatus" : estatus, "profile.estatusObj.classLabel" : classLabel, "profile.estatusObj.nombre" : estatusNombre, "profile.estatusObj.codigo" : estatus}});
-		return obtenerEstatusNombre(estatus);
+		return estatus;
 	},
-	getAlumnosPorEstatus : function(fechaInicio, fechaFin, estatus, seccion_id){
+	getClientesPorEstatus : function(fechaInicio, fechaFin, estatus, sucursal_id){
 		var estatusNombre = obtenerEstatusNombre(estatus);
-		var bitacoras = BitacoraEstatus.find({fechaCreacion : { $gte : fechaInicio, $lt : fechaFin}, estatusActual : parseInt(estatus), seccion_id : seccion_id}).fetch();
+		var bitacoras = BitacoraEstatus.find({fechaCreacion : { $gte : fechaInicio, $lt : fechaFin}, estatusActual : parseInt(estatus), sucursal_id : sucursal_id}).fetch();
 		if(bitacoras.length > 0){
 			_.each(bitacoras, function(bitacora){
-				bitacora.alumno = Meteor.users.findOne({_id : bitacora.alumno_id}, { fields : {"profile.nombreCompleto" : 1, "profile.matricula" : 1, "profile.estatus" : 1, "profile.estatusObj" : 1}});
+				bitacora.cliente = Meteor.users.findOne({_id : bitacora.cliente_id}, { fields : {"profile.nombreCompleto" : 1, "username" : 1, "profile.estatus" : 1, "profile.estatusObj" : 1}});
 				bitacora.estatusNombre = estatusNombre;
 			})
 		}
 		return bitacoras;
 	},
-	getCantClientesPorEstatus : function(fechaInicio, fechaFin, estatus, seccion_id){
+	getCantClientesPorEstatus : function(fechaInicio, fechaFin, estatus, sucursal_id){
 		
-		var bitacoras = BitacoraEstatus.find({fechaCreacion : { $gte : fechaInicio, $lt : fechaFin}, seccion_id : seccion_id}).fetch();
+		var bitacoras = BitacoraEstatus.find({fechaCreacion : { $gte : fechaInicio, $lt : fechaFin}, sucursal_id : sucursal_id}).fetch();
 		
 		fechaInicio = moment(fechaInicio);
 		fechaFin = moment(fechaFin);
@@ -191,21 +129,12 @@ function obtenerEstatusNombre(estatus){
 	if(estatus == 1){ //Registrado
 	  var estatusNombre = "Registrado";
   }else if(estatus == 2){
-	  var estatusNombre = "Inicio";
-  }else if(estatus == 3){
-	  var estatusNombre = "Inicio Pospuesto";
-  }else if(estatus == 4){
-	  var estatusNombre = "Fantasma";
-  }else if(estatus == 5){
 	  var estatusNombre = "Activo";
-  }else if(estatus == 6){
+  }else if(estatus == 3){
+	  var estatusNombre = "Preferente";
+  }else if(estatus == 4){
 	  var estatusNombre = "Baja";
-  }else if(estatus == 7){
-	  var estatusNombre = "Terminación de Pago";
-  }else if(estatus == 8){
-	  var estatusNombre = "Egresado";
-  }
-  
+  }  
   return estatusNombre;
 }
 
@@ -218,13 +147,5 @@ function obtenerColorEstatus(estatus){
 	  return "#b09b5b";
   }else if(estatus == 4){
 	  return "#92a2a8";
-  }else if(estatus == 5){
-	  return "#71843f";
-  }else if(estatus == 6){
-	  return "#a90329";
-  }else if(estatus == 7){
-	  return "#4c4f53";
-  }else if(estatus == 8){
-	  return "blue";
   }
 }

@@ -104,7 +104,6 @@ function ClientesCtrl($scope, $meteor, $reactive, $state, toastr) {
   };
   
   this.buscarClientes = function(){
-	  console.log(this.buscar.nombre);
 	  if(this.buscar.nombre.length > 3 ){
 		  Meteor.apply('buscarClientes', [{
 			    options : { limit: 51 },

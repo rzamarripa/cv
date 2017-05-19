@@ -14,19 +14,26 @@
 								<th class="text-center">Fecha</th>
 								<th class="text-center">Estatus proceso</th>
 								<th class="text-center">Estatus pago</th>
+								<th class="text-center">Sucursal</th>
 								<th class="text-center">Acciones</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr ng-repeat="compra in cl.compras">
 								<td class="text-center" width="5%">{{$index + 1}}</td>
-								<td>{{compra.entrega.nombre}}</td>
+								<td>
+									<span ng-show="!compra.anonimo">{{compra.entrega.nombre}}</span>
+									<span ng-show="compra.anonimo">Anónimo</span>
+								</td>
 								<td class="text-center">{{compra.entrega.fecha | date: "dd-MM-yyyy HH:mm"}}</td>
 								<td class="text-center">
-									<span class="label {{cl.obtenerColorEstatus(compra.estatus)}}"> {{cl.obtenerNombreEstatus(compra.estatus)}}</span>
+									<span class="label {{cl.getEstatusNombreColor(compra.estatus)}}"> {{cl.getEstatusNombreProceso(compra.estatus)}}</span>
 								</td>
 								<td class="text-center">
 									<span class="label label-default"> {{cl.getEstatusNombrePago(compra.estatusPago)}}</span>
+								</td>
+								<td class="text-center">
+									{{compra.sucursal.nombreSucursal}}
 								</td>
 								<td class="text-center">
 									<button class="btn btn-primary" ng-click="cl.ver(compra)"><i class="fa fa-eye"></i></button>

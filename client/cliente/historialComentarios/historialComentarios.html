@@ -8,8 +8,8 @@
 							<div class="col-sm-12">
 								<div id="myCarousel" class="carousel profile-carousel">
 									<div class="air air-bottom-right padding-10">
-										<a ng-if="currentUser.roles[0] == 'director' || currentUser.roles[0] == 'coordinadorFinanciero'" ui-sref="root.clienteDetalle({alumno_id : hc.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
- 										<a ui-sref="root.editarAlumno({alumno_id : hc.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm" ng-show="currentUser.roles[0] == 'director'">
+										<a ng-if="currentUser.roles[0] == 'gerente'" ui-sref="root.clienteDetalle({cliente_id : hc.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
+ 										<a ui-sref="root.editarCliente({cliente_id : hc.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm" ng-show="currentUser.roles[0] == 'gerente'">
 	 										<i class="fa fa-pencil"></i> Modificar
 	 									</a> 
 									</div>
@@ -82,7 +82,9 @@
 										<tr ng-repeat="comentario in hc.comentarios">
 											<td class="text-center">{{$index + 1}}</td>	
 											<td class="text-center">{{comentario.fechaCreacion | date:"dd-MM-yyyy hh:mm:ss"}}</td>
-											<td class="text-center">{{comentario.tipoRespuesta}}</td>
+											<td class="text-center">
+												<span class="label label-{{comentario.tipoRespuesta == 'positivo' ? 'success' : 'warning'}}">{{comentario.tipoRespuesta}}</span>
+											</td>
 											<td class="text-center">{{comentario.comentario}}</td>
 											<td class="text-center">{{comentario.usuarioInserto.profile.nombreCompleto}}</td>
 										</tr>
