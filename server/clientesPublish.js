@@ -6,8 +6,7 @@ Meteor.publish("clientesNombre",function(options){
 	if(options.nombreCompleto != undefined){
 		let selector = {
 	  	"profile.nombreCompleto": { '$regex' : '.*' + options.nombreCompleto || '' + '.*', '$options' : 'i' },
-	  	roles : ["cliente"],
-	  	"profile.estatus" : options.estatus
+	  	roles : ["cliente"]
 		}
 	  return Meteor.users.find(selector);
 	}

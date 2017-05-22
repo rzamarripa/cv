@@ -1,4 +1,32 @@
 Meteor.methods({
+	createGerenteVenta: function (usuario, rol) {	  
+	  usuario.profile.friends = [];
+	  
+		if(usuario.maestro_id != undefined)
+			profile.maestro_id = usuario.maestro_id;
+		
+		var usuario_id = Accounts.createUser({
+			username: usuario.username,
+			password: usuario.password,			
+			profile: usuario.profile
+		});
+		
+		Roles.addUsersToRoles(usuario_id, rol);
+		
+		return usuario_id;
+		
+	},
+	updateGerente: function (usuario, rol) {		
+		var usuarioViejo = Meteor.users.findOne({"profile.sucursal_id" : usuario.profile.sucursal_id});
+		var idTemp = usuarioViejo._id;
+	  Meteor.users.update({_id: idTemp}, {$set:{
+			username: usuario.username,
+			roles: [rol],
+			profile: usuario.profile
+		}});
+		
+		Accounts.setPassword(idTemp, usuario.password, {logout: false});		
+	},
 	sendEmail: function (to, from, subject, text) {
     this.unblock();
     Email.send({

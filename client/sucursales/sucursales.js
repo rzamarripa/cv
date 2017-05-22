@@ -70,7 +70,7 @@ function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
 				nombreCompleto : nombre + apPaterno + apMaterno,
 				region_id : $stateParams.region_id,
 				region_clave : rc.region.clave,
-				sucursal_id : idTemp,
+				sucursal_id : sucursal_id,
 				sucursal_clave : sucursal.clave,
 				estatus : true,
 				sexo : sucursal.sexo

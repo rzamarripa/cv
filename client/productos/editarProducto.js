@@ -114,9 +114,12 @@ let rc = $reactive(this).attach($scope);
 				toastr.success("Imagen guardada");
 			})
 		})
+		total = 0.00;
 		_.each(rc.producto.detalleProducto, function(producto){
 			delete producto.$$hashKey;
+			total += parseFloat(producto.cantidad) * producto.precio;
 		});	
+		rc.producto.precio = total;
 		Productos.update({_id:idTemp},{$set:producto});
 		$('.collapse').collapse('hide');
 		this.nuevo = true;

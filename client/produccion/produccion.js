@@ -6,7 +6,7 @@ function ProduccionCtrl($scope, $meteor, $reactive, $state, $stateParams, toastr
 	window.rc = rc;
 	
 	this.subscribe('ventas',()=>{
-		return [{estatusPago : 2, estatus: {$in : [1, 2]}, sucursal_id : Meteor.user() ? Meteor.user().profile.sucursal_id : ""}] 
+		return [{$or : [{estatusPago : 2}, {enProduccion : true}], estatus: {$in : [1, 2]}, sucursal_id : Meteor.user() ? Meteor.user().profile.sucursal_id : ""}] 
   });
   
   this.subscribe("usuariosProduccion");

@@ -33,7 +33,7 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 
   this.subscribe('clientesNombre',()=>{
 	  if(this.getReactively("buscar.nombreCliente").length >= 3){
-		  return [{nombreCompleto : this.getReactively("buscar.nombreCliente"), estatus : "1"}] 
+		  return [{nombreCompleto : this.getReactively("buscar.nombreCliente")}] 
 	  }else{
 		  return [{}];
 	  }
@@ -71,13 +71,9 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 			delete producto.$$hashKey;
 		});	
 		
-		//Aumentar folio sucursal
-		var sucursal = Sucursales.findOne();
-		var folioActual = sucursal.folioActual + 1;
-		
 		console.log("datos del pedido", rc.venta);
 		
-		if(form.$invalid){
+		if(form.$invalid || rc.venta.anticipo == undefined){
       toastr.error('Error al guardar los datos.');
       return;
 	  }
@@ -92,64 +88,26 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 			return;
 		}
 		
-		var total = 0;
-		rc.venta.sucursal_id = Meteor.user().profile.sucursal_id;
-		rc.venta.estatus = 1;
-		rc.venta.fechaCreacion = new Date();
-		rc.venta.folios = [folioActual];
-		rc.venta.pagado = 0;
-		rc.venta.anticipo = parseFloat(rc.venta.anticipo);
-		rc.venta.entrega.nombreCliente = rc.clienteSeleccionado.profile.nombreCompleto;
-		
-		if(rc.venta.anticipo <= 0){
-			//No pagó nada
-			rc.venta.estatusPago = 0;
-		}else if(rc.venta.saldo == 0){
-			//Pago todo
-			rc.venta.estatusPago = 2;
-		}else{
-			//Pago anticipo
-			rc.venta.estatusPago = 1;
-		}
-		
-		if(rc.clienteSeleccionado.profile.estatus == "1"){
-			console.log("Entré");
-			rc.clienteSeleccionado.profile.estatus == "2";
-			
-			Meteor.users.update({_id : rc.clienteSeleccionado._id},{$set : {profile : rc.clienteSeleccionado.profile}});
-		}
-
-		var venta_id = Ventas.insert(rc.venta);
-		
-		Pagos.insert({
-			folio : folioActual,
-			venta_id : venta_id,
-			pago : venta.anticipo,
-			saldo : venta.saldo,
-			total : venta.total,
-			fechaPago : new Date(),
-			sucursal_id : venta.sucursal_id,
-			estatus : 1,
-			cliente_id : venta.cliente_id,
-			formaPago : venta.formaPago,
-			usuario_id : Meteor.userId()			
+		//Aquí va el meteor.method
+		Meteor.apply("realizarVenta", [rc.venta, rc.clienteSeleccionado], function(error, result){
+			if(result){
+				console.log(result);
+				var url = $state.href("anon.pagosImprimir",{sucursal_id : result.sucursal_id, folioActual : result.folios[0], cliente_id : venta.cliente_id},{newTab : true});
+				window.open(url,'_blank');
+				
+				rc.clienteSeleccionado = {};
+				rc.buscar.nombreCliente = "";
+				rc.venta = {};
+				rc.venta.detalle = [];
+				rc.venta.total = 0;
+				rc.venta.anticipo = 0;
+				rc.venta.saldo = 0;
+				rc.nuevo = true;
+			}else{
+				toastr.error('Hubo un error');
+				console.log(error);
+			}
 		});
-		
-		Sucursales.update({_id : sucursal._id},{$set: {folioActual : folioActual}});
-		
-		toastr.success('Venta realizada.');
-		this.clienteSeleccionado = {};
-		this.buscar.nombreCliente = "";
-		this.venta = {};
-		this.venta.detalle = [];
-		this.venta.total = 0;
-		this.venta.anticipo = 0;
-		this.venta.saldo = 0;
-		$('.collapse').collapse('hide');
-		this.nuevo = true;
-		
-		var url = $state.href("anon.pagosImprimir",{sucursal_id : venta.sucursal_id, folioActual : folioActual, cliente_id : venta.cliente_id},{newTab : true});
-		window.open(url,'_blank');
 	};
 	
 	this.editar = function(id)
@@ -227,7 +185,6 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
   }
   
   this.calcularSaldo = function(anticipo){
-	  console.log(rc.venta.anticipo);
 	  rc.venta.saldo = (parseFloat(rc.venta.anticipo) - rc.venta.total) * -1;
   }
   
@@ -241,7 +198,7 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
   this.seleccionarFormaPago = function(formaPago, archivo){
 	  if(formaPago == 'Intercambio'){
 		  var contrasena = prompt("Escriba la contraseña del Gerente", "");
-		  Meteor.apply("validarContrasena", [Meteor.user().username, contrasena], function(error, result){
+		  Meteor.apply("validarContrasena", [Meteor.user().profile.sucursal_id, contrasena], function(error, result){
 			  if(result){
 				  
 			  }else{
@@ -259,11 +216,16 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
   this.almacenaImagen = function(imagen){	
 		rc.venta.comprobante = imagen;
 	}
+	
+	this.almacenaImagenArreglo = function(imagen){	
+		rc.venta.imagenArreglo = imagen;
+	}
   
   $(document).ready( function() {
 		var comprobante = document.getElementById('comprobante');			
-		var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
-		//JavaScript para agregar la imagen
+		var imagenArreglo = document.getElementById('imagenArreglo');
+		
+		//JavaScript para agregar la imagen del comprobante
 		comprobante.addEventListener('change', function(e) {
 			var file = comprobante.files[0];
 			var imageType;
@@ -286,6 +248,32 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 				}
 			} else {
 				fileDisplayArea1.innerHTML = "File not supported!";
+			}			
+		});
+		
+		//JavaScript para agregar la imagen del arreglo
+		imagenArreglo.addEventListener('change', function(e) {
+			var file = imagenArreglo.files[0];
+			var imageType;
+			if (file.type == "application/pdf")
+					imageType = /application.*/;
+			else
+					imageType = /image.*/;
+			//console.log(imageType);
+			if (file.type.match(imageType)) {
+				if (file.size <= 1000000)
+				{
+					var reader = new FileReader();
+					reader.onload = function(e) {
+						rc.almacenaImagenArreglo(reader.result);
+					}
+					reader.readAsDataURL(file);
+				}else {
+					toastr.error("Error el archivo supera 1 MB");
+					return;
+				}
+			} else {
+				imagenArreglo.innerHTML = "File not supported!";
 			}			
 		});
 	});
