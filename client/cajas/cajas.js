@@ -92,11 +92,24 @@ function CajasCtrl($scope, $meteor, $reactive, $state, toastr) {
   };
   
   this.abrir = function(caja){
+	  var tieneAbiertas = false;
+	  _.each(rc.cajas, function(caja){
+		  if(caja.usuario_id == Meteor.userId()){
+			  tieneAbiertas = true;
+		  }
+	  })
+	  
+	  if(tieneAbiertas == true){
+		  toastr.warning("Usted ya tiene una caja abierta, no puede tener dos cajas abiertas, cierre la que tiene abierta antes de abrir otra");
+		  $('#abrirCaja').modal('hide')
+			return;
+	  }
 	  this.cajaSeleccionada = caja;
 	  this.confirmarSaldo = false;
 		this.habilitarAbrirCaja = false;
 		if(caja.usuarioCierre_id)
 			caja.usuarioCierre = Meteor.users.findOne(caja.usuarioCierre_id);
+		$('#abrirCaja').modal('show')
   }
   
   this.confirmarSaldoActual = function(caja){

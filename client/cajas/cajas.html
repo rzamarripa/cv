@@ -15,8 +15,8 @@
 			    	</div>
 
 			    	<div class="col-sm-4" valida>
-			    		<label>Saldo Actual</label>
-				    	<input name="saldoActual" type="number" class="form-control" placeholder="0.00" ng-model="c.caja.saldoActual" required="">
+			    		<label>Saldo Inicial</label>
+				    	<input name="saldoInicial" type="number" class="form-control" placeholder="0.00" ng-model="c.caja.saldoInicial" required="">
 			    	</div>
 			    	<div class="col-sm-4">
 			    		<label>Saldo Máximo</label>
@@ -93,8 +93,8 @@
 							  </button>
 							  <ul class="dropdown-menu dropdown-menu-right text-left">
 							    <li ng-show="currentUser.roles[0] == 'gerente'"><a href="#" ng-click="c.editar(caja._id)"><i class="fa fa-pencil"></i> Editar</a></li>
-							    <li ng-show="caja.abierta == false">
-							    	<a href="#" ng-click="c.abrir(caja)" data-toggle="modal" data-target="#abrirCaja">
+							    <li ng-show="caja.abierta == false && caja.estatus == true">
+							    	<a href="#" ng-click="c.abrir(caja)">
 								    	<i class="fa fa-unlock"></i> Abrir
 								   	</a>
 								  </li>

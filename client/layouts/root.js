@@ -39,9 +39,9 @@ function RootCtrl($scope, $meteor, $reactive, $state, $stateParams, toastr){
 					})
 					
 					if(hayAbiertas){
-						toastr.success("Bienvenido, su caja está abierta");						
+						toastr.success("Bienvenido, su caja está abierta, puede realizar ventas");						
 					}else{
-						toastr.warning("Bienvenido, tiene que abrir una caja para iniciar");
+						toastr.warning("Tiene que abrir una caja para iniciar una venta");
 						$state.go("root.cajas");
 					}
 				}
