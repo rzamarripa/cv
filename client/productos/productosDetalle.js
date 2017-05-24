@@ -57,10 +57,7 @@ let rc = $reactive(this).attach($scope);
   $(".js-example-basic-single").select2();
   this.agregarMaterial = function(material)
 	{ 
-		//producto.material_id = this.material_id;
-		
 		this.producto.detalleProducto.push(material);
-		console.log(rc.producto)
 		this.materialSeleccionado = {};
 		this.material = {};
 		
@@ -68,17 +65,22 @@ let rc = $reactive(this).attach($scope);
 	
 	this.guardar = function(producto)
 	{ 
-		//producto.material_id = this.material_id;
 		_.each(rc.producto.detalleProducto, function(producto){
 			delete producto.$$hashKey;
 		});	
 		
 
-		 var total = 0;
+		 var totalPrecio = 0;
+		 var totalCosto = 0;
 		 
-		_.each(rc.producto.detalleProducto,function(producto){total += producto.precio * producto.cantidad});
+		_.each(rc.producto.detalleProducto,function(producto){
+			totalPrecio += producto.precio * producto.cantidad;
+			totalCosto += producto.costo * producto.cantidad;
+			
+		});
 
-		this.producto.precio = parseFloat(total.toFixed(2));
+		this.producto.precio = parseFloat(totalPrecio.toFixed(2));
+		this.producto.costo = parseFloat(totalCosto.toFixed(2));
 		this.producto.estatus = true;
 		this.producto.sucursal_id = Meteor.user().profile.sucursal_id;
 		console.log(this.producto);
@@ -150,7 +152,6 @@ let rc = $reactive(this).attach($scope);
 	
   this.eliminarMaterial = function($index)
 	{	
-		//this.materialIndice = $index;
 		rc.producto.detalleProducto.splice($index, 1);
   };
 
@@ -174,10 +175,7 @@ let rc = $reactive(this).attach($scope);
 		if(unidad)
 			return unidad.nombre;
 	};
-	//  this.obtenerMaterial= function(material_id)
-	// {
-	// 	this.agregar = true;
-	// };
+
 	this.cancelarMaterial = function()
 	{
 		this.agregar = true
@@ -185,10 +183,15 @@ let rc = $reactive(this).attach($scope);
 		this.materialSeleccionado = {};
 	}
 
-	this.SumaPrecioProductos = function(){
+	this.sumaPrecioProductos = function(){
 		total = 0;
 			_.each(rc.producto.detalleProducto,function(producto){total += producto.precio * producto.cantidad});
-		return total
+		return total;
+	}
+	this.sumaPrecioProductosCostos = function(){
+		total = 0;
+			_.each(rc.producto.detalleProducto,function(producto){total += producto.costo * producto.cantidad});
+		return total;
 	}
 		
 	this.tomarFoto = function(){

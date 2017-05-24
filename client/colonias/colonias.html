@@ -16,6 +16,10 @@
 	    	 				<label>Nombre</label>
 					    	<input type="text" class="form-control" placeholder="Nombre de la Colonia" ng-model="c.colonia.nombre" capitalized >
 	    	 			</div>
+	    	 			<div class="col-sm-3">
+	    	 				<label>Precio Envío</label>
+					    	<input type="number" class="form-control" ng-model="c.colonia.precioEnvio">
+	    	 			</div>
 	    	 		</div>
 	    	 	</div><br/>
 
@@ -43,6 +47,7 @@
 				<tr>
 					<th width="10%">No.</th>
 					<th><div class="text-center">Nombre</div></th>
+					<th><div class="text-center">Precio Envío</div></th>
 					<th width="10%">
 						<div class="text-center">
 							Estatus
@@ -59,6 +64,7 @@
 		    <tr ng-repeat="colonia in c.colonias">
 			    <td><div class="text-center">{{$index + 1}}</div></td>
 			    <td><div class="text-center">{{colonia.nombre}}</div></td>
+			    <td><div class="text-center">{{colonia.precioEnvio | currency}}</div></td>
 			    <td>
 				    <div class="text-center">
 				    	<span ng-if="colonia.estatus" class="label label-success">

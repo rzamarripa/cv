@@ -6,17 +6,17 @@ function RootCtrl($scope, $meteor, $reactive, $state, $stateParams, toastr){
 	this.hoy = new Date();
 	this.usuarioActual = {};
 	
-	if(Meteor.user() && Meteor.user().roles && Meteor.user().roles[0] == "gerente"){
-		// Gerente
-		this.subscribe('sucursales', function(){
+	if(Meteor.user() && Meteor.user().roles && Meteor.user().roles[0] == "encargado"){
+		
+		this.subscribe('cajas', function(){
 			return [{
-				_id : Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""
+				sucursal_id : Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""
 			}]
 		});
 		
-		this.subscribe('avisos', function(){
+		this.subscribe('sucursales', function(){
 			return [{
-				estatus : true
+				_id : Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""
 			}]
 		});
 	
@@ -24,8 +24,40 @@ function RootCtrl($scope, $meteor, $reactive, $state, $stateParams, toastr){
 			sucursal : () => {
 			  return Sucursales.findOne(Meteor.user().profile.sucursal_id);
 			},
-			avisos : () => {
-			  return Avisos.find();
+			usuarioActual : () => {
+				return Meteor.user();
+			},
+			cajas : () =>{
+				var cajas = Cajas.find().fetch();
+				var hayAbiertas = false;
+				if(cajas.length > 0){
+					_.each(cajas, function(caja){
+						if(caja && caja.estatus && caja.usuario_id == Meteor.userId() && caja.abierta == true){
+							hayAbiertas = true;
+							return;
+						}
+					})
+					
+					if(hayAbiertas){
+						toastr.success("Bienvenido, su caja está abierta");						
+					}else{
+						toastr.warning("Bienvenido, tiene que abrir una caja para iniciar");
+						$state.go("root.cajas");
+					}
+				}
+				return cajas;
+			}
+		});
+	}else{
+		this.subscribe('sucursales', function(){
+			return [{
+				_id : Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""
+			}]
+		});
+	
+		this.helpers({
+			sucursal : () => {
+			  return Sucursales.findOne(Meteor.user().profile.sucursal_id);
 			},
 			usuarioActual : () => {
 				return Meteor.user();
@@ -33,9 +65,14 @@ function RootCtrl($scope, $meteor, $reactive, $state, $stateParams, toastr){
 		});
 	}
 	
+	//if(Meteor.user() && Meteor.user().roles && Meteor.user().roles[0] == "gerente"){
+		// Gerente
+		
+	//}
+	
 	this.autorun(function() {
  	
-    if(!Meteor.user() && Meteor.user()._id){
+    if(!Meteor.user()){
 	    toastr.success("Se deslogueó por inactividad");
     	$state.go('anon.login');
     }
@@ -64,15 +101,4 @@ function RootCtrl($scope, $meteor, $reactive, $state, $stateParams, toastr){
 	  }
   };
 	
-	this.cambiarEstatus = function(aviso_id){
-		var aviso = MensajesVendedores.findOne(aviso_id);
-		if(aviso){
-			MensajesVendedores.update({_id : aviso_id}, { $set : {estatus : !aviso.estatus}});
-			if(aviso.estatus){
-				toastr.success("Mensaje leído.");
-			}else{
-				toastr.info("Mensaje no leído");
-			}
-		}
-	}
 };

@@ -4,14 +4,12 @@ function UnidadesCtrl($scope, $meteor, $reactive, $state, $stateParams, toastr){
 let rc = $reactive(this).attach($scope);
 
 	this.subscribe('unidades',()=>{
-	return [{estatus:true}] 
-    });
+		return []   
+  });
 
-    this.subscribe('materiales',()=>{
-	return [{estatus:true}] 
-    });
-
- 
+  this.subscribe('materiales',()=>{
+		return [{estatus:true}] 
+  });
 	
   this.action = true;
   

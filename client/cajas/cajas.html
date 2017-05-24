@@ -1,0 +1,234 @@
+<h2>Cajas</h2>
+<div class="row">
+	<div class="col-sm-12">
+		<a class="btn btn-{{c.nuevo == true ? 'primary' : 'danger'}}" role="button" data-toggle="collapse" 
+			href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" ng-click="c.nuevaCaja()">
+			{{c.nuevo == true ? 'Nuevo' : 'Cancelar'}}
+		</a>
+		<div class="collapse" id="collapseExample">
+			<form name="form" class="form-horizontal" role="form" novalidate >
+		  	<div class="well">
+			    <div class="row">
+			    	<div class="col-sm-4" valida>
+			    		<label>Nombre *</label>
+				    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="c.caja.nombre" required="">
+			    	</div>
+
+			    	<div class="col-sm-4" valida>
+			    		<label>Saldo Actual</label>
+				    	<input name="saldoActual" type="number" class="form-control" placeholder="0.00" ng-model="c.caja.saldoActual" required="">
+			    	</div>
+			    	<div class="col-sm-4">
+			    		<label>Saldo Máximo</label>
+				    	<input type="number" class="form-control" placeholder="0.00" ng-model="c.caja.saldoMaximo">
+			    	</div>
+			    </div>
+				</div>				
+				<div class="row">
+					<div class="col-sm-12">
+						<input type="submit" ng-click="c.guardar(c.caja,form)" value="Guardar" class="btn btn-primary" ng-show="c.action" valida-form formulario="form"/>
+						<input type="submit" ng-click="c.actualizar(c.caja,form)" value="Actualizar" class="btn btn-primary" ng-show="!c.action" valida-form formulario="form"/>				
+					</div>
+				</div>	  
+		  </form>
+		</div>
+	</div>
+</div>
+
+<!-- List -->
+<div class="row">
+	<div class="col-sm-12">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th width="5%"><div class="text-center">No.</div></th>
+					<th width="15%"><div class="text-center">Nombre</div></th>
+					<th width="15%"><div class="text-center">Cajero Actual</div></th>
+					<th width="15%"><div class="text-center">Saldo Inicial</div></th>
+					<th width="15%"><div class="text-center">Saldo Actual</div></th>
+					<th width="15%"><div class="text-center">Saldo Máximo</div></th>
+					<th width="10%"><div class="text-center">Estatus</div></th>
+					<th width="20%"><div class="text-center">Abierta</div></th>
+					<th width="10%">
+						<div class="text-center">
+							Acciones
+						</div>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+		    <tr ng-repeat="caja in c.cajas">
+			    <td class="text-center">{{$index + 1}}</td>
+			    <td>{{caja.nombre}}</td>
+			    <td>{{caja.usuario.profile.nombreCompleto}}</td>
+			    <td class="text-right">{{caja.saldoInicial | currency}} </td>
+			    <td class="text-right">{{caja.saldoActual | currency}} </td>
+			    <td class="text-right">{{caja.saldoMaximo | currency}} </td>
+			    <td>
+				    <div class="text-center">
+				    	<span ng-if="caja.estatus" class="label label-success">
+							  Activo
+							</span>
+							<span ng-if="!caja.estatus" class="label label-danger">
+							  Inactivo
+							</span>
+				    </div>
+			    </td>
+			    <td>
+				    <div class="text-center">
+				    	<span ng-if="caja.abierta" class="label label-success">
+							  Abierta
+							</span>
+							<span ng-if="!caja.abierta" class="label label-danger">
+							  Cerrada
+							</span>
+				    </div>
+			    </td>
+			    <td>
+				    <div class="text-center">
+					    <div class="btn-group">
+							  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							    <span class="caret"></span>
+							    <span class="sr-only">Toggle Dropdown</span>
+							  </button>
+							  <ul class="dropdown-menu dropdown-menu-right text-left">
+							    <li ng-show="currentUser.roles[0] == 'gerente'"><a href="#" ng-click="c.editar(caja._id)"><i class="fa fa-pencil"></i> Editar</a></li>
+							    <li ng-show="caja.abierta == false">
+							    	<a href="#" ng-click="c.abrir(caja)" data-toggle="modal" data-target="#abrirCaja">
+								    	<i class="fa fa-unlock"></i> Abrir
+								   	</a>
+								  </li>
+							    <li ng-show="caja.abierta == true && caja.usuario_id == currentUser._id">
+							    	<a href="#" ng-click="c.cerrar(caja)" data-toggle="modal" data-target="#cerrarCaja">
+								    	<i class="fa fa-lock"></i> Cerrar
+								    </a>
+								  </li>
+							    <li ng-show="currentUser.roles[0] == 'gerente'">
+							    	<a href="#" ng-click="c.cambiarEstatus(caja._id)">
+							    		<i class="fa fa-{{caja.estatus ? 'trash' : 'check' }}"></i> {{caja.estatus ? "Desactivar" : "Activar" }}
+							    	</a>
+							    </li>
+							  </ul>
+							</div>
+				    </div>				    
+			    </td>
+		    </tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<!-- Modal Para Abrir Caja -->
+<div class="modal fade" id="abrirCaja" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{c.cajaSeleccionada.nombre}}</h4>
+      </div>
+      <div class="modal-body">
+        <form id="productForm" class="form-horizontal bv-form" novalidate="novalidate">
+	        <button type="submit" class="bv-hidden-submit" style="display: none; width: 0px; height: 0px;"></button>
+
+					<fieldset>
+						<legend>
+							<span ng-show="c.cajaSeleccionada.usuarioCierre_id">
+								{{c.cajaSeleccionada.usuarioCierre.profile.nombreCompleto}} dejó la caja con : {{c.cajaSeleccionada.saldoInicial | currency}}
+							</span>
+							<span ng-show="!c.cajaSeleccionada.usuarioCierre_id">
+								Esta caja cuenta con un saldo inicial de : {{c.cajaSeleccionada.saldoInicial | currency}}
+							</span><br/>
+							<button ng-click="c.confirmarSaldoActual(c.cajaSeleccionada)" class="btn btn-primary btn-xs"> <i class="fa fa-check"></i> Acuerdo</button>
+							<button ng-click="c.noConfirmarSaldoActual(c.cajaSeleccionada)" class="btn btn-warning btn-xs"> <i class="fa fa-times"></i> No Acuerdo</button>
+						</legend>
+						<div class="form-group has-feedback">
+							<label class="col-xs-2 col-lg-3 control-label">Saldo Inicial</label>
+							<div class="col-xs-9 col-lg-6 inputGroupContainer">
+								<div class="input-group">
+									<input type="number" class="form-control" name="saldoInicial" ng-model="c.saldoInicial" ng-disabled="!c.confirmarSaldo">
+									<span class="input-group-addon">$</span>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+
+				</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" ng-disabled="!c.habilitarAbrirCaja" ng-click="c.confirmarAbrirCaja(c.cajaSeleccionada)">Abrir Caja</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="cerrarCaja" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{c.cajaSeleccionadaParaCierre.nombre}}</h4>
+      </div>
+      <div class="modal-body">
+        <form id="productForm" class="form-horizontal bv-form" novalidate="novalidate">
+	        <button type="submit" class="bv-hidden-submit" style="display: none; width: 0px; height: 0px;"></button>
+
+					<fieldset>
+						<legend>
+							Esta caja cuenta actualmente con : <br/>
+							<div class="text-right">
+								<strong>Saldo Inicial&nbsp;&nbsp;:&nbsp;&nbsp;</strong>{{c.cajaSeleccionadaParaCierre.saldoInicial | currency}}<br/>
+								<strong>Ventas&nbsp;&nbsp;:&nbsp;&nbsp;</strong>{{c.cajaSeleccionadaParaCierre.saldoActual | currency}}<br/>
+								<strong>Saldo Total&nbsp;&nbsp;:&nbsp;&nbsp;</strong>{{c.cajaSeleccionadaParaCierre.saldoActual + c.cajaSeleccionadaParaCierre.saldoInicial | currency}}
+							</div>
+						</legend>
+						<div class="form-group has-feedback">
+							<label class="col-xs-2 col-lg-3 control-label">Monto a dejar</label>
+							<div class="col-xs-9 col-lg-6 inputGroupContainer">
+								<div class="input-group">
+									<input type="number" class="form-control" name="saldoCierre" ng-model="c.saldoCierre">
+									<span class="input-group-addon">$</span>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+
+				</form>
+				<div class="row">
+					<div class="col-sm-12">
+						<table class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th>No.</th>
+									<th>Fecha</th>
+									<th>Cliente</th>
+									<th>Venta</th>
+									<th>Importe</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="pago in c.pagos">
+									<td>{{$index + 1}}</td>
+									<td>{{pago.fechaPago | date:"dd-MM-yyy HH:mm:ss"}}</td>
+									<td>{{pago.cliente.profile.nombreCompleto}}</td>
+									<td>
+										<span ng-repeat="detalle in pago.venta.detalle">
+											{{detalle.descripcion}}
+										</span>
+									</td>
+									<td>{{pago.pago | currency}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" ng-click="c.confirmarCerrarCaja(c.cajaSeleccionadaParaCierre)">Cerrar Caja</button>
+      </div>
+    </div>
+  </div>
+</div>
+

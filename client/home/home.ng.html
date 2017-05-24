@@ -1,6 +1,7 @@
 <nav>
 	<div ng-include="'client/home/_admin.html'" ng-if="currentUser.roles[0] == 'admin'"></div>
 	<div ng-include="'client/home/_gerente.html'" ng-if="currentUser.roles[0] == 'gerente'"></div>
+	<div ng-include="'client/home/_encargado.html'" ng-if="currentUser.roles[0] == 'encargado'"></div>
 	<div ng-include="'client/home/_gerenteVenta.html'" ng-if="currentUser.roles[0] == 'gerenteVenta'"></div>
 	<div ng-include="'client/home/_vendedor.html'" ng-if="currentUser.roles[0] == 'vendedor'"></div>
 	<div ng-include="'client/home/_alumno.html'" ng-if="currentUser.roles[0] == 'alumno'"></div>

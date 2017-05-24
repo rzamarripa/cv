@@ -20,10 +20,7 @@ function MediosPublicidadCtrl($scope, $meteor, $reactive, $state, toastr) {
   this.helpers({
 	  mediosPublicidad : () => {
 		  return MediosPublicidad.find();
-	  },
-		deptosAcademicos : () => {
-		  return DeptosAcademicos.find();
-	  }	  
+	  }  
   });
     
   this.nuevo = true;
@@ -56,7 +53,6 @@ function MediosPublicidadCtrl($scope, $meteor, $reactive, $state, toastr) {
 	
 	this.actualizar = function(medios,form)
 	{
-		   
 			var idTemp = medios._id;
 			delete medios._id;		
 			//medios.usuarioActualizo = Meteor.userId(); 
@@ -77,10 +73,4 @@ function MediosPublicidadCtrl($scope, $meteor, $reactive, $state, toastr) {
 			MediosPublicidad.update({_id:id}, {$set : {estatus : medios.estatus}});
 
 	};
-	
-	this.getDeptoAcademico = function(depto_id){
-			var depto = Departamentos.findOne(DeptosAcademicos, depto_id, false);
-			return depto.descripcion;
-	};
-	
 }

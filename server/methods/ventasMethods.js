@@ -14,7 +14,7 @@ Meteor.methods({
 		
 		return [cliente, sucursal, venta, pago];
 	},
-	realizarVenta : function(venta, clienteSeleccionado){
+	realizarVenta : function(venta, clienteSeleccionado, caja){
 		//Aumentar folio sucursal
 		var sucursal = Sucursales.findOne(Meteor.user().profile.sucursal_id);
 		console.log(sucursal);
@@ -30,6 +30,11 @@ Meteor.methods({
 		if(venta.saldo == undefined){
 			venta.saldo = venta.total;
 		}
+		
+		caja.saldoActual = parseFloat(caja.saldoActual) + parseFloat(venta.anticipo);
+		caja.folios.push({folio : folioActual, usuario_id : Meteor.userId()});
+		
+		Cajas.update({_id : caja._id}, { $set : {saldoActual : caja.saldoActual, folios : caja.folios}});
 		
 		venta.entrega.nombreCliente = clienteSeleccionado.profile.nombreCompleto;
 		
@@ -70,5 +75,13 @@ Meteor.methods({
 		Sucursales.update({_id : sucursal._id},{$set: {folioActual : folioActual}});
 		
 		return venta;
+	},
+	getVentasPorFolios : function(folios){
+		var pagos = Pagos.find({folio : { $in : folios}}).fetch();
+		_.each(pagos, function(pago){
+			pago.cliente = Meteor.users.findOne(pago.cliente_id, { profile : 1});
+			pago.venta = Ventas.findOne(pago.venta_id);
+		})
+		return pagos;
 	}
 });

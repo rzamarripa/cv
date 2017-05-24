@@ -61,6 +61,9 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 	  },
 	  colonias : () => {
 		  return Colonias.find({},{sort : {nombre : 1}});
+	  },
+	  caja : () => {
+		  return Cajas.findOne({usuario_id : Meteor.userId()});
 	  }
   });
   
@@ -69,13 +72,16 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 	{
 		_.each(rc.venta.detalleProducto, function(producto, indice){
 			delete producto.$$hashKey;
-		});	
-		
-		console.log("datos del pedido", rc.venta);
+		});
 		
 		if(form.$invalid || rc.venta.anticipo == undefined){
       toastr.error('Error al guardar los datos.');
       return;
+	  }
+	  
+	  if(rc.caja == undefined || rc.caja.usuario_id == "" || rc.caja.usuario_id != Meteor.userId()){
+		  toastr.warning("No hay caja abierta, por favor primero abra una caja antes de realizar una venta");
+		  $state.go("root.cajas");
 	  }
 		
 		if(rc.venta.anticipo <= 0 && rc.anticipoCero == false){
@@ -89,7 +95,7 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 		}
 		
 		//Aquí va el meteor.method
-		Meteor.apply("realizarVenta", [rc.venta, rc.clienteSeleccionado], function(error, result){
+		Meteor.apply("realizarVenta", [rc.venta, rc.clienteSeleccionado, rc.caja], function(error, result){
 			if(result){
 				console.log(result);
 				var url = $state.href("anon.pagosImprimir",{sucursal_id : result.sucursal_id, folioActual : result.folios[0], cliente_id : venta.cliente_id},{newTab : true});
@@ -291,5 +297,12 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 		if(rc.venta.anonimo == true){
 			venta.entrega.nombre = "";
 		}
+	}
+	
+	this.agregarEnvio = function(colonia_id){
+		var colonia = Colonias.findOne(colonia_id)
+		rc.venta.total += parseFloat(colonia.precioEnvio) - (parseFloat(rc.venta.precioEnvio) || 0);
+		rc.venta.saldo = rc.venta.total - rc.venta.anticipo;
+		rc.venta.precioEnvio = colonia.precioEnvio;
 	}
 };

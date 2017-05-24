@@ -1,14 +1,25 @@
 <div class="row">
 	<article class="col-sm-12 col-md-12 col-lg-8 sortable-grid ui-sortable">
 		<div class="jarviswidget jarviswidget-sortable" id="wid-id-2" data-widget-colorbutton="false" data-widget-editbutton="false" role="widget">
-			<header role="heading"><div class="jarviswidget-ctrls" role="menu">   <a href="javascript:void(0);" class="button-icon jarviswidget-toggle-btn" rel="tooltip" title="Expandir" data-placement="bottom" data-original-title="Collapse"><i class="fa fa-minus "></i></a></div>
+			<header role="heading">
+				<div class="jarviswidget-ctrls" role="menu"></div>
 				<span class="widget-icon"> <i class="fa fa-eye"></i> </span>
-				<h2>{{currentUser.profile.nombreCompleto}}</h2>
+				<h2>{{currentUser.profile.nombreCompleto}} - Cajero</h2>
 			</header>
 			<div role="content">
 				<div class="jarviswidget-editbox">
 				</div>
 				<div class="widget-body">
+					<div class="alert alert-danger alert-dismissible fade in" role="alert" ng-show="np.caja == undefined"> 
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">×</span>
+						</button> <h4>Abra una Caja!</h4> 
+						<p>Estás haciendo una venta sin tener una caja abierta, por favor ve primero a abrir una caja.</p> 
+						<p> 
+							<button type="button" class="btn btn-danger">Cancelar</button> 
+							<a class="btn btn-default" ui-sref="root.cajas">Abrir Caja</button> 
+						</p> 
+					</div>
 					<form name="form" class="form-horizontal">
 						<fieldset>
 							<div class="form-group" valida>
@@ -229,7 +240,7 @@
 				        </div>
 				        <label class="col-md-2 control-label">Colonia *</label>
 				        <div class="col-md-4">				          
-				          <select name="colonia" ng-model="np.venta.entrega.colonia" style="width: 100%;" class="form-control select2">
+				          <select name="colonia" ng-model="np.venta.entrega.colonia" style="width: 100%;" class="form-control select2" ng-change="np.agregarEnvio(np.venta.entrega.colonia)">
 									  <option value="{{colonia._id}}" ng-repeat="colonia in np.colonias">{{colonia.nombre}}</option>
 									</select>
 				        </div>
@@ -253,7 +264,17 @@
 									<button type="button" class="btn btn-default" ng-click="np.guardar(np.venta, form)" valida-form formulario="form">Aceptar</button> 
 								</p> 
 							</div>
-							<div ng-disabled="np.venta.saldo < 0" class="btn btn-primary btn-lg" ng-click="np.guardar(np.venta, form)" ng-disabled="np.anticipoCero" valida-form formulario="form">
+							<div class="alert alert-danger alert-dismissible fade in" role="alert" ng-show="np.caja == undefined"> 
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">×</span>
+								</button> <h4>Abra una Caja!</h4> 
+								<p>Estás haciendo una venta sin tener una caja abierta, por favor ve primero a abrir una caja.</p> 
+								<p> 
+									<button type="button" class="btn btn-danger">Cancelar</button> 
+									<a class="btn btn-default" ui-sref="root.cajas">Abrir Caja</button> 
+								</p> 
+							</div>
+							<div ng-disabled="np.venta.saldo < 0 || np.caja == undefined" class="btn btn-primary btn-lg" ng-click="np.guardar(np.venta, form)" ng-disabled="np.anticipoCero" valida-form formulario="form">
 								<i class="fa fa-save"></i>
 								Aceptar
 							</div>
@@ -266,10 +287,13 @@
 	<article class="col-sm-12 col-md-12 col-lg-4 sortable-grid ui-sortable">
 		<div class="jarviswidget jarviswidget-sortable" id="wid-id-2" data-widget-colorbutton="false" data-widget-editbutton="false" role="widget">
 			
-			<header role="heading"><div class="jarviswidget-ctrls" role="menu">   <a href="javascript:void(0);" class="button-icon jarviswidget-toggle-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Collapse"><i class="fa fa-minus "></i></a> <a href="javascript:void(0);" class="button-icon jarviswidget-fullscreen-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Fullscreen"><i class="fa fa-expand "></i></a> <a href="javascript:void(0);" class="button-icon jarviswidget-delete-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Delete"><i class="fa fa-times"></i></a></div>
-			<span class="widget-icon"> <i class="fa fa-eye"></i> </span>
-			<h2>Catálogo de Arreglos</h2>
-			<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
+			<header role="heading">
+				<div class="jarviswidget-ctrls" role="menu">   
+				</div>
+				<span class="widget-icon"> <i class="fa fa-eye"></i> </span>
+				<h2>Catálogo de Arreglos</h2>
+				<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+			</header>
 			<div role="content">
 				<div class="jarviswidget-editbox">
 				</div>
@@ -294,9 +318,8 @@
 								<div class="row">
 										<div class="col-md-5 col-sm-12 col-xs-12">
 											<div class="product-image"> 
-												<img src="{{producto.imagenes[0].nombre}}" alt="194x228" class="img-responsive"> 
+												<img src="{{producto.imagenes[0].nombre}}" alt="imagen" class="img-responsive"> 
 												<span class="tag2 hot">
-													MAMÁ
 												</span> 
 											</div>
 										</div>

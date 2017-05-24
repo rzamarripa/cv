@@ -15,6 +15,7 @@
 					<th width="20%"><div class="text-center">No.</div></th>
 					<th width="20%"><div class="text-center">Nombre</div></th>
 					<th width="20%"><div class="text-center">Unidad</div></th>
+					<th width="20%"><div class="text-center">Costo</div></th>
 					<th width="20%"><div class="text-center">Precio</div></th>
 					<th width="20%"><div class="text-center">Descripción</div></th>
 					<th width="10%">
@@ -34,6 +35,7 @@
 			    <td><div class="text-center">{{$index + 1}}</div></td>
 			    <td><div class="text-center">{{material.nombre}}</div></td>
 			    <td><div class="text-center">{{mat.obtenerUnidad(material.unidad_id)}}</div></td>
+			    <td><div class="text-center">{{material.costo | currency}}</div></td>
 			    <td><div class="text-center">{{material.precio | currency}}</div></td>
 			    <td><div class="text-center">{{material.descripcion}}</div></td>
 			    <td>

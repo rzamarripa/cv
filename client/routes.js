@@ -96,7 +96,7 @@ angular.module('casserole').config(['$injector', function ($injector) {
       resolve: {
 				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
 					return $meteor.requireValidUser(function(user) {
-						if(user.roles[0] == "admin" || user.roles[0] == "gerente"){
+						if(user.roles[0] == "admin" || user.roles[0] == "gerente" || user.roles[0] == "encargado"){
 							return true;
 						}else{
 							return 'UNAUTHORIZED'; 
@@ -433,7 +433,7 @@ angular.module('casserole').config(['$injector', function ($injector) {
       resolve: {
         "currentUser": ["$meteor", "toastr", function($meteor, toastr){
           return $meteor.requireValidUser(function(user) {
-            if(user.roles[0] == "gerente" || user.roles[0] == "recepcionista"){
+            if(user.roles[0] == "gerente" || user.roles[0] == "encargado"){
               return true;
             }else{
               return 'UNAUTHORIZED'; 
@@ -490,6 +490,22 @@ angular.module('casserole').config(['$injector', function ($injector) {
        }]
       }
     })
+    .state('root.usuariosEncargados', {
+      url: '/usuariosEncargados',
+      templateUrl: 'client/usuariosEncargados/usuariosEncargados.html',
+      controller: 'UsuariosEncargadosCtrl as ur',
+      resolve: {
+        "currentUser": ["$meteor", "toastr", function($meteor, toastr){
+          return $meteor.requireValidUser(function(user) {
+            if(user.roles[0] == "gerente"){
+              return true;
+            }else{
+              return 'UNAUTHORIZED'; 
+            }           
+         });
+       }]
+      }
+    })
     .state('root.usuariosReparto', {
       url: '/usuariosReparto',
       templateUrl: 'client/usuariosReparto/usuariosReparto.html',
@@ -532,6 +548,22 @@ angular.module('casserole').config(['$injector', function ($injector) {
           return $meteor.requireValidUser(function(user) {
 	          console.log(Meteor.user())
             if(user.roles[0] == "repartidor"){
+              return true;
+            }else{
+              return 'UNAUTHORIZED'; 
+            }           
+         });
+       }]
+      }
+    })
+    .state('root.cajas', {
+      url: '/cajas',
+      templateUrl: 'client/cajas/cajas.html',
+      controller: 'CajasCtrl as c',
+      resolve: {
+        "currentUser": ["$meteor", "toastr", function($meteor, toastr){
+          return $meteor.requireValidUser(function(user) {
+            if(user.roles[0] == "gerente" || user.roles[0] == "encargado"){
               return true;
             }else{
               return 'UNAUTHORIZED'; 

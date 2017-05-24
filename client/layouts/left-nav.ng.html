@@ -1,4 +1,5 @@
 <nav>
 	<div ng-include="'client/layouts/_admin.html'" ng-if="currentUser.roles[0] == 'admin'"></div>
-	<div ng-include="'client/layouts/_director.html'" ng-if="currentUser.roles[0] == 'gerente'"></div>
+	<div ng-include="'client/layouts/_gerente.html'" ng-if="currentUser.roles[0] == 'gerente'"></div>
+	<div ng-include="'client/layouts/_encargado.html'" ng-if="currentUser.roles[0] == 'encargado'"></div>
 </nav>

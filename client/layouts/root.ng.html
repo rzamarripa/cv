@@ -1,19 +1,6 @@
 <header id="header">
 	<div id="logo-group">
-		<span id="logo" style="margin-top: 0px !important;"> <img ng-if="ro.seccion.logo != undefined" ng-src="{{ro.seccion.logo}}" style="width: 110px;" alt="Escuelas"> </span>
-		<!-- Pánel de mensajes para directores -->
-		<div ng-if="ro.usuarioActual.roles[0] == 'director'">
-			<div ng-include="'client/layouts/avisosDirector.html'"></div>
-		</div>
-		
-		<!-- Pánel de mensajes para vendedores -->
-		<div ng-if="ro.usuarioActual.roles[0] == 'vendedor'">
-			<div ng-include="'client/layouts/avisosVendedor.html'"></div>
-		</div>
-		
-		<div ng-if="currentUser.roles[0] == 'alumno'">
-			<div ng-include="'client/layouts/avisosAlumnos.html'"></div>
-		</div>
+		<span id="logo" style="margin-top: 0px !important;"> <img ng-if="ro.sucursal.logo != undefined" ng-src="{{ro.sucursal.logo}}" style="width: 48px;" alt="Floristeria"> </span>
 	</div>
 	
   <div class="pull-right">
@@ -84,10 +71,9 @@
   <div id="ribbon">
 	  <span class="ribbon-button-alignment"> 
 			<span id="backbutton" back-button class="btn btn-ribbon" data-action="resetWidgets" data-title="refresh" rel="tooltip" data-placement="bottom" data-original-title="">
-				<i class="fa fa-arrow-left"></i> <span class="hidden-xs">Regresar
-			</span>
-		</span> 
-		</span>
+				<i class="fa fa-arrow-left"></i> <span class="hidden-xs">Regresar</span>
+			</span> 
+	  </span>
 	  <ol class="breadcrumb pull-right" ng-show="currentUser.roles[0] != 'alumno'">
 		  <li>{{ro.sucursal.descripcion}}</li>
 			<li class="hidden-xs">{{ro.sucursal.clave}} - {{ro.sucursal.descripcion}}</li>

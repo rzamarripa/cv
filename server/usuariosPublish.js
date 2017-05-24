@@ -11,11 +11,15 @@ Meteor.publish("todosUsuarios", function(options){
 });
 
 Meteor.publish("validaUsuarios", function(){
-	return Roles.getUsersInRole( ['director', 'coordinadorFinanciero', 'coordinadorAcademico', 'gerenteVenta', 'vendedor', 'recepcionista'] );
+	return Roles.getUsersInRole( ['director', 'encargado', 'produccion', 'gerente'] );
 });
 
 Meteor.publish("usuariosProduccion", function(){
 	return Roles.getUsersInRole( ['produccion'] );
+});
+
+Meteor.publish("usuariosEncargados", function(){
+	return Roles.getUsersInRole( ['encargado'] );
 });
 
 Meteor.publish("usuariosReparto", function(){

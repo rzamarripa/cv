@@ -21,6 +21,7 @@
 				</div>
 	  	</div>
 	  	<div class="well">
+		  	<h3>Imágenes desde URL</h3>
 	  		<div class="row" ng-repeat="imagen in pro.producto.imagenes track by $index">
 	  			<div class="col-sm-12">
 						<input type="text" class="form-control" placeholder="Ruta de la imagen" ng-model="imagen.nombre" >
@@ -35,26 +36,32 @@
 	  	<div class="well">
     	 	<br/>
     	 	<div class="row">
-    	 		<div class="col-sm-4">
+    	 		<div class="col-sm-3">
 						<label for="id_label_single" >Insumos</label>
 						<select  ng-options="material._id as material.nombre for material in pro.materiales" 
               ng-model="pro.materialSeleccionado._id" class="js-example-basic-single js-states form-control" placeholder="Seleccione" ng-change="pro.getMateriales(pro.materialSeleccionado._id)"></select>
 					</div>
 					<div class="col-sm-2">
 				    <label>Cantidad</label>
-			    	<input type="text" class="form-control" placeholder="Cantidad" ng-model="pro.materialSeleccionado.cantidad" >
+			    	<input type="number" class="form-control" placeholder="Cantidad" ng-model="pro.materialSeleccionado.cantidad" >
 			    </div>
 				  <div class="col-sm-2">
     	 			<label>Unidad</label>
 				    <div class="form-control">{{pro.materialSeleccionado.unidad.nombre}}</div>
 					</div>
+					<div class="col-sm-2">
+    	 			<label>Costo</label>
+				    <div class="form-control">{{pro.materialSeleccionado.costo | currency}}</div>
+					</div>
     	 		<div class="col-sm-2">
     	 			<label>Precio</label>
 				    <div class="form-control">{{pro.materialSeleccionado.precio | currency}}</div>
 					</div>
-					<div class="col-sm-2"><br/>
-						<input type="submit" ng-show="pro.agregar" ng-click="pro.agregarMaterial(pro.materialSeleccionado)" value="Agregar" class="  btn btn-primary">
-						<input type="submit" ng-show="!pro.agregar" ng-click="pro.modificarMaterial(pro.materialSeleccionado)" value="Modificar" class="  btn btn-primary">
+					<div class="col-sm-1"><br/>
+						<button class="btn btn-primary" ng-show="pro.agregar" ng-click="pro.agregarMaterial(pro.materialSeleccionado)"><i class="fa fa-plus fa-lg"></i></button>
+						<button class="btn btn-warning" ng-show="!pro.agregar" ng-click="pro.modificarMaterial(pro.materialSeleccionado)"><i class="fa fa-check fa-lg"></i></button>
+<!-- 						<input type="submit" ng-show="pro.agregar" ng-click="pro.agregarMaterial(pro.materialSeleccionado)" value="Agregar" class="  btn btn-primary"> -->
+<!-- 						<input type="submit" ng-show="!pro.agregar" ng-click="pro.modificarMaterial(pro.materialSeleccionado)" value="Modificar" class="  btn btn-primary"> -->
 					</div>
 					<div class="col-sm-2"><br/>
 						<input type="submit" ng-show="pro.cancelar" ng-click="pro.cancelarMaterial(pro.materialSeleccionado)" value="Cancelar" class="  btn btn-danger">
@@ -66,12 +73,13 @@
 						<table class="table table-bordered">
 							<thead>
 								<tr>
-								  <th width="10%"><div class="text-center">No.</div></th>
-									<th width="20%"><div class="text-center">Insumos</div></th>
-									<th width="20%"><div class="text-center">Cantidad</div></th>
-									<th width="20%"><div class="text-center">Unidad</div></th>
-									<th width="30%"><div class="text-center">Importe</div></th>
-									<th width="30%"><div class="text-center">Acciones</div></th>
+								  <th width="5%"><div class="text-center">No.</div></th>
+									<th width="20%"><div class="text-center">Insumo</div></th>
+									<th width="10%"><div class="text-center">Cantidad</div></th>
+									<th width="10%"><div class="text-center">Unidad</div></th>
+									<th width="10%"><div class="text-center">Importe costo</div></th>
+									<th width="10%"><div class="text-center">Importe venta</div></th>
+									<th width="15%"><div class="text-center">Acciones</div></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -80,6 +88,7 @@
 							    <td><div class="text-center">{{material.nombre}}</div></td>
 							    <td><div class="text-center">{{material.cantidad}}</div></td>
 							    <td><div class="text-center">{{pro.getUnidad(material.unidad_id)}}</div></td>
+							    <td><div class="text-center">{{material.costo * material.cantidad | currency}}</div></td>
 							    <td><div class="text-center">{{material.precio * material.cantidad | currency}}</div></td>
 							    <td>
 								    <div class="text-center">
@@ -98,8 +107,9 @@
 						    </tr>
 						  <!--   <tr ><td colspan="6"> Total:{{pro.SumaPrecioProductos()}}</td></tr> -->
 						    <tr >
-							    <td colspan="4"><div class="pull-right"> <strong>Total</strong></div></td>
-							    <td><div class="text-center">{{pro.SumaPrecioProductos() | currency}}</div></td>
+							    <td colspan="4"><div class="pull-right"> <strong>Totales</strong></div></td>
+							    <td><div class="text-center">{{pro.sumaPrecioProductosCostos() | currency}}</div></td>
+							    <td><div class="text-center">{{pro.sumaPrecioProductos() | currency}}</div></td>
 							    <td></td>
 						    </tr>
 							</tbody>
