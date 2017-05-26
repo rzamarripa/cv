@@ -96,7 +96,7 @@ angular.module('casserole').config(['$injector', function ($injector) {
       resolve: {
 				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
 					return $meteor.requireValidUser(function(user) {
-						if(user.roles[0] == "admin" || user.roles[0] == "gerente" || user.roles[0] == "encargado"){
+						if(user.roles[0] == "admin" || user.roles[0] == "gerente" || user.roles[0] == "encargado" || user.roles[0] == "matriz"){
 							return true;
 						}else{
 							return 'UNAUTHORIZED'; 
@@ -330,6 +330,22 @@ angular.module('casserole').config(['$injector', function ($injector) {
        }]
       }
     })
+    .state('root.sucursalesMatriz', {
+      url: '/sucursalesMatriz/',
+      templateUrl: 'client/sucursales/sucursalesMatriz.html',
+      controller: 'SucursalesCtrl as sc',
+      resolve: {
+				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
+					return $meteor.requireValidUser(function(user) {
+						if(user.roles[0] == "admin" || user.roles[0] == "matriz"){
+							return true;
+						}else{
+							return 'UNAUTHORIZED'; 
+						}
+         });
+       }]
+      }
+    })
     .state('root.regiones', {
       url: '/regiones',
       templateUrl: 'client/regiones/regiones.html',
@@ -428,8 +444,8 @@ angular.module('casserole').config(['$injector', function ($injector) {
     })
     .state('root.nuevoPedido', {
       url: '/nuevoPedido',
-      templateUrl: 'client/pedidos/nuevoPedido.html',
-      controller: 'NuevoPedidoCtrl as np',
+      templateUrl: 'client/ventas/nuevoPedido.html',
+      controller: 'VentasCtrl as np',
       resolve: {
         "currentUser": ["$meteor", "toastr", function($meteor, toastr){
           return $meteor.requireValidUser(function(user) {
@@ -442,14 +458,78 @@ angular.module('casserole').config(['$injector', function ($injector) {
        }]
       }
     })
-    .state('root.pedidos', {
-      url: '/pedidos',
-      templateUrl: 'client/pedidos/pedidos.html',
-      controller: 'PedidosCtrl as p',
+    .state('root.ventas', {
+      url: '/ventas',
+      templateUrl: 'client/ventas/ventas.html',
+      controller: 'VentasCtrl as v',
       resolve: {
         "currentUser": ["$meteor", "toastr", function($meteor, toastr){
           return $meteor.requireValidUser(function(user) {
             if(user.roles[0] == "gerente" || user.roles[0] == "produccion"){
+              return true;
+            }else{
+              return 'UNAUTHORIZED'; 
+            }           
+         });
+       }]
+      }
+    })
+    .state('root.nuevaSolicitud', {
+      url: '/nuevaSolicitud',
+      templateUrl: 'client/solicitudes/nuevaSolicitud.html',
+      controller: 'NuevaSolicitudCtrl as ns',
+      resolve: {
+        "currentUser": ["$meteor", "toastr", function($meteor, toastr){
+          return $meteor.requireValidUser(function(user) {
+            if(user.roles[0] == "gerente" || user.roles[0] == "encargado"){
+              return true;
+            }else{
+              return 'UNAUTHORIZED'; 
+            }
+         });
+       }]
+      }
+    })
+    .state('root.editarSolicitud', {
+      url: '/editarSolicitud/:solicitud_id',
+      templateUrl: 'client/solicitudes/nuevaSolicitud.html',
+      controller: 'NuevaSolicitudCtrl as ns',
+      resolve: {
+        "currentUser": ["$meteor", "toastr", function($meteor, toastr){
+          return $meteor.requireValidUser(function(user) {
+            if(user.roles[0] == "gerente" || user.roles[0] == "encargado" || user.roles[0] == "matriz"){
+              return true;
+            }else{
+              return 'UNAUTHORIZED'; 
+            }
+         });
+       }]
+      }
+    })
+    .state('root.solicitudes', {
+      url: '/solicitudes',
+      templateUrl: 'client/solicitudes/solicitudes.html',
+      controller: 'SolicitudesCtrl as s',
+      resolve: {
+        "currentUser": ["$meteor", "toastr", function($meteor, toastr){
+          return $meteor.requireValidUser(function(user) {
+            if(user.roles[0] == "gerente" || user.roles[0] == "encargado" || user.roles[0] == "matriz"){
+              return true;
+            }else{
+              return 'UNAUTHORIZED'; 
+            }           
+         });
+       }]
+      }
+    })
+    .state('root.verSolicitud', {
+      url: '/verSolicitud/:solicitud_id',
+      templateUrl: 'client/solicitudes/verSolicitud.html',
+      controller: 'VerSolicitudCtrl as vs',
+      resolve: {
+        "currentUser": ["$meteor", "toastr", function($meteor, toastr){
+          return $meteor.requireValidUser(function(user) {
+            if(user.roles[0] == "gerente" || user.roles[0] == "encargado" || user.roles[0] == "matriz"){
               return true;
             }else{
               return 'UNAUTHORIZED'; 

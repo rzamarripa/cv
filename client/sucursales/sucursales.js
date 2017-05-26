@@ -8,7 +8,7 @@ function SucursalesCtrl($scope, $meteor, $reactive, $state, toastr, $stateParams
 	this.action = true;  
   this.nuevo = true;
   window.rc = rc;
-	
+
   this.subscribe('regiones', function(){
 		return [{
 			_id : this.getReactively("parametros.region_id")

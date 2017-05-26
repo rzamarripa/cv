@@ -1,6 +1,6 @@
 angular.module("casserole")
-.controller("PedidosCtrl", PedidosCtrl);  
-function PedidosCtrl($scope, $meteor, $reactive, $state, $stateParams, toastr){
+.controller("VentasCtrl", VentasCtrl);  
+function VentasCtrl($scope, $meteor, $reactive, $state, $stateParams, toastr){
 	let rc = $reactive(this).attach($scope);
 	
 	window.rc = rc;

@@ -1,0 +1,94 @@
+<h2>Nueva Solicitud</h2>
+<div class="row">
+	<div class="col-sm-12">
+		<form class="form-horizontal" role="form" data-parsley-validate>
+	  	<div class="well">    
+			  <div class="row">
+          <div class="col-sm-3" ng-show="ns.solicitud.usuario_id">
+				    <label>Solicita</label>
+			    	<input type="text" class="form-control" value="{{ns.solicitud.usuario.profile.nombreCompleto}}" disabled="" capitalized>
+			    </div>
+			    <div class="col-sm-2">
+						<label >Fecha</label>
+						<div class="form-control">{{ns.hoy | date:"dd-MM-yyyy"}}</div>
+			    </div>
+				</div>
+	  	</div>
+	  	<div class="well">
+    	 	<br/>
+    	 	<div class="row">
+    	 		<div class="col-sm-6">
+						<label for="id_label_single" >Insumos</label>
+						<select  ng-options="material._id as material.nombre for material in ns.materiales" 
+              ng-model="ns.materialSeleccionado._id" class="js-example-basic-single js-states form-control" placeholder="Seleccione" ng-change="ns.getMateriales(ns.materialSeleccionado._id)"></select>
+					</div>
+					<div class="col-sm-2">
+				    <label>Cantidad</label>
+			    	<input type="number" class="form-control" placeholder="Cantidad" ng-model="ns.materialSeleccionado.cantidad" >
+			    </div>
+				  <div class="col-sm-2">
+    	 			<label>Unidad</label>
+				    <div class="form-control">{{ns.materialSeleccionado.unidad.nombre}}</div>
+					</div>
+					<div class="col-sm-1"><br/>
+						<button class="btn btn-primary" ng-show="ns.agregar" ng-click="ns.agregarMaterial(ns.materialSeleccionado)">
+							<i class="fa fa-plus fa-lg"></i>
+						</button>
+						<button class="btn btn-warning" ng-show="!ns.agregar" ng-click="ns.modificarMaterial(ns.materialSeleccionado)">
+							<i class="fa fa-check fa-lg"></i>
+						</button>
+					</div>
+					<div class="col-sm-2"><br/>
+						<input type="submit" ng-show="ns.cancelar" ng-click="ns.cancelarMaterial(ns.materialSeleccionado)" value="Cancelar" class="  btn btn-danger">
+					</div>
+    	 	</div><br/>
+			 	<!-- ////////////////////////////////////////  TABLA DE MATERIALES   ///////////////////////////// -->				
+				<div class="row">
+					<div class="col-sm-12">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+								  <th width="5%"><div class="text-center">No.</div></th>
+									<th width="20%"><div class="text-center">Insumo</div></th>
+									<th width="10%"><div class="text-center">Cantidad</div></th>
+									<th width="10%"><div class="text-center">Unidad</div></th>
+									<th width="15%"><div class="text-center">Acciones</div></th>
+								</tr>
+							</thead>
+							<tbody>
+						    <tr ng-repeat="material in ns.solicitud.detallePedido">
+						      <td><div class="text-center">{{$index + 1}}</div></td>
+							    <td><div class="text-center">{{material.nombre}}</div></td>
+							    <td><div class="text-center">{{material.cantidad}}</div></td>
+							    <td><div class="text-center">{{ns.getUnidad(material.unidad_id)}}</div></td>
+							    <td>
+								    <div class="text-center">
+									    <div class="btn-group">
+											  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											    <span class="caret"></span>
+											    <span class="sr-only">Toggle Dropdown</span>
+											  </button>
+											  <ul class="dropdown-menu text-left">
+											    <li><a href="#" ng-click="ns.editarMaterial($index)"><i class="fa fa-pencil"></i> Editar</a></li>
+													<li><a href="#" ng-click="ns.eliminarMaterial($index)"><i class="fa fa-trash"></i> Eliminar</a></li>
+											  </ul>
+											</div>
+								    </div>				    
+							    </td>
+						    </tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+         <!--  //////////////// boton guardar de productos ////////////// -->
+				<div class="row">
+					<div class="col-sm-12">
+						<input type="submit" ng-click="ns.guardar(ns.solicitud)" value="Guardar" class="btn btn-primary" ng-if="!ns.solicitud._id">
+						<input type="submit" ng-click="ns.actualizar(ns.solicitud)" value="Actualizar" class="btn btn-primary" ng-if="ns.solicitud._id">	
+					</div>
+				</div>
+	  	</div>
+  	</form>
+	</div>
+</div>
+<br/>

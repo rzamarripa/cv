@@ -1,17 +1,17 @@
-<h2>Listado de Pedidos</h2>
+<h2>Listado de Ventas</h2>
 <!-- <h2>Vendedores</h2> -->
 <div class="row well">
 	<form name="form" class="form-horizontal" role="form" novalidate style="margin: auto;">
 		<div class="col-sm-2 col-sm-offset-4 text-center" valida>
 			<label for="fechaInicial">Fecha Inicial *</label>
-			<input name="fechaInicial" date-time format="dd-MM-yyyy" class="form-control" readonly="" style="background-color: white" view="date" max-view="year" min-view="date" ng-model="p.fechaInicial" required="" />
+			<input name="fechaInicial" date-time format="dd-MM-yyyy" class="form-control" readonly="" style="background-color: white" view="date" max-view="year" min-view="date" ng-model="v.fechaInicial" required="" />
 		</div>
 		<div class="col-sm-2 text-center" valida>
 			<label for="fechaFinal">Fecha Final *</label>
-			<input name="fechaFinal" date-time format="dd-MM-yyyy" class="form-control" readonly="" style="background-color: white" view="date" max-view="year" min-view="date" ng-model="p.fechaFinal" required="" />
+			<input name="fechaFinal" date-time format="dd-MM-yyyy" class="form-control" readonly="" style="background-color: white" view="date" max-view="year" min-view="date" ng-model="v.fechaFinal" required="" />
 		</div>
 		<div class="col-sm-2">
-			<button class="btn btn-primary" ng-click="p.getPedidos(p.fechaInicial, p.fechaFinal)">Buscar</button>
+			<button class="btn btn-primary" ng-click="v.getPedidos(v.fechaInicial, v.fechaFinal)">Buscar</button>
 		</div>
 	</form>
 </div>
@@ -34,7 +34,7 @@
 				<th>Saldo</th>
 				<th>Acciones</th>
 			</tr>
-			<tr ng-repeat="venta in p.ventas">
+			<tr ng-repeat="venta in v.ventas">
 				<td>{{$index + 1}}</td>
 				<td>{{venta.clienteSeleccionado.profile.nombreCompleto}}</td>
 				<td>{{venta.entrega.fecha | date:"dd-MM-yyyy hh:mm"}}</td>
@@ -50,9 +50,9 @@
 					    <span class="sr-only">Toggle Dropdown</span>
 					  </button>
 					  <ul class="dropdown-menu  dropdown-menu-right text-left">
-					    <li><a href="#" ng-click="p.editar(venta._id)"><i class="fa fa-pencil"></i> Editar</a></li>
-					    <li ng-show="venta.saldo > 0"><a href="#" ng-click="p.mostrarModalPago(venta._id)"><i class="fa fa-dollar"></i> Pagar</a></li>
-					    <li><a href="#" ng-click="p.cambiarEstatus(venta._id)">
+					    <li><a href="#" ng-click="v.editar(venta._id)"><i class="fa fa-pencil"></i> Editar</a></li>
+					    <li ng-show="venta.saldo > 0"><a href="#" ng-click="v.mostrarModalPago(venta._id)"><i class="fa fa-dollar"></i> Pagar</a></li>
+					    <li><a href="#" ng-click="v.cambiarEstatus(venta._id)">
 					    				<i class="fa fa-{{venta.estatus ? 'trash' : 'check' }}"></i> {{venta.estatus ? "Desactivar" : "Activar" }}
 					    		</a>
 					    </li>
@@ -63,8 +63,8 @@
 			<tr>
 				<th colspan="5"></th>
 				<th class="text-right">Total</th>				
-				<th>{{p.pagadoTotal | currency}}</th>
-				<th>{{p.saldoTotal | currency}}</th>
+				<th>{{v.pagadoTotal | currency}}</th>
+				<th>{{v.saldoTotal | currency}}</th>
 				<th></th>
 			</tr>
 		</table>
@@ -76,48 +76,48 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">{{p.ventaSeleccionada.cliente.profile.nombreCompleto}}</h4>
+        <h4 class="modal-title" id="myModalLabel">{{v.ventaSeleccionada.cliente.profile.nombreCompleto}}</h4>
       </div>
       <div class="modal-body">
         <form name="form" class="form-horizontal" role="form"  novalidate>
 	        <div class="row">
 			    	<div class="col-sm-12" valida>
 					    <label>Importe a pagar *</label>
-					    <input name="importeAPagar" type="number" class="form-control" ng-model="p.importeAPagar" required="">
+					    <input name="importeAPagar" type="number" class="form-control" ng-model="v.importeAPagar" required="">
 			    	</div>
 			    </div>
 			    <fieldset>
 							<div class="form-group">
 				        <label class="col-md-2 control-label">Forma de pago</label>
 				        <div class="col-md-2">
-				          <button class="btn btn-{{p.ventaSeleccionada.formaPago == 'Efectivo' ? 'info' : 'default'}} form-control" ng-click="p.seleccionarFormaPago('Efectivo', false)">Efectivo</button>
+				          <button class="btn btn-{{v.ventaSeleccionada.formaPago == 'Efectivo' ? 'info' : 'default'}} form-control" ng-click="v.seleccionarFormaPago('Efectivo', false)">Efectivo</button>
 				        </div>
 				        <div class="col-md-2">
-				          <button class="btn btn-{{p.ventaSeleccionada.formaPago == 'Tarjeta' ? 'info' : 'default'}} form-control" ng-click="p.seleccionarFormaPago('Tarjeta', false)">Tarjeta</button>		
+				          <button class="btn btn-{{v.ventaSeleccionada.formaPago == 'Tarjeta' ? 'info' : 'default'}} form-control" ng-click="v.seleccionarFormaPago('Tarjeta', false)">Tarjeta</button>		
 				        </div>
 				        <div class="col-md-3">
-				          <button class="btn btn-{{p.ventaSeleccionada.formaPago == 'Oxxo/Trans' ? 'info' : 'default'}} form-control" ng-click="p.seleccionarFormaPago('Oxxo/Trans', true)">Oxxo/Trans</button>
+				          <button class="btn btn-{{v.ventaSeleccionada.formaPago == 'Oxxo/Trans' ? 'info' : 'default'}} form-control" ng-click="v.seleccionarFormaPago('Oxxo/Trans', true)">Oxxo/Trans</button>
 				        </div>
 				        <div class="col-md-3">
-				          <button class="btn btn-{{p.ventaSeleccionada.formaPago == 'Intercambio' ? 'info' : 'default'}} form-control" ng-click="p.seleccionarFormaPago('Intercambio', false)">Intercambio</button>
+				          <button class="btn btn-{{v.ventaSeleccionada.formaPago == 'Intercambio' ? 'info' : 'default'}} form-control" ng-click="v.seleccionarFormaPago('Intercambio', false)">Intercambio</button>
 				        </div>				        
 					    </div>
 						</fieldset>
 	        <address>
-					  <strong>Saldo: {{p.ventaSeleccionada.saldo | currency}}.</strong><br>
-					  Tipo: {{p.ventaSeleccionada.tipoEnvio}}<br>
-					  Dirección : {{p.ventaSeleccionada.cliente.profile.calleNum + " " + p.ventaSeleccionada.cliente.profile.colonia + ", " + p.ventaSeleccionada.cliente.profile.codigoPostal}}<br>
-					  <abbr title="Teléfono">T:</abbr> {{p.ventaSeleccionada.cliente.profile.tel1}}
+					  <strong>Saldo: {{v.ventaSeleccionada.saldo | currency}}.</strong><br>
+					  Tipo: {{v.ventaSeleccionada.tipoEnvio}}<br>
+					  Dirección : {{v.ventaSeleccionada.cliente.profile.calleNum + " " + v.ventaSeleccionada.cliente.profile.colonia + ", " + v.ventaSeleccionada.cliente.profile.codigoPostal}}<br>
+					  <abbr title="Teléfono">T:</abbr> {{v.ventaSeleccionada.cliente.profile.tel1}}
 					</address>
 					
 					<address>
-					  <strong>{{p.ventaSeleccionada.cliente.profile.nombreCompleto}}</strong><br>
-					  <a href="mailto:{{p.ventaSeleccionada.cliente.profile.correo}}">{{p.ventaSeleccionada.cliente.profile.correo}}</a>
+					  <strong>{{v.ventaSeleccionada.cliente.profile.nombreCompleto}}</strong><br>
+					  <a href="mailto:{{v.ventaSeleccionada.cliente.profile.correo}}">{{v.ventaSeleccionada.cliente.profile.correo}}</a>
 					</address>
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-	        <button type="button" class="btn btn-primary" ng-click="p.pagar(p.ventaSeleccionada, p.importeAPagar, form)" valida-form formulario="form">Pagar</button>
+	        <button type="button" class="btn btn-primary" ng-click="v.pagar(v.ventaSeleccionada, v.importeAPagar, form)" valida-form formulario="form">Pagar</button>
 	      </div>
 			</form>
     </div>

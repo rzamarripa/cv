@@ -85,10 +85,18 @@
 								    	<label>Teléfono 2</label>																	
 								    	<input type="number" class="form-control" placeholder="Teléfono 2" ng-model="sc.sucursal.telefono2">
 							    	</div>
-							    	<div class="col-sm-8" valida>
-									    <label>Dirección *</label>
-									    <textarea name="direccion" class="form-control" placeholder="Dirección" ng-model="sc.sucursal.direccion" required></textarea>
-							    	</div>	    	
+							    	<div class="col-sm-3" valida>
+									    <label>Calle y Número *</label>
+									    <input name="calleNum" type="text" class="form-control" placeholder="Calle y Número" ng-model="sc.sucursal.calleNum" required>
+							    	</div>
+							    	<div class="col-sm-3" valida>
+									    <label>Colonia *</label>
+									    <input name="colonia" type="text" class="form-control" placeholder="Colonia" ng-model="sc.sucursal.colonia" required>
+							    	</div>
+							    	<div class="col-sm-2" valida>
+									    <label>Código Postal *</label>
+									    <input name="cp" type="text" class="form-control" placeholder="Código Postal" ng-model="sc.sucursal.cp" required>
+							    	</div>   	
 							    </div>	
 							    <div class="row">
 							    	<div class="col-sm-6" valida>
@@ -98,6 +106,20 @@
 							    	<div class="col-sm-6" valida>
 									    <label>Estado *</label>
 									    <input name="estado" type="text" class="form-control" placeholder="Estado" ng-model="sc.sucursal.estado" required="">
+							    	</div>
+							    </div>
+							    <div class="row">
+							    	<div class="col-sm-4" valida>
+									    <label>Regalías *</label>
+									    <input name="regalias" type="number" class="form-control" placeholder="0" ng-model="sc.sucursal.regalias" required="">
+							    	</div>
+							    	<div class="col-sm-4" valida>
+									    <label>Publicidad Sucursal *</label>
+									    <input name="publicidadSucursal" type="number" class="form-control" placeholder="0" ng-model="sc.sucursal.publicidadSucursal" required="">
+							    	</div>
+							    	<div class="col-sm-4" valida>
+									    <label>Publicidad Marca *</label>
+									    <input name="publicidadMarca" type="number" class="form-control" placeholder="0" ng-model="sc.sucursal.publicidadMarca" required="">
 							    	</div>
 							    </div>				
 							    <div class="row">
