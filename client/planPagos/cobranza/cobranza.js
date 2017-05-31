@@ -7,14 +7,16 @@ function CobranzaCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr)
   this.semanaActual = moment().isoWeek();
   this.anioActual = moment().get("year");
   this.fechaInicial = new Date();
+  this.fechaInicial.setHours(0,0,0);
   this.fechaFinal = new Date();
+  this.fechaFinal.setHours(23,59,0)
   this.otrosCobros = [];
   this.totales = 0.00;
   this.cobrosPorFormaPago = {};
   window.rc = rc;
   
   this.subscribe('todosUsuarios',()=>{
-		return [{sucursal_id : Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "" }]
+		return [{"profile.sucursal_id" : Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "", roles : {$ne : ["cliente"]}}]
 	});
 	
 	this.helpers({
@@ -35,7 +37,7 @@ function CobranzaCtrl($scope, $meteor, $reactive,  $state, $stateParams, toastr)
 	});
 	
 	this.calcularCobros = function(fechaInicial, fechaFinal, usuario_id, formaPago, form){
-		console.log(usuario_id);
+		console.log(this.fechaInicial, this.fechaFinal, usuario_id, formaPago, form);
 		NProgress.set(0.5);
 		if(form.$invalid){
 			toastr.error('Error al enviar los datos, por favor llene todos los campos.');

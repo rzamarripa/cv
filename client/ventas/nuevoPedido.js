@@ -9,6 +9,9 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 	this.venta.detalle = [];
 	this.venta.total = 0;
 	this.venta.saldo = 0;
+	this.venta.tipoEnvio = "Tienda";
+	this.venta.enProduccion = false;
+	this.venta.formaPago = "Efectivo";
 	this.buscando = false;
   this.hoy = new Date();
   this.action = true;
@@ -86,7 +89,7 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 		
 		if(rc.venta.anticipo <= 0 && rc.anticipoCero == false){
 			rc.anticipoCero = true;
-			return
+			return;
 		}
 		
 		if(rc.venta.formaPago == undefined){
@@ -97,13 +100,20 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 		//Aquí va el meteor.method
 		Meteor.apply("realizarVenta", [rc.venta, rc.clienteSeleccionado, rc.caja], function(error, result){
 			if(result){
-				console.log(result);
-				var url = $state.href("anon.pagosImprimir",{sucursal_id : result.sucursal_id, folioActual : result.folios[0], cliente_id : venta.cliente_id},{newTab : true});
+				var url = $state.href(
+										"anon.pagosImprimir",
+										{sucursal_id : result.sucursal_id, folioActual : result.folios[0], cliente_id : venta.cliente_id},
+										{newTab : true}
+									);
+									
 				window.open(url,'_blank');
 				
 				rc.clienteSeleccionado = {};
 				rc.buscar.nombreCliente = "";
 				rc.venta = {};
+				rc.venta.tipoEnvio = "Tienda";
+				rc.venta.enProduccion = false;
+				rc.venta.formaPago = "Efectivo";
 				rc.venta.detalle = [];
 				rc.venta.total = 0;
 				rc.venta.anticipo = 0;
@@ -161,20 +171,52 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
   this.agregar = function(producto){
 	  var producto_id = rc.venta.detalle.length + 1;
 	  rc.productoManual = {};
-	  console.log("producto", producto)
 	  producto.importe = producto.cantidad * producto.precio;
 	  if(producto.detalleProducto){
-		  rc.venta.detalle.push({
+		  var productoActual = {
 			  _id : producto_id,
 			  cantidad : producto.cantidad,
 			  descripcion : producto.descripcion,
 			  detalleProducto : producto.detalleProducto,
 			  importe : producto.importe,
+			  costo : producto.costo,
 			  precio : producto.precio,
 			  tipoProducto : "catalago",
 			  estatus : 1,
 			  producto_id : producto._id
+		  };
+		  Meteor.apply("validaProducto", [productoActual], function(error, result){
+			  if(result){
+				  rc.venta.detalle.push(productoActual);
+				  
+				  rc.venta.costo = 0.00;
+				  console.log("1", rc.venta);
+				  _.each(rc.venta.detalle, function(arreglo){
+					  if(arreglo.tipoProducto == "catalago"){
+						  console.log(arreglo);
+						  rc.venta.costo += arreglo.costo;
+					  }
+				  });
+			  }else if(typeof result == "object"){
+				  rc.venta.detalle.push(result);
+				  
+				  rc.venta.costo = 0.00;
+				  console.log("2", rc.venta);
+				  _.each(rc.venta.detalle, function(arreglo){
+					  if(arreglo.tipoProducto == "catalago"){
+						  console.log(arreglo);
+						  rc.venta.costo += arreglo.costo;
+					  }
+				  });
+			  }
+			  
+			  if(error){
+				  toastr.warning("No puedo hacer conexión con el servidor");
+			  }
 		  });
+		  
+		  
+		  
 	  }else{
 		  rc.venta.detalle.push({
 			  _id : producto_id,
@@ -186,18 +228,18 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 			  estatus : 1
 		  });
 	  }
-	  console.log(producto);
 	  rc.venta.total += producto.importe;
   }
   
   this.calcularSaldo = function(anticipo){
+	  rc.venta.anticipo = parseFloat(rc.venta.anticipo);
 	  rc.venta.saldo = (parseFloat(rc.venta.anticipo) - rc.venta.total) * -1;
   }
   
   this.quitar = function(indice){	  
 	  var arreglo = rc.venta.detalle[indice];
 		rc.venta.total -= arreglo.importe; 
-		
+		rc.venta.costo -= arreglo.costo;
 		rc.venta.detalle.splice(indice, 1);
   }
   
@@ -303,6 +345,7 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 		var colonia = Colonias.findOne(colonia_id)
 		rc.venta.total += parseFloat(colonia.precioEnvio) - (parseFloat(rc.venta.precioEnvio) || 0);
 		rc.venta.saldo = rc.venta.total - rc.venta.anticipo;
+		rc.venta.envio = colonia.precioEnvio;
 		rc.venta.precioEnvio = colonia.precioEnvio;
 	}
 };

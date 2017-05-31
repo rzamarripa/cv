@@ -16,6 +16,7 @@ function PagosImprimirCtrl($scope, $meteor, $reactive, $state, $stateParams, toa
 	
 	Meteor.apply("imprimirTicket", [$stateParams.cliente_id, $stateParams.sucursal_id, $stateParams.folioActual], function(error, result){
 		if(result){
+			console.log(result);
 			rc.cliente = result[0];
 			rc.sucursal = result[1];
 			rc.venta = result[2][0];

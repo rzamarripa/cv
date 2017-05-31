@@ -21,7 +21,10 @@
 				<option value="todos" selected="selected">Todos</option>
 				<option value="Efectivo">Efectivo</option>
 				<option value="Tarjeta">Tarjeta</option>
-				<option value="Oxxo/Trans">Oxxo/Trans</option>
+				<option value="Deposito">Depósito</option>
+				<option value="Transferencia">Transferencia</option>
+				<option value="OXXO">OXXO</option>
+				<option value="Credito">Credito</option>
 				<option value="Intercambio">Intercambio</option>
 			</select>
 		</div>
@@ -36,7 +39,7 @@
 	</form>
 </div>
 <div class="row">
-	<div class="well col-sm-3" ng-repeat="pago in oc.cobrosPorFormaPago">
+	<div class="well col-sm-2" ng-repeat="pago in oc.cobrosPorFormaPago">
 		<h1>{{pago.formaPago}}</h1>
 		<h2 class="text-gree">{{pago.total | currency}}</h2>
 	</div>

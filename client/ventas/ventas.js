@@ -12,6 +12,7 @@ function VentasCtrl($scope, $meteor, $reactive, $state, $stateParams, toastr){
   this.fechaInicial.setHours(0,0,0);
   this.fechaFinal = new Date();
   this.fechaFinal.setHours(23,59,59);
+  this.sucursal = {};
 	
 	this.subscribe('ventas',()=>{
 		return [{sucursal_id : Meteor.user() ? Meteor.user().profile.sucursal_id : "", "fechaCreacion" : { $gte : rc.getReactively("fechaInicial"), $lt: rc.getReactively("fechaFinal")}}]
@@ -31,7 +32,7 @@ function VentasCtrl($scope, $meteor, $reactive, $state, $stateParams, toastr){
   
 	this.helpers({
 	  ventas : () => {
-		  var ventasFormadas = Ventas.find().fetch();
+		  var ventasFormadas = Ventas.find({estatus : 1}).fetch();
 		  if(ventasFormadas){
 			  var clientes_id = [];
 			  rc.saldoTotal = 0.00;
@@ -48,8 +49,14 @@ function VentasCtrl($scope, $meteor, $reactive, $state, $stateParams, toastr){
 		  }
 		  return ventasFormadas;
 	  },
+	  ventasCanceladas : () => {
+		  return Ventas.find({estatus : 2}).fetch()
+	  },
 	  clientes : () => {
 		  return Meteor.users.find({roles : ["cliente"]});
+		},
+		sucursal : () => {
+			return Sucursales.findOne();
 		}
   });
   
@@ -158,6 +165,69 @@ function VentasCtrl($scope, $meteor, $reactive, $state, $stateParams, toastr){
 		  rc.ventaSeleccionada.formaPago = formaPago;
 	  }
 	  rc.archivo = archivo;
+  }
+  
+  this.cambiarFechas = function(periodo){
+	  this.fechaInicial = moment().startOf(periodo).toDate();
+	  this.fechaFinal = moment().endOf(periodo).toDate();
+  }
+  
+  this.imprimir = function(){
+	  _.each(rc.ventas, function(venta, index){
+		  venta.no = index + 1;
+		  venta.entrega.fecha = moment(venta.entrega.fecha).format("DD-MM-YYYY");
+		  venta.sumaPagos = venta.anticipo + venta.pagado;
+		  venta.sumaPagos = venta.sumaPagos.toString();
+	  })
+    loading(true);
+    Meteor.call('report', {
+      templateNombre: 'reporteVentas',
+      reportNombre: 'Reporte_de_Ventas',
+      type: 'pdf',  
+      datos: {
+        items: rc.ventas,
+        length : rc.ventas.length,
+        fechaInicio : moment(rc.fechaInicial).format("DD-MM-YYYY"),
+        fechaFinal : moment(rc.fechaFinal).format("DD-MM-YYYY"),
+        pagaron : rc.pagadoTotal,
+        deben : rc.saldoTotal,
+        sucursal : rc.sucursal
+        
+      },
+    }, function(error, file) { 
+      downloadFile(file);
+      loading(false);
+    });
+  };
+  
+  this.mostrarModalCancelacion = function(venta_id){
+	  Meteor.apply("obtenerVenta", [venta_id], function(error, result){
+		  if(result){
+			  rc.ventaSeleccionada = result;
+			  $('#cancelar').modal('show');
+			  $scope.$apply();
+		  }else if(error){
+			  console.log(error);
+		  }
+	  });
+  }
+  
+  this.cancelarVenta = function(venta, form){
+	  
+	  if(form.$invalid){
+	    toastr.error('Especifique el motivo de cancelación.');
+	    return;
+		}
+		var ventaActual = Ventas.findOne(venta._id);
+	  ventaActual.estatus = 2;
+	  ventaActual.porqueCancelar = rc.porqueCancelar;
+	  Meteor.apply("cancelarVenta",[ventaActual], function(error, result){
+		  if(result){
+			  toastr.success("se canceló la venta");
+			  $('#cancelar').modal('hide');
+		  }
+	  });
+	  
   }
   
 };

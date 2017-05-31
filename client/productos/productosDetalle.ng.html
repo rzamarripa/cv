@@ -1,22 +1,22 @@
 <h2>Productos</h2>
 <div class="row">
-	<div class="col-sm-12">
-		<form class="form-horizontal" role="form" data-parsley-validate>
+	<form name="form" class="form-horizontal" role="form">
+		<div class="col-sm-12">		
 	  	<div class="well">    
 			  <div class="row">
-          <div class="col-sm-3">
+          <div class="col-sm-3" valida>
 				    <label>Nombre</label>
-			    	<input type="text" class="form-control" placeholder="Nombre" ng-model="pro.producto.nombre" capitalized>
+			    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="pro.producto.nombre" required>
 			    </div>
-			    <div class="col-sm-2">
+			    <div class="col-sm-2" valida>
 						<label >Unidad</label>
-						<select  class="form-control select2" placeholder="Seleccione" ng-model="pro.producto.unidad_id">
+						<select name="unidad" class="form-control select2" placeholder="Seleccione" ng-model="pro.producto.unidad_id" required>
 							<option ng-repeat="unidad in pro.unidades" value="{{unidad._id}}">{{unidad.nombre}}</option>
 						</select>
 			    </div>
 			    <div class="col-sm-7">
 				    <label>Descripción</label>
-			    	<textarea type="text" class="form-control" placeholder="Descripción" ng-model="pro.producto.descripcion" capitalized ></textarea>
+			    	<textarea type="text" class="form-control" placeholder="Descripción" ng-model="pro.producto.descripcion"></textarea>
 					</div>
 				</div>
 	  	</div>
@@ -119,12 +119,12 @@
          <!--  //////////////// boton guardar de productos ////////////// -->
 				<div class="row">
 					<div class="col-sm-12">
-						<input type="submit" ng-click="pro.guardar(pro.producto)" value="Guardar" class="btn btn-primary" ng-if="!pro.producto._id">
+						<input type="submit" ng-click="pro.guardar(pro.producto)" value="Guardar" class="btn btn-primary" ng-if="!pro.producto._id" valida-form formulario="form">
 						<input type="submit" ng-click="pro.actualizar(pro.producto)" value="Actualizar" class="btn btn-primary" ng-if="pro.producto._id">	
 					</div>
 				</div>
 	  	</div>
-  	</form>
-	</div>
+		</div>
+	</form>
 </div>
 <br/>

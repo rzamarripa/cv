@@ -5,7 +5,9 @@ angular
 function ClientesPorEstatusCtrl($scope, $meteor, $reactive, $state, toastr) {
 	let rc = $reactive(this).attach($scope);
 	this.fechaInicio = new Date();
+	this.fechaInicio.setHours(0,0,0);
 	this.fechaFin = new Date();
+	this.fechaFin.setHours(23,59)
 	this.semanaActual = moment(new Date()).isoWeek();
 	this.diasActuales = [];
 	this.alumnos = [];
@@ -14,7 +16,7 @@ function ClientesPorEstatusCtrl($scope, $meteor, $reactive, $state, toastr) {
 	window.rc = rc;
 	
   this.getClientes = function(semana, anio){
-	  Meteor.apply('getClientesPorEstatus', [new Date(this.fechaInicio.setHours(0,0,0,0)), new Date(this.fechaFin.setHours(23,59,59,0)), this.estatus, Meteor.user().profile.sucursal_id], function(error, result){
+	  Meteor.apply('getClientesPorEstatus', [this.fechaInicio, this.fechaFin, this.estatus, Meteor.user().profile.sucursal_id], function(error, result){
 		  if(result){
 			  console.log(result);
 			  rc.clientes = result;
@@ -24,7 +26,8 @@ function ClientesPorEstatusCtrl($scope, $meteor, $reactive, $state, toastr) {
   }
   
   this.getCantClientes = function(semana, anio){
-	  Meteor.apply('getCantClientesPorEstatus', [new Date(this.fechaInicio.setHours(0,0,0,0)), new Date(this.fechaFin.setHours(23,59,59,0)), this.estatus, Meteor.user().profile.sucursal_id], function(error, result){
+	  Meteor.apply('getCantClientesPorEstatus', [this.fechaInicio, this.fechaFin, this.estatus, Meteor.user().profile.sucursal_id], function(error, result){
+		  console.log(rc.fechaInicio, rc.fechaFin, rc.estatus, Meteor.user().profile.sucursal_id)
 		  console.log(result);
 		  $('#cantClientes').highcharts( {
 			  chart: {

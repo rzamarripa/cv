@@ -55,35 +55,38 @@ let rc = $reactive(this).attach($scope);
   this.materialSeleccionado.unidad_id = this.material.unidad_id;
 
   $(".js-example-basic-single").select2();
+  
   this.agregarMaterial = function(material)
 	{ 
+		material._id = rc.materialSeleccionado._id;
 		this.producto.detalleProducto.push(material);
 		this.materialSeleccionado = {};
 		this.material = {};
-		
 	};
 	
 	this.guardar = function(producto)
 	{ 
+		if(form.$invalid || this.producto.detalleProducto.length <= 0){
+      toastr.error('Error al guardar los datos.');
+      return;
+	  }
+	  
+	  var totalPrecio = 0;
+		var totalCosto = 0;
+	  
 		_.each(rc.producto.detalleProducto, function(producto){
 			delete producto.$$hashKey;
 		});	
-		
-
-		 var totalPrecio = 0;
-		 var totalCosto = 0;
 		 
 		_.each(rc.producto.detalleProducto,function(producto){
 			totalPrecio += producto.precio * producto.cantidad;
 			totalCosto += producto.costo * producto.cantidad;
-			
 		});
 
 		this.producto.precio = parseFloat(totalPrecio.toFixed(2));
 		this.producto.costo = parseFloat(totalCosto.toFixed(2));
 		this.producto.estatus = true;
 		this.producto.sucursal_id = Meteor.user().profile.sucursal_id;
-		console.log(this.producto);
 		Productos.insert(this.producto);
 		toastr.success('producto guardado.');
 		this.producto = {}; 

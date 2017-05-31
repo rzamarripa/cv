@@ -12,13 +12,14 @@
 			<div class="form-group" valida>
 				<label for="estatus">Estatus *</label>
 				<select name="estatus" class="form-control" ng-model="ape.estatus" required="">
+					<option value="0">Todos</option>
 					<option value="1">Registrado</option>
 					<option value="2">Activo</option>
 					<option value="3">Preferente</option>
 					<option value="4">Baja</option>
 				</select>
 			</div>
-			<button class="btn btn-primary" ng-click="ape.getCantClientes()">Buscar Alumnos</button>
+			<button class="btn btn-primary" ng-click="ape.getCantClientes()">Buscar</button>
 		</div>
 	</div>
 </form>

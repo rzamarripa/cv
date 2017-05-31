@@ -65,11 +65,6 @@ function RootCtrl($scope, $meteor, $reactive, $state, $stateParams, toastr){
 		});
 	}
 	
-	//if(Meteor.user() && Meteor.user().roles && Meteor.user().roles[0] == "gerente"){
-		// Gerente
-		
-	//}
-	
 	this.autorun(function() {
  	
     if(!Meteor.user()){

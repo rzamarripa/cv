@@ -64,15 +64,13 @@ angular.module('casserole').config(['$injector', function ($injector) {
     })
     .state('anon.pagosImprimir', {
       url: '/pagosImprimir/:sucursal_id/:folioActual/:cliente_id',
-      templateUrl: 'client/pedidos/pagosImprimir.ng.html',
-      controller: 'PagosImprimirCtrl as pi',
-     // params: { 'semanas': ':semanas' , 'id' : ':id'},
+      templateUrl: 'client/ventas/pagosImprimir.ng.html',
+      controller: 'PagosImprimirCtrl as pi'
     })
     .state('anon.pagosImprimirPagos', { 
       url: '/pagosImprimirPagos/:sucursal_id/:folioActual/:cliente_id',
-      templateUrl: 'client/pedidos/pagosImprimirPagos.html',
-      controller: 'PagosImprimirPagosCtrl as pi',
-     // params: { 'semanas': ':semanas' , 'id' : ':id'},
+      templateUrl: 'client/ventas/pagosImprimirPagos.html',
+      controller: 'PagosImprimirPagosCtrl as pi'
     });
   /***************************
    * Login Users Routes
@@ -445,7 +443,7 @@ angular.module('casserole').config(['$injector', function ($injector) {
     .state('root.nuevoPedido', {
       url: '/nuevoPedido',
       templateUrl: 'client/ventas/nuevoPedido.html',
-      controller: 'VentasCtrl as np',
+      controller: 'NuevoPedidoCtrl as np',
       resolve: {
         "currentUser": ["$meteor", "toastr", function($meteor, toastr){
           return $meteor.requireValidUser(function(user) {
@@ -465,7 +463,7 @@ angular.module('casserole').config(['$injector', function ($injector) {
       resolve: {
         "currentUser": ["$meteor", "toastr", function($meteor, toastr){
           return $meteor.requireValidUser(function(user) {
-            if(user.roles[0] == "gerente" || user.roles[0] == "produccion"){
+            if(user.roles[0] == "gerente" || user.roles[0] == "encargado"){
               return true;
             }else{
               return 'UNAUTHORIZED'; 
@@ -574,6 +572,22 @@ angular.module('casserole').config(['$injector', function ($injector) {
       url: '/usuariosEncargados',
       templateUrl: 'client/usuariosEncargados/usuariosEncargados.html',
       controller: 'UsuariosEncargadosCtrl as ur',
+      resolve: {
+        "currentUser": ["$meteor", "toastr", function($meteor, toastr){
+          return $meteor.requireValidUser(function(user) {
+            if(user.roles[0] == "gerente"){
+              return true;
+            }else{
+              return 'UNAUTHORIZED';
+            }
+         });
+       }]
+      }
+    })
+    .state('root.usuariosLinea', {
+      url: '/usuariosLinea',
+      templateUrl: 'client/usuariosLinea/usuariosLinea.html',
+      controller: 'UsuariosLineaCtrl as ul',
       resolve: {
         "currentUser": ["$meteor", "toastr", function($meteor, toastr){
           return $meteor.requireValidUser(function(user) {

@@ -119,7 +119,12 @@ Meteor.methods({
 	},
 	getCantClientesPorEstatus : function(fechaInicio, fechaFin, estatus, sucursal_id){
 		
-		var bitacoras = BitacoraEstatus.find({fechaCreacion : { $gte : fechaInicio, $lt : fechaFin}, sucursal_id : sucursal_id}).fetch();
+		if(estatus == "0"){
+			console.log("entré");
+			var bitacoras = BitacoraEstatus.find({fechaCreacion : { $gte : fechaInicio, $lt : fechaFin}, sucursal_id : sucursal_id}).fetch();
+		}else{
+			var bitacoras = BitacoraEstatus.find({fechaCreacion : { $gte : fechaInicio, $lt : fechaFin}, estatusActual : parseInt(estatus), sucursal_id : sucursal_id}).fetch();
+		}
 		
 		fechaInicio = moment(fechaInicio);
 		fechaFin = moment(fechaFin);

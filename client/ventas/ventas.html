@@ -1,48 +1,116 @@
 <h2>Listado de Ventas</h2>
 <!-- <h2>Vendedores</h2> -->
 <div class="row well">
-	<form name="form" class="form-horizontal" role="form" novalidate style="margin: auto;">
-		<div class="col-sm-2 col-sm-offset-4 text-center" valida>
-			<label for="fechaInicial">Fecha Inicial *</label>
-			<input name="fechaInicial" date-time format="dd-MM-yyyy" class="form-control" readonly="" style="background-color: white" view="date" max-view="year" min-view="date" ng-model="v.fechaInicial" required="" />
-		</div>
-		<div class="col-sm-2 text-center" valida>
-			<label for="fechaFinal">Fecha Final *</label>
-			<input name="fechaFinal" date-time format="dd-MM-yyyy" class="form-control" readonly="" style="background-color: white" view="date" max-view="year" min-view="date" ng-model="v.fechaFinal" required="" />
-		</div>
-		<div class="col-sm-2">
-			<button class="btn btn-primary" ng-click="v.getPedidos(v.fechaInicial, v.fechaFinal)">Buscar</button>
-		</div>
-	</form>
-</div>
-<div class="row">
-	<div class="col-sm-">
-		
+	<div class="col-sm-7">
+		<form name="form" class="form-horizontal" role="form" novalidate style="margin: auto;">
+			<div class="col-sm-4 col-sm-offset-1 text-center" valida>
+				<label for="fechaInicial">Fecha Inicial *</label>
+				<input name="fechaInicial" date-time format="dd-MM-yyyy" class="form-control" readonly="" style="background-color: white" view="date" max-view="year" min-view="date" ng-model="v.fechaInicial" required="" />
+			</div>
+			<div class="col-sm-4 text-center" valida>
+				<label for="fechaFinal">Fecha Final *</label>
+				<input name="fechaFinal" date-time format="dd-MM-yyyy" class="form-control" readonly="" style="background-color: white" view="date" max-view="year" min-view="date" ng-model="v.fechaFinal" required="" />
+			</div>
+			<div class="col-sm-2">
+				<br/>
+				<button class="btn btn-primary" ng-click="v.getPedidos(v.fechaInicial, v.fechaFinal)">Buscar</button>
+			</div>
+		</form>
 	</div>
+	<div class="col-sm-5">
+		<div class="btn-group btn-group-justified">
+			<a href="javascript:void(0);" class="btn btn-default" ng-click="v.cambiarFechas('day')">Día</a>
+			<a href="javascript:void(0);" class="btn btn-default" ng-click="v.cambiarFechas('week')">Semana</a>
+			<a href="javascript:void(0);" class="btn btn-default" ng-click="v.cambiarFechas('month')">Mes</a>
+		</div>
+	</div>	
+</div>
+<div class="row" ng-show="v.ventas.length > 0 || v.ventasCanceladas.length > 0">
+  <div class="col-sm-3">
+      <div class="panel panel-info">
+          <div class="panel-heading">
+              <div class="row">
+                  <div class="col-xs-3">
+                      <i class="fa fa-shopping-cart fa-3x"></i>
+                  </div>
+                  <div class="col-xs-9 text-right">
+                      <div class="huge">{{v.ventas.length}}</div>
+                      <div>Nuevas Ventas!</div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="col-sm-3">
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-xs-3">
+              <i class="fa fa-dollar fa-3x"></i>
+          </div>
+          <div class="col-xs-9 text-right">
+              <div class="huge">{{v.pagadoTotal | currency}}</div>
+              <div>Te pagaron!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3">
+      <div class="panel panel-danger">
+          <div class="panel-heading">
+              <div class="row">
+                  <div class="col-xs-3">
+                      <i class="fa fa-warning fa-3x"></i>
+                  </div>
+                  <div class="col-xs-9 text-right">
+                      <div class="huge">{{v.saldoTotal | currency}}</div>
+                      <div>Te deben!</div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="col-sm-3">
+      <div class="panel panel-warning">
+          <div class="panel-heading">
+              <div class="row">
+                  <div class="col-xs-3">
+                      <i class="fa fa-shopping-cart fa-3x"></i>
+                  </div>
+                  <div class="col-xs-9 text-right">
+                      <div class="huge">{{v.ventasCanceladas.length}}</div>
+                      <div>Ventas Canceladas!</div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
 </div>
 <div class="row">
 	<div class="col-sm-12">
+		<button ng-click="v.imprimir()" class="btn btn-primary pull-right"><i class="fa fa-print"></i></button>
 		<table class="table">
 			<tr>
-				<th>No.</th>
-				<th>Clientes</th>
-				<th>Fecha Entrega</th>
-				<th>Estatus Prod.</th>
-				<th>Estatus Pago.</th>
-				<th>Fecha Pedido</th>
-				<th>Pagado</th>
-				<th>Saldo</th>
-				<th>Acciones</th>
+				<th class="text-center">No.</th>
+				<th class="text-center">Clientes</th>
+				<th class="text-center">Fecha Entrega</th>
+				<th class="text-center">Estatus Prod.</th>
+				<th class="text-center">Estatus Pago.</th>
+				<th class="text-center">Fecha Pedido</th>
+				<th class="text-center">Pagado</th>
+				<th class="text-center">Saldo</th>
+				<th class="text-center">Acciones</th>
 			</tr>
 			<tr ng-repeat="venta in v.ventas">
 				<td>{{$index + 1}}</td>
 				<td>{{venta.clienteSeleccionado.profile.nombreCompleto}}</td>
-				<td>{{venta.entrega.fecha | date:"dd-MM-yyyy hh:mm"}}</td>
+				<td class="font-xs">{{venta.entrega.fecha | date:"dd-MM-yyyy hh:mm"}}</td>
 				<td><span ng-class="">{{venta.estatusNombre}}</span></td>
 				<td><span ng-class="">{{venta.estatusNombrePago}}</span></td>
-				<td>{{venta.fechaCreacion | date:"dd-MM-yyyy HH:mm"}}</td>
-				<td>{{venta.anticipo + venta.pagado | currency}}</td>
-				<td>{{venta.saldo | currency}}</td>
+				<td class="font-xs">{{venta.fechaCreacion | date:"dd-MM-yyyy HH:mm"}}</td>
+				<td class="text-right">{{venta.anticipo + venta.pagado | currency}}</td>
+				<td class="text-right">{{venta.saldo | currency}}</td>
 				<td class="text-center">
 					<div class="btn-group">
 					  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -50,11 +118,11 @@
 					    <span class="sr-only">Toggle Dropdown</span>
 					  </button>
 					  <ul class="dropdown-menu  dropdown-menu-right text-left">
-					    <li><a href="#" ng-click="v.editar(venta._id)"><i class="fa fa-pencil"></i> Editar</a></li>
 					    <li ng-show="venta.saldo > 0"><a href="#" ng-click="v.mostrarModalPago(venta._id)"><i class="fa fa-dollar"></i> Pagar</a></li>
-					    <li><a href="#" ng-click="v.cambiarEstatus(venta._id)">
-					    				<i class="fa fa-{{venta.estatus ? 'trash' : 'check' }}"></i> {{venta.estatus ? "Desactivar" : "Activar" }}
-					    		</a>
+					    <li>
+					    	<a href="#" ng-click="v.mostrarModalCancelacion(venta._id)">
+				    				<i class="fa fa-times"></i> Cancelar venta
+				    		</a>
 					    </li>
 					  </ul>
 					</div>
@@ -63,8 +131,8 @@
 			<tr>
 				<th colspan="5"></th>
 				<th class="text-right">Total</th>				
-				<th>{{v.pagadoTotal | currency}}</th>
-				<th>{{v.saldoTotal | currency}}</th>
+				<th class="text-right">{{v.pagadoTotal | currency}}</th>
+				<th class="text-right">{{v.saldoTotal | currency}}</th>
 				<th></th>
 			</tr>
 		</table>
@@ -87,22 +155,32 @@
 			    	</div>
 			    </div>
 			    <fieldset>
-							<div class="form-group">
-				        <label class="col-md-2 control-label">Forma de pago</label>
-				        <div class="col-md-2">
-				          <button class="btn btn-{{v.ventaSeleccionada.formaPago == 'Efectivo' ? 'info' : 'default'}} form-control" ng-click="v.seleccionarFormaPago('Efectivo', false)">Efectivo</button>
-				        </div>
-				        <div class="col-md-2">
-				          <button class="btn btn-{{v.ventaSeleccionada.formaPago == 'Tarjeta' ? 'info' : 'default'}} form-control" ng-click="v.seleccionarFormaPago('Tarjeta', false)">Tarjeta</button>		
-				        </div>
-				        <div class="col-md-3">
-				          <button class="btn btn-{{v.ventaSeleccionada.formaPago == 'Oxxo/Trans' ? 'info' : 'default'}} form-control" ng-click="v.seleccionarFormaPago('Oxxo/Trans', true)">Oxxo/Trans</button>
-				        </div>
-				        <div class="col-md-3">
-				          <button class="btn btn-{{v.ventaSeleccionada.formaPago == 'Intercambio' ? 'info' : 'default'}} form-control" ng-click="v.seleccionarFormaPago('Intercambio', false)">Intercambio</button>
-				        </div>				        
-					    </div>
-						</fieldset>
+						<div class="form-group">
+			        <label class="col-md-2 control-label">Forma de pago</label>
+			        <div class="col-md-2">
+			          <button class="btn btn-{{v.ventaSeleccionada.formaPago == 'Efectivo' ? 'info' : 'default'}}" ng-click="v.seleccionarFormaPago('Efectivo', false)">Efectivo</button>
+			        </div>
+			        <div class="col-md-2">
+			          <button class="btn btn-{{v.ventaSeleccionada.formaPago == 'Tarjeta' ? 'info' : 'default'}}" ng-click="v.seleccionarFormaPago('Tarjeta', false)">Tarjeta</button>		
+			        </div>
+			        <div class="col-md-3">
+			          <button class="btn btn-{{v.ventaSeleccionada.formaPago == 'Deposito' ? 'info' : 'default'}}" ng-click="v.seleccionarFormaPago('Deposito', true)">Deposito</button>
+			        </div>
+			        <div class="col-md-3">
+			          <button class="btn btn-{{v.ventaSeleccionada.formaPago == 'Transferencia' ? 'info' : 'default'}} form-control" ng-click="v.seleccionarFormaPago('Transferencia', false)">Transferencia</button>
+			        </div>
+			        <div class="col-md-3">
+			          <button class="btn btn-{{v.ventaSeleccionada.formaPago == 'OXXO' ? 'info' : 'default'}}" ng-click="v.seleccionarFormaPago('OXXO', false)">OXXO</button>
+			        </div>
+			        <div class="col-md-3">
+			          <button class="btn btn-{{v.ventaSeleccionada.formaPago == 'Credito' ? 'info' : 'default'}}" ng-click="v.seleccionarFormaPago('Credito', false)">Crédito</button>
+			        </div>
+			        <div class="col-md-3">
+			          <button class="btn btn-{{v.ventaSeleccionada.formaPago == 'Intercambio' ? 'info' : 'default'}}" ng-click="v.seleccionarFormaPago('Intercambio', false)">Intercambio</button>
+			        </div>
+			        				        
+				    </div>
+					</fieldset>
 	        <address>
 					  <strong>Saldo: {{v.ventaSeleccionada.saldo | currency}}.</strong><br>
 					  Tipo: {{v.ventaSeleccionada.tipoEnvio}}<br>
@@ -118,6 +196,44 @@
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 	        <button type="button" class="btn btn-primary" ng-click="v.pagar(v.ventaSeleccionada, v.importeAPagar, form)" valida-form formulario="form">Pagar</button>
+	      </div>
+			</form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="cancelar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{v.ventaSeleccionada.cliente.profile.nombreCompleto}}</h4>
+      </div>
+      <div class="modal-body">
+        <form name="form" class="form-horizontal" role="form"  novalidate>
+	        <div class="row">
+			    	<div class="col-sm-12" valida>
+					    <label for="porqueCancelar">Porqué quiere cancelar *</label>
+					    <textarea role="3" name="porqueCancelar" class="form-control" ng-model="v.porqueCancelar" required=""></textarea>
+			    	</div>
+			    </div>
+	        <address>
+					  <strong>Saldo: {{v.ventaSeleccionada.saldo | currency}}.</strong><br>
+					  <strong>Pagado: {{v.ventaSeleccionada.anticipo + v.ventaSeleccionada.pagado | currency}}.</strong><br>
+					  Tipo: {{v.ventaSeleccionada.tipoEnvio}}<br>
+					  Dirección : {{v.ventaSeleccionada.cliente.profile.calleNum + " " + v.ventaSeleccionada.cliente.profile.colonia + ", " + v.ventaSeleccionada.cliente.profile.codigoPostal}}<br>
+					  <abbr title="Teléfono">T:</abbr> {{v.ventaSeleccionada.cliente.profile.tel1}}
+					</address>
+					
+					<address>
+					  <strong>{{v.ventaSeleccionada.cliente.profile.nombreCompleto}}</strong><br>
+					  <a href="mailto:{{v.ventaSeleccionada.cliente.profile.correo}}">{{v.ventaSeleccionada.cliente.profile.correo}}</a>
+					</address>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+	        <button type="button" class="btn btn-danger" ng-click="v.cancelarVenta(v.ventaSeleccionada, form)" valida-form formulario="form">Cancelar</button>
 	      </div>
 			</form>
     </div>

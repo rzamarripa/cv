@@ -21,19 +21,21 @@
 					        
 				          <div class="widget-body">							
 								    <div class="row">
-									    <div class="col-sm-2" valida>					    
+									    <div class="col-sm-4" valida>					    
 									    	<label>Nombre *</label>
 									    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="sc.sucursal.nombre" required>
 								    	</div>
-								    	<div class="col-sm-2" valida>
+								    	<div class="col-sm-4" valida>
 									    	<label>Apellido Paterno *</label>
 									    	<input name="apPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="sc.sucursal.apPaterno" required>
 								    	</div>
-								    	<div class="col-sm-2">					    
+								    	<div class="col-sm-4">					    
 									    	<label>Apellido Materno</label>
 									    	<input name="apMaterno"  type="text" class="form-control" placeholder="Apellido Materno" ng-model="sc.sucursal.apMaterno" >
 								    	</div>
-								    	<div class="col-sm-2" valida>
+								    </div>
+								    <div class="row">
+								    	<div class="col-sm-3" valida>
 										    <label for="sexo">Sexo *</label>
 										    <select name="sexo" ng-model="sc.sucursal.sexo" data-placeholder="Seleccione" class="form-control" required>
 												    <option value=""></option>
@@ -41,11 +43,15 @@
 												    <option value="femenino">Femenino</option>
 												</select>
 								    	</div>
-								    	<div class="col-sm-2" valida>					    
+								    	<div class="col-sm-3" valida>
+										    <label for="correo">Correo *</label>
+										    <input name="correo"  type="text" class="form-control" placeholder="Correo" ng-model="sc.sucursal.correoGerente" >
+								    	</div>
+								    	<div class="col-sm-3" valida>					    
 									    	<label>Usuario *</label>
 									    	<input name="usuario" type="text" class="form-control" placeholder="Usuario" ng-model="sc.sucursal.username" required>
 								    	</div>
-								    	<div class="col-sm-2" valida>					    										
+								    	<div class="col-sm-3" valida>					    										
 									    	<label>Contraseña *</label>																	
 									    	<input name="password" type="password" class="form-control" placeholder="Contraseña" ng-model="sc.sucursal.password" required>
 								    	</div>
@@ -99,11 +105,15 @@
 							    	</div>   	
 							    </div>	
 							    <div class="row">
-							    	<div class="col-sm-6" valida>
+								    <div class="col-sm-4" valida>
+									    <label>RFC *</label>
+									    <input name="rfc" type="text" class="form-control" placeholder="RFC" ng-model="sc.sucursal.rfc" required="">
+							    	</div>
+							    	<div class="col-sm-4" valida>
 									    <label>Ciudad *</label>
 									    <input name="ciudad" type="text" class="form-control" placeholder="Ciudad" ng-model="sc.sucursal.ciudad" required="">
 							    	</div>
-							    	<div class="col-sm-6" valida>
+							    	<div class="col-sm-4" valida>
 									    <label>Estado *</label>
 									    <input name="estado" type="text" class="form-control" placeholder="Estado" ng-model="sc.sucursal.estado" required="">
 							    	</div>

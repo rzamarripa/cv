@@ -1,0 +1,160 @@
+<h2>Redes Sociales</h2>
+<div class="row">
+	<div class="col-sm-12">
+		<a class="btn btn-{{ul.nuevo == true ? 'primary' : 'danger'}}" role="button" data-toggle="collapse" 
+			href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" ng-click="ul.nuevoUsuario()">
+			{{ul.nuevo == true ? 'Nuevo' : 'Cancelar'}}
+		</a>
+		<div class="collapse" id="collapseExample">
+			<form name="form" class="form-horizontal" role="form" novalidate >
+		  	<div class="well">
+			    <div class="row">
+			    	<div class="col-sm-4" valida>
+			    		<label>Nombre *</label>
+				    	<input name="nombre" type="text" class="form-control" placeholder="Nombre" ng-model="ul.usuario.profile.nombre" required="">
+			    	</div>
+
+			    	<div class="col-sm-4" valida>
+			    		<label>Apellido Paterno *</label>
+				    	<input name="apellidoPaterno" type="text" class="form-control" placeholder="Apellido Paterno" ng-model="ul.usuario.profile.apPaterno" required="">
+			    	</div>
+			    	<div class="col-sm-4">
+			    		<label>Apellido Materno</label>
+				    	<input type="text" class="form-control" placeholder="Apellido Materno" ng-model="ul.usuario.profile.apMaterno">
+			    	</div>
+			    	<div class="col-sm-4">
+			    		<label>Dirección</label>
+				    	<input type="text" class="form-control" placeholder="Dirección" ng-model="ul.usuario.profile.direccion">
+			    	</div>
+			    	<div class="col-sm-4">
+			    		<label>Teléfono</label>
+				    	<input type="text" class="form-control" placeholder="Teléfono" ng-model="ul.usuario.profile.telefono">
+			    	</div>
+			    	<div class="col-sm-4" valida>
+			    		<label>Correo * </label>
+				    	<input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="ul.usuario.profile.correo" required>
+			    	</div>
+			    	<div class="col-sm-4">
+			    		<label>Usuario</label>
+				    	<input type="text" class="form-control" placeholder="Usuario" ng-model="ul.usuario.username">
+			    	</div>
+			    	<div class="col-sm-4" valida>
+				    	<label>Sexo *</label>
+					    <select name="genero" ng-model="ul.usuario.profile.sexo" class="form-control" required>
+							  <option value="masculino">Masculino</option>
+							  <option value="femenino">Femenino</option>
+							</select>
+			    	</div>
+			    	<div class="col-sm-4">
+							<label for="talla">Fotografía</label>
+							<button class="btn btn-primary" ng-click="ul.tomarFoto()"><i class="fa fa-camera"></i></button>
+							<img width="100px" ng-src="{{ul.usuario.profile.fotografia}}" ng-class="{'img-thumbnail': !!usuario.profile.fotografia}" />
+						</div>
+						<div class="col-sm-4" valida>
+				    	<label>Sucursal *</label>
+					    <select name="sucursal" ng-model="ul.usuario.profile.colonias" style="width: 100%;" class="form-control select2" multiple="multiple" required>
+							  <option value="todos">Todos</option>
+							  <option value="{{sucursal._id}}" ng-repeat="sucursal in ul.sucursales">{{sucursal.nombreSucursal}}</option>
+							</select>
+			    	</div>
+			    </div>
+			    <div class="row">
+			    	<div class="col-sm-4" ng-class="!ul.validaContrasena == true ? 'has-error' : 'has-success'">					    
+				    	<label>Contraseña *</label>
+				    	<input type="password" class="form-control" placeholder="Contraseña" 
+				    	ng-model="ul.usuario.password" 
+				    	ng-disabled="ul.cambiarPassword"
+				    	ng-change="ul.validarContrasena(ul.usuario.password, ul.usuario.confirmarContrasena)">
+			    	</div>		    				    	    
+			    	<div class="col-sm-4" ng-class="!ul.validaContrasena == true ? 'has-error' : 'has-success'">					    
+				    	<label>Confirmar Contraseña *</label>
+				    	<input type="password" class="form-control" placeholder="Confirmar Contraseña" 
+				    	ng-model="ul.usuario.confirmarContrasena" 
+				    	ng-disabled="ul.cambiarPassword"
+				    	ng-change="ul.validarContrasena(ul.usuario.password, ul.usuario.confirmarContrasena)">
+				    	<div class="note note-success" ng-if="!ul.validaContrasena == true && ul.usuario.confirmarContrasena.length > 0">Las contraseñas no coinciden.</div>
+						</div>
+						<div class="col-sm-4"> 
+							<button class="btn btn-primary btn-sm" ng-click="ul.cambiarContrasena()">{{(ul.cambiarPassword == true) ? 'Cambiar Contraseña' : 'No cambiar'}}</button>
+						</div>
+			    </div>
+				</div>				
+				<div class="row">
+					<div class="col-sm-12">
+						<input type="submit" ng-click="ul.guardar(ul.usuario,form)" value="Guardar" class="btn btn-primary" ng-show="ul.action" valida-form formulario="form"/>
+						<input type="submit" ng-click="ul.actualizar(ul.usuario,form)" value="Actualizar" class="btn btn-primary" ng-show="!ul.action" valida-form formulario="form"/>				
+					</div>
+				</div>	  
+		  </form>
+		</div>
+	</div>
+</div>
+
+<!-- List -->
+<div class="row">
+	<div class="col-sm-12">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th width="5%"><div class="text-center">No.</div></th>
+					<th width="15%"><div class="text-center">Foto</div></th>
+					<th width="15%"><div class="text-center">Nombre</div></th>
+					<th width="15%"><div class="text-center">Usuario</div></th>
+					<th width="15%"><div class="text-center">Dirección </div></th>
+					<th width="10%"><div class="text-center">Teléfono</div></th>
+					<th width="20%"><div class="text-center">correo</div></th>
+					<th width="10%">
+						<div class="text-center">
+							Estatus
+						</div>
+					</th>
+					<th width="10%">
+						<div class="text-center">
+							Acciones
+						</div>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+		    <tr ng-repeat="usuario in ul.usuariosEncargados">
+			    <td>{{$index + 1}}</td>
+		    	<td><img width="100px" ng-src="{{usuario.profile.fotografia}}" ng-class="{'img-thumbnail': !!usuario.profile.fotografia}"/> </td>
+			    <td>{{usuario.profile.nombre}} {{usuario.profile.apPaterno}} {{usuario.profile.apMaterno}}</td>
+			    <td>{{usuario.username}} </td>
+			    <td>{{usuario.profile.direccion}} </td>
+			    <td>{{usuario.profile.telefono}} </td>
+			    <td>{{usuario.profile.correo}} </td>
+			    <td>
+				    <div class="text-center">
+				    	<span ng-if="usuario.profile.estatus" class="label label-success">
+							  Activo
+							</span>
+							<span ng-if="!usuario.profile.estatus" class="label label-danger">
+							  Inactivo
+							</span>
+				    </div>
+			    </td>
+			    <td>
+				    <div class="text-center">
+					    <div class="btn-group">
+							  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							    <span class="caret"></span>
+							    <span class="sr-only">Toggle Dropdown</span>
+							  </button>
+							  <ul class="dropdown-menu dropdown-menu-right text-left">
+							    <li><a href="#" ng-click="ul.editar(usuario._id)"><i class="fa fa-pencil"></i> Editar</a></li>
+							    <li><a href="#" ng-click="ul.cambiarEstatus(usuario._id)">
+							    				<i class="fa fa-{{usuario.profile.estatus ? 'trash' : 'check' }}"></i> {{usuario.profile.estatus ? "Desactivar" : "Activar" }}
+							    		</a>
+							    </li>
+							  </ul>
+							</div>
+				    </div>				    
+			    </td>
+		    </tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+

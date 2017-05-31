@@ -33,4 +33,6 @@ function onReady() {
 }
 */
 
+$("html").attr({lang:"es"});
+
 NProgress.configure({ easing: 'ease', speed: 600 });

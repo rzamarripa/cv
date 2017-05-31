@@ -54,6 +54,8 @@ function CajasCtrl($scope, $meteor, $reactive, $state, toastr) {
 		//producto.material_id = this.material_id;	
 		caja.estatus = true;
 		caja.abierta = false;
+		caja.saldoActual = caja.saldoInicial;
+		caja.folios = [];
 		caja.sucursal_id = Meteor.user().profile.sucursal_id;
 		Cajas.insert(this.caja);
 		toastr.success('Caja guardada.');
@@ -126,9 +128,12 @@ function CajasCtrl($scope, $meteor, $reactive, $state, toastr) {
   
   this.confirmarAbrirCaja = function(caja){
 	  this.confirmarSaldo = true;
-	  Cajas.update(caja._id, { $set : { usuario_id : Meteor.userId(), saldoActual : this.saldoActual, abierta : true, saldoInicial : rc.saldoInicial}});
-	  toastr.success("Has abierto la caja con un saldo de: " + this.saldoActual);
-	  $('#abrirCaja').modal('hide')
+	  Meteor.apply("confirmarAbrirCaja", [caja, Meteor.userId(), this.saldoActual, rc.saldoInicial, this.confirmarSaldo, this.cajaSeleccionada.saldoInicial], function(error, result){
+		  if(result){
+			  toastr.success("Has abierto la caja con un saldo de: " + this.saldoActual);
+				$('#abrirCaja').modal('hide')
+		  }
+	  });
   }
   
   this.cerrar = function(caja){

@@ -7,7 +7,7 @@ Meteor.publish("usuariosMensajes", function(options){
 });
 
 Meteor.publish("todosUsuarios", function(options){
-	return Roles.getUsersInRole(['gerente', 'director']);
+	return Meteor.users.find(options);
 });
 
 Meteor.publish("validaUsuarios", function(){
