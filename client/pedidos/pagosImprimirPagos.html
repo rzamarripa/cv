@@ -1,0 +1,69 @@
+
+	<div class="container">
+		<div class="widget-body no-padding">
+			<div class="padding-10">
+				<div class="row text-center">
+					<div class="col-sm-4 col-sm-offset-4">
+						<div>
+							<img src="{{pi.sucursal.logo}}" width="200" alt="recibo icon">
+						</div>
+						<address>
+							<br>
+							<strong>{{pi.sucursal.nombreSucursal}}</strong>
+							<br><br>
+							{{pi.sucursal.direccion}}
+							<br/>
+							{{pi.sucursal.ciudad}}, {{pi.sucursal.estado}}
+							<br>
+							<abbr>TEL:</abbr> {{pi.sucursal.telefono1}}
+						</address>
+						<table class="table">
+							<tr>
+								<th>RECIBO NO. : </th>
+								<td class="text-right">{{ pi.pago.folio }}</td>
+							</tr>
+							<tr>
+								<th>FECHA : </th>
+								<td class="text-right">{{ pi.pago.fechaPago | date:'dd-MM-yyyy' }}</td>
+							</tr>
+							<tr>
+								<th>CLIENTE : </th>
+								<td class="text-right">{{ pi.cliente.profile.nombreCompleto }}</td>
+							</tr>
+						</table>
+						<table class="table">
+							<tr>
+								<td>CANT.</td>
+								<td>CONCEPTO</td>
+								<td>IMPORTE</td>
+							</tr>
+							<tr>
+								<td><strong>{{pi.venta.detalle[0].cantidad}}</strong></td>
+								<td><strong>{{pi.venta.detalle[0].descripcion}}</strong></td>
+								<td class="text-right"><strong>{{pi.venta.detalle[0].importe | currency}}</strong></td>
+							</tr>
+							<tr>
+								<td colspan="2" style="text-align: right"><strong>Total:</strong></td>
+								<td style="text-align: right">{{pi.pago.pago + pi.pago.saldo | currency}}</td>
+							</tr>
+							<tr>
+								<td colspan="2" style="text-align: right"><strong>Pago( - ):</strong></td>
+								<td style="text-align: right">{{pi.pago.pago | currency}}</td>
+							</tr>
+							<tr>
+								<td colspan="2" style="text-align: right"><strong>Saldo:</strong></td>
+								<td style="text-align: right">{{pi.pago.saldo | currency}}</td>
+							</tr>
+							<tr>
+								<td colspan="3" class="text-left">
+									Síguenos en: Facebook: Corazondevioleta
+								</td>
+							</tr>
+						</table>
+						<hr/>
+						<h3>GRACIAS POR PREFERIRNOS!</h3>
+					</div>
+				</div>
+			</div>		
+		</div>
+	</div>

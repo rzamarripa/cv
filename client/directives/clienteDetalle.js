@@ -5,24 +5,17 @@ angular.module('casserole').directive('perfil', perfil);
     templateUrl: 'client/clientes/_perfil.html'
   }
 }
-angular.module('casserole').directive('otrospagos', otrospagos);
-	function otrospagos () {
+angular.module('casserole').directive('comprascliente', comprascliente);
+	function comprascliente () {
   return {
     restrict: 'E',
-    templateUrl: 'client/clientes/_otrospagos.html'
+    templateUrl: 'client/clientes/_comprascliente.html'
   }
 }
 angular.module('casserole').directive('historialcliente', historialalumno);
 	function historialalumno () {
   return {
     restrict: 'E',
-    templateUrl: 'client/clientes/_historialalumno.html'
-  }
-}
-angular.module('casserole').directive('modalabonar', modalabonar);
-	function modalabonar () {
-  return {
-    restrict: 'E',
-    templateUrl: 'client/clientes/_modalabonar.html'
+    templateUrl: 'client/clientes/_historialcliente.html'
   }
 }

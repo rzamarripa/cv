@@ -9,13 +9,14 @@
 				<div class="jarviswidget-editbox">
 				</div>
 				<div class="widget-body">
-					<form class="form-horizontal">
+					<form name="form" class="form-horizontal">
 						<fieldset>
-							<div class="form-group">
+							<div class="form-group" valida>
 								<label class="col-md-2 control-label">Cliente</label>
-								<div class="col-md-10">
-									<input type="text" ng-model="np.buscar.nombreCliente" class="form-control" ng-change="np.buscandoCliente()">
+								<div class="col-md-8">
+									<input type="text" name="cliente" ng-model="np.buscar.nombreCliente" class="form-control" ng-change="np.buscandoCliente()" required="">
 								</div>
+								<button class="btn btn-primary col-md-1" style="width: 100px;" ng-click="np.publicoGeneral()">Pub. Gral.</button>
 								<div class="ajax-dropdown" ng-show="np.buscando" style="display: block; width: 80% !important;">
 									<div class="ajax-notifications custom-scroll">
 										<div class="alert alert-transparent">
@@ -50,10 +51,10 @@
 									</span>
 								</div>
 							</div>
-							<div class="form-group">
+							<div class="form-group" valida>
 								<label class="col-md-2 control-label">Teléfono</label>
 								<div class="col-md-10">
-									<input class="form-control" type="text" ng-model="np.clienteSeleccionado.profile.tel1">
+									<input name="telefono" class="form-control" type="text" ng-model="np.clienteSeleccionado.profile.tel1" required=""> 
 								</div>
 							</div>
 							<div class="form-group">
@@ -106,7 +107,7 @@
 										<td class="text-right">{{producto.precio | currency}}</td>
 										<td class="text-right">{{producto.importe | currency}}</td>
 										<td class="text-center">
-											<button class="btn btn-xs btn-primary" ng-click=""><i class="fa fa-trash"></i></button>
+											<button class="btn btn-xs btn-danger" ng-click="np.quitar($index)"><i class="fa fa-trash"></i></button>
 										</td>
 									</tr>
 								</tbody>
@@ -120,6 +121,10 @@
 											<label for="tienda" class="control-label">Tienda</label>
 											<input id="tienda" type="radio" value="Tienda" name="tipoEnvio" class="form-control" ng-model="np.venta.tipoEnvio">
 										</td>
+										<td class="col-sm-2">
+											<label for="anonimo" class="control-label">Anónimo</label>
+											<input id="anonimo" type="checkbox" name="tipoEnvio" class="form-control" ng-model="np.venta.anonimo" ng-checked="np.venta.anonimo">
+										</td>
 										<td class="text-right">
 											<label class="control-label">
 												<strong>Total</strong>
@@ -130,15 +135,15 @@
 										</td>
 									</tr>
 									<tr class="form-inline">
-										<td colspan="3" class="text-right">
+										<td colspan="4" class="text-right">
 											<label class="control-label"><strong>Anticipo</strong></label>
 										</td>
 										<td class="text-right">
-											<span>$</span><input type="number" class="form-control" ng-model="np.venta.anticipo" style="width: 100px;" ng-change="np.calcularSaldo()">
+											<span>$</span><input id="precioAnticipo" size="30" type="text" placeholder="0.00"  class="form-control" ng-model="np.venta.anticipo" style="width: 100px;" ng-change="np.calcularSaldo(np.venta.anticipo)">
 										</td>
 									</tr>
 									<tr class="form-inline">
-										<td colspan="3" class="text-right">
+										<td colspan="4" class="text-right">
 											<label class="control-label"><strong>Saldo</strong></label>
 										</td>
 										<td class="text-right">
@@ -150,38 +155,60 @@
 						</fieldset>
 						<fieldset>
 							<div class="form-group">
+				        <label class="col-md-2 control-label">Forma de pago</label>
+				        <div class="col-md-2">
+				          <button class="btn btn-{{np.venta.formaPago == 'Efectivo' ? 'info' : 'default'}} form-control" ng-click="np.seleccionarFormaPago('Efectivo', false)">Efectivo</button>
+				        </div>
+				        <div class="col-md-2">
+				          <button class="btn btn-{{np.venta.formaPago == 'Tarjeta' ? 'info' : 'default'}} form-control" ng-click="np.seleccionarFormaPago('Tarjeta', false)">Tarjeta</button>		
+				        </div>
+				        <div class="col-md-3">
+				          <button class="btn btn-{{np.venta.formaPago == 'Oxxo/Trans' ? 'info' : 'default'}} form-control" ng-click="np.seleccionarFormaPago('Oxxo/Trans', true)">Oxxo/Trans</button>
+				        </div>
+				        <div class="col-md-3">
+				          <button class="btn btn-{{np.venta.formaPago == 'Intercambio' ? 'info' : 'default'}} form-control" ng-click="np.seleccionarFormaPago('Intercambio', false)">Intercambio</button>
+				        </div>				        
+					    </div>
+						</fieldset>
+						<fieldset>
+							<div class="form-group" ng-show="!np.venta.anonimo">
+				        <label class="col-md-2 control-label">Nombre de quien recibe</label>
+				        <div class="col-md-10">
+				          <input class="form-control" ng-model="np.venta.entrega.nombre" placeholder="A quién se lo entregamos" type="text">
+				        </div>
+					    </div>
+							<div class="form-group">
 				        <label class="col-md-2 control-label">Fecha y Hora de entrega</label>
 				        <div class="col-md-10">
 					        <input name="fechaNac" date-time class="form-control" view="date" max-view="year" min-view="minutes" ng-model="np.venta.entrega.fecha" />
 				        </div>
 					    </div>
 					    <div class="form-group">
-				        <label class="col-md-2 control-label">Forma de pago</label>
-				        <div class="col-md-2">
-				          <button class="btn btn-{{np.venta.formaPago == 'Efectivo' ? 'info' : 'default'}} form-control" ng-click="np.venta.formaPago = 'Efectivo'">Efectivo</button>
+				        <label class="col-md-2 control-label">Mensaje / Comentario</label>
+				        <div class="col-md-10">
+				          <input class="form-control" ng-model="np.venta.entrega.mensajeComentario" placeholder="Escribe el mensaje en la tarjeta o algún comentario" type="text">
 				        </div>
-				        <div class="col-md-2">
-				          <button class="btn btn-{{np.venta.formaPago == 'Tarjeta' ? 'info' : 'default'}} form-control" ng-click="np.venta.formaPago = 'Tarjeta'">Tarjeta</button>		
-				        </div>
-				        <div class="col-md-3">
-				          <button class="btn btn-{{np.venta.formaPago == 'Oxxo/Trans' ? 'info' : 'default'}} form-control" ng-click="np.venta.formaPago = 'Oxxo/Trans'">Oxxo/Trans</button>
-				        </div>
-				        <div class="col-md-3">
-				          <button class="btn btn-{{np.venta.formaPago == 'Intercambio' ? 'info' : 'default'}} form-control" ng-click="np.venta.formaPago = 'Intercambio'">Intercambio</button>
-				        </div>				        
 					    </div>
 						</fieldset>
-						<fieldset ng-show="np.venta.tipoEnvio == 'Envio'">
+						<fieldset ng-show="np.venta.formaPago == 'Oxxo/Trans'">
 							<div class="form-group">
-				        <label class="col-md-2 control-label">Nombre de quien recibe</label>
+				        <label class="col-md-2 control-label">Adjunte el comprobante</label>
 				        <div class="col-md-10">
-				          <input class="form-control" ng-model="np.venta.entrega.nombre" placeholder="A quién se lo entregamos" type="text">
+				          <input type="file" id="comprobante" name="comprobante" ng-model="np.venta.comprobante"/>
 				        </div>
-					    </div>
+					    </div>		    
+						</fieldset>
+						<fieldset ng-show="np.venta.tipoEnvio == 'Envio'">
 					    <div class="form-group">
-				        <label class="col-md-2 control-label">Dirección</label>
-				        <div class="col-md-10">
-				          <input class="form-control" ng-model="np.venta.entrega.direccion" placeholder="Dirección de envío" type="text">
+				        <label class="col-md-2 control-label">Calle / Num.</label>
+				        <div class="col-md-4">
+				          <input class="form-control" ng-model="np.venta.entrega.direccion" placeholder="Calle / Num de envío" type="text">
+				        </div>
+				        <label class="col-md-2 control-label">Colonia *</label>
+				        <div class="col-md-4" valida>				          
+				          <select name="colonia" ng-model="np.venta.entrega.colonia" style="width: 100%;" class="form-control select2" required>
+									  <option value="{{colonia._id}}" ng-repeat="colonia in np.colonias">{{colonia.nombre}}</option>
+									</select>
 				        </div>
 					    </div>
 					    <div class="form-group">
@@ -200,10 +227,10 @@
 								<p>Estás haciendo una venta sin anticipo, si es correcto acepta.</p> 
 								<p> 
 									<button type="button" class="btn btn-danger">Cancelar</button> 
-									<button type="button" class="btn btn-default" ng-click="np.guardar(np.venta)">Aceptar</button> 
+									<button type="button" class="btn btn-default" ng-click="np.guardar(np.venta, form)" valida-form formulario="form">Aceptar</button> 
 								</p> 
 							</div>
-							<div class="btn btn-primary btn-lg" ng-click="np.guardar(np.venta)" ng-disabled="np.anticipoCero">
+							<div ng-disabled="np.venta.saldo < 0" class="btn btn-primary btn-lg" ng-click="np.guardar(np.venta, form)" ng-disabled="np.anticipoCero" valida-form formulario="form">
 								<i class="fa fa-save"></i>
 								Aceptar
 							</div>

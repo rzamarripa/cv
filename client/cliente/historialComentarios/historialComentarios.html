@@ -8,8 +8,8 @@
 							<div class="col-sm-12">
 								<div id="myCarousel" class="carousel profile-carousel">
 									<div class="air air-bottom-right padding-10">
-										<a ng-if="currentUser.roles[0] == 'director' || currentUser.roles[0] == 'coordinadorFinanciero'" ui-sref="root.alumnoDetalle({alumno_id : hc.alumno._id})" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
- 										<a ui-sref="root.editarAlumno({alumno_id : hc.alumno._id})" class="btn txt-color-white bg-color-pinkDark btn-sm" ng-show="currentUser.roles[0] == 'director'">
+										<a ng-if="currentUser.roles[0] == 'director' || currentUser.roles[0] == 'coordinadorFinanciero'" ui-sref="root.clienteDetalle({alumno_id : hc.cliente._id})" class="btn txt-color-white bg-color-teal btn-sm"><i class="fa fa-user"></i> Ir a mi perfil</a>&nbsp;
+ 										<a ui-sref="root.editarAlumno({alumno_id : hc.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm" ng-show="currentUser.roles[0] == 'director'">
 	 										<i class="fa fa-pencil"></i> Modificar
 	 									</a> 
 									</div>
@@ -28,36 +28,36 @@
 							<div class="col-sm-12">
 								<div class="row">
 									<div class="col-sm-2 profile-pic" style="text-align:left;width:initial;">
-								    <img style="max-width:200px;" src="{{hc.tieneFoto(hc.alumno.profile.sexo, hc.alumno.profile.fotografia)}}" >
+								    <img style="max-width:200px;" src="{{hc.tieneFoto(hc.cliente.profile.sexo, hc.cliente.profile.fotografia)}}" >
 								    <div class="ribbon-wrapper-alumno-profile" style="z-index: 10">
-								      <div class="ribbon-alumno {{hc.obtenerColorEstatus(hc.alumno.profile.estatus)}}">{{hc.obtenerNombreEstatus(hc.alumno.profile.estatus)}}</div>
+								      <div class="ribbon-alumno {{hc.obtenerColorEstatus(hc.cliente.profile.estatus)}}">{{hc.obtenerNombreEstatus(hc.cliente.profile.estatus)}}</div>
 								    </div>
 									</div>
 									<div class="col-sm-6">
-										<h1>{{hc.alumno.profile.nombre}} <span class="semi-bold">{{hc.alumno.profile.apPaterno}} {{hc.alumno.profile.apMaterno}}</span>
+										<h1>{{hc.cliente.profile.nombre}} <span class="semi-bold">{{hc.cliente.profile.apPaterno}} {{hc.cliente.profile.apMaterno}}</span>
 										<small> (Alumno)</small></h1>
 										<ul class="list-unstyled">
 											<li>
 												<p class="text-muted">
 													<i class="fa fa-key fa-lg"></i>&nbsp;&nbsp;
 													<span class="txt-color-darken">
-														<strong>{{hc.alumno.profile.matricula}}</strong>
+														<strong>{{hc.cliente.profile.matricula}}</strong>
 													</span>
 												</p>
 											</li>
 											<li>
 												<p class="text-muted">
-													<i class="fa fa-phone fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{hc.alumno.profile.tel1}}</span>
+													<i class="fa fa-phone fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{hc.cliente.profile.tel1}}</span>
 												</p>
 											</li>
 											<li>
 												<p class="text-muted">
-													<i class="fa fa-envelope fa-lg"></i>&nbsp;&nbsp;<a href="mailto:{{hc.alumno.profile.correo}}">{{hc.alumno.profile.correo}}</a>
+													<i class="fa fa-envelope fa-lg"></i>&nbsp;&nbsp;<a href="mailto:{{hc.cliente.profile.correo}}">{{hc.cliente.profile.correo}}</a>
 												</p>
 											</li>
 											<li>
 												<p class="text-muted">
-													<i class="fa fa-birthday-cake fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{hc.alumno.profile.fechaNac | date:"dd-MM-yyyy"}}</span>
+													<i class="fa fa-birthday-cake fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{hc.cliente.profile.fechaNac | date:"dd-MM-yyyy"}}</span>
 												</p>
 											</li>
 										</ul>

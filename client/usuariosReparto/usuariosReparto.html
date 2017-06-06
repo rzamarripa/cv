@@ -8,6 +8,13 @@
 		<div class="collapse" id="collapseExample">
 			<form name="form" class="form-horizontal" role="form" novalidate >
 		  	<div class="well">
+			  	<div class="row">
+			  		<div class="col-sm-4">
+							<label for="talla">Fotografía</label>
+							<button class="btn btn-primary" ng-click="ur.tomarFoto()"><i class="fa fa-camera"></i></button>
+							<img width="100px" ng-src="{{ur.usuario.profile.fotografia}}" ng-class="{'img-thumbnail': !!usuario.profile.fotografia}" />
+						</div>
+			  	</div>
 			    <div class="row">
 			    	<div class="col-sm-4" valida>
 			    		<label>Nombre *</label>
@@ -30,9 +37,9 @@
 			    		<label>Teléfono</label>
 				    	<input type="text" class="form-control" placeholder="Teléfono" ng-model="ur.usuario.profile.telefono">
 			    	</div>
-			    	<div class="col-sm-4">
-			    		<label>Correo</label>
-				    	<input type="text" class="form-control" placeholder="Correo" ng-model="ur.usuario.profile.correo">
+			    	<div class="col-sm-4" valida>
+			    		<label>Correo *</label>
+				    	<input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="ur.usuario.profile.correo" required>
 			    	</div>
 			    	<div class="col-sm-4">
 			    		<label>Usuario</label>
@@ -45,11 +52,13 @@
 							  <option value="femenino">Femenino</option>
 							</select>
 			    	</div>
-			    	<div class="col-sm-4">
-							<label for="talla">Fotografía</label>
-							<button class="btn btn-primary" ng-click="ur.tomarFoto()"><i class="fa fa-camera"></i></button>
-							<img width="100px" ng-src="{{ur.usuario.profile.fotografia}}" ng-class="{'img-thumbnail': !!usuario.profile.fotografia}" />
-						</div>
+			    	<div class="col-sm-4" valida>
+				    	<label>Colonias *</label>
+					    <select name="colonia" ng-model="ur.usuario.profile.colonias" style="width: 100%;" class="form-control select2" multiple="multiple" required>
+							  <option value="todos">Todos</option>
+							  <option value="{{colonia._id}}" ng-repeat="colonia in ur.colonias">{{colonia.nombre}}</option>
+							</select>
+			    	</div>
 			    </div>
 			    <div class="row">
 			    	<div class="col-sm-4" ng-class="!ur.validaContrasena == true ? 'has-error' : 'has-success'">					    

@@ -6,11 +6,11 @@ function ProduccionCtrl($scope, $meteor, $reactive, $state, $stateParams, toastr
 	window.rc = rc;
 	
 	this.subscribe('ventas',()=>{
-		return [{estatus: {$in : [1, 2]}, sucursal_id : Meteor.user() ? Meteor.user().profile.sucursal_id : ""}] 
+		return [{estatusPago : 2, estatus: {$in : [1, 2]}, sucursal_id : Meteor.user() ? Meteor.user().profile.sucursal_id : ""}] 
   });
   
   this.subscribe("usuariosProduccion");
-  
+  //todo hola mundo
   this.helpers({
 	  ventas : () => {
 		  return Ventas.find({},{sort : {"entrega.fecha" : -1}}).fetch();
@@ -23,9 +23,13 @@ function ProduccionCtrl($scope, $meteor, $reactive, $state, $stateParams, toastr
 		  if(this.getReactively("ventas")){
 			  _.each(this.getReactively("ventas"), function(venta){
 				  _.each(venta.detalle, function(detalle){
-					  detalle.cliente = venta.clienteSeleccionado.nombre;
+					  //detalle.cliente = venta.clienteSeleccionado.nombre;
 					  detalle.claseEstatus = rc.obtenerEstatus(detalle.estatus);
 					  detalle.venta_id = venta._id;
+					  detalle.fechaEntrega = venta.entrega.fecha;
+					  detalle.fechaTermino = moment(venta.entrega.fecha).add(-1, "hours").toDate();
+					  detalle.tipoEnvio = venta.tipoEnvio;
+					  detalle.mensajeComentario = venta.entrega.mensajeComentario;
 					  listado.push(detalle);
 				  })
 			  })
@@ -108,6 +112,7 @@ function ProduccionCtrl($scope, $meteor, $reactive, $state, $stateParams, toastr
   this.cancelar = function(arreglo){
 	  var venta = Ventas.findOne(arreglo.venta_id);
 	  delete venta._id;
+	  delete arreglo.produccion;
 	  arreglo.estatus = 1;
 	  arreglo.tomado = false;
 	  venta.detalle[arreglo._id - 1] = arreglo;

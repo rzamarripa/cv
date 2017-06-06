@@ -18,7 +18,7 @@
 													<option value="4">Preferente</option>
 												</select>
 											</div>
-											<a ng-if="currentUser.roles[0] == 'gerente'" ui-sref="root.editarAlumno({alumno_id : cl.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
+											<a ng-if="currentUser.roles[0] == 'gerente'" ui-sref="root.editarCliente({cliente_id : cl.cliente._id})" class="btn txt-color-white bg-color-pinkDark btn-sm">
 		 										<i class="fa fa-pencil"></i> Modificar
 		 									</a> 
 										</form>
@@ -43,22 +43,17 @@
 								      <div class="ribbon-alumno {{cl.obtenerColorEstatus(cl.cliente.profile.estatus)}}">{{cl.obtenerNombreEstatus(cl.cliente.profile.estatus)}}</div>
 								    </div>
 										<div class="padding-10">
-											<h4 class="font-md"><strong>{{cl.cliente.profile.friends.length}}</strong>
+											<h4 class="font-md"><strong>{{cl.compras.length}}</strong>
 											<br>
-											<small>Amigos</small></h4>
+											<small>Compras</small></h4>
 										</div>
 									</div>
-									<div class="col-sm-6">
-										<h1>{{cl.cliente.profile.nombre}} <span class="semi-bold">{{cl.cliente.profile.apPaterno}} {{cl.cliente.profile.apMaterno}}</span>
-										
-										<small> (Alumno)</small></h1>
+									<div class="col-sm-4">
+										<h1>{{cl.cliente.profile.nombreCompleto}}</h1>
 										<ul class="list-unstyled">
 											<li>
 												<p class="text-muted">
-													<i class="fa fa-key fa-lg"></i>&nbsp;&nbsp;
-													<span class="txt-color-darken">
-														<strong>{{cl.cliente.profile.matricula}}</strong>
-													</span>
+													<i class="fa fa-key fa-lg"></i><strong>&nbsp;&nbsp;{{cl.cliente.username}}</strong>
 												</p>
 											</li>
 											<li>
@@ -76,6 +71,12 @@
 													<i class="fa fa-birthday-cake fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{cl.cliente.profile.fechaNac | date:"dd-MM-yyyy"}}</span>
 												</p>
 											</li>
+											<li>
+												<p class="text-muted">
+													<i class="fa fa-map-marker fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{cl.cliente.profile.calleNum}}, {{cl.cliente.profile.colonia}} {{cl.cliente.profile.ciudad}}, {{cl.cliente.profile.estado}} {{cl.cliente.profile.codigoPostal}}<br>
+													</span>
+												</p>
+											</li>
 										</ul>
 										<br>
 										<p class="font-sm">
@@ -86,129 +87,31 @@
 										</p>
 										<br>
 									</div>
-									<!--																
-									<div class="col-sm-3">
-										<h1><small>Amigos</small></h1>
-										<ul class="list-inline friends-list">
-											<li><img src="img/avatars/1.png" alt="friend-1">
-											</li>
-											<li><img src="img/avatars/2.png" alt="friend-2">
-											</li>
-											<li><img src="img/avatars/3.png" alt="friend-3">
-											</li>
-											<li><img src="img/avatars/4.png" alt="friend-4">
-											</li>
-											<li><img src="img/avatars/5.png" alt="friend-5">
-											</li>
-											<li><img src="img/avatars/male.png" alt="friend-6">
+									<div class="col-sm-4">
+										<h1>&nbsp;</h1>
+										<ul class="list-unstyled">
+											<li>
+												<p class="text-muted">
+													<i class="fa fa-glass fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{cl.cliente.profile.nivelSocial}}</span>
+												</p>
 											</li>
 											<li>
-												<a href="javascript:void(0);">413 more</a>
+												<p class="text-muted">
+													<i class="fa fa-phone fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{cl.cliente.profile.tel2}}</span>
+												</p>
+											</li>
+											<li>
+												<p class="text-muted">
+													<i class="fa fa-gears fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{cl.cliente.profile.ocupacion.nombre}}</span>
+												</p>
+											</li>
+											<li>
+												<p class="text-muted">
+													<i class="fa fa-medium fa-lg"></i>&nbsp;&nbsp;<span class="txt-color-darken">{{cl.cliente.profile.medio.nombre}}</span>
+												</p>
 											</li>
 										</ul>
-									</div>
-									-->
-								</div>
-								<div class="row">
-									<div class="col-sm-12">
-										<ul class="nav nav-tabs">
-											<li class="pull-right">
-												<a ng-click="cl.masInformacion()" role="button" data-toggle="collapse"
-			href="#masInformacion" aria-expanded="false" aria-controls="masInformacion"><i class="fa fa-{{cl.masInfo == true ? 'plus':'minus'}} fa-lg"></i></a>
-											</li>
-										</ul>
-										<div class="collapse padding-10" id="masInformacion">
-											<div class="tab-pane">
-												<div class="col-sm-6">
-													<ul class="list-unstyled">															
-														<li>
-															<address>
-															  <strong>Información de la Madre</strong><br>
-															  <strong>Nombre:</strong> {{cl.cliente.profile.madre}}<br>
-															  <strong>Teléfono:</strong> {{cl.cliente.profile.telefonoMadre}}
-															  <strong>Correo:</strong> {{cl.cliente.profile.correoMadre}}
-															</address>
-														</li>
-														<li>
-															<address>
-															  <strong>Dirección</strong><br>
-															  {{cl.cliente.profile.calleNum}}, {{cl.cliente.profile.colonia}}<br>
-															  {{cl.cliente.profile.ciudad}}, {{cl.cliente.profile.estado}} {{cl.cliente.profile.codigoPostal}}<br>
-															</address>
-														</li>
-														<li>
-															<address>
-															  <strong>Lugar de Nacimiento</strong><br>
-															  {{cl.cliente.profile.lugarNac}}
-															</address>
-														</li>
-														<li>
-															<address>
-															  <strong>Escolaridad</strong><br>
-															  {{cl.cliente.profile.escolaridad}}
-															</address>
-														</li>		
-														<li>
-															<address>
-															  <strong>Nivel Social</strong><br>
-															  {{cl.cliente.profile.nivelSocial}}
-															</address>
-														</li>
-														<li>
-															<address>
-															  <strong>Correo para Calificaciones</strong><br>
-															  {{cl.cliente.profile.correoCalificaciones}}
-															</address>
-														</li>											
-													</ul>	
-												</div>
-												<div class="col-sm-6">
-													<ul class="list-unstyled">
-														<li>
-															<address>
-															  <strong>Información del Padre</strong><br>
-															  <strong>Nombre:</strong> {{cl.cliente.profile.padreTutor}}<br>
-															  <strong>Teléfono:</strong> {{cl.cliente.profile.telefonoPadre}}
-															  <strong>Correo:</strong> {{cl.cliente.profile.correoPadre}}
-															</address>
-														</li>
-														<li>
-															<address>
-															  <strong>Teléfono Secundario</strong><br>
-																{{cl.cliente.profile.tel2}}															  
-															</address>
-														</li>													
-														<li>
-															<address>
-															  <strong>Ocupación del Alumno</strong><br>
-															  {{cl.getOcupacion(cl.cliente.profile.ocupacion_id)}}
-															</address>
-														</li>													
-														<li>
-															<address>
-															  <strong>Cómo te enteraste de nosotros</strong><br>
-															  {{cl.cliente.profile.medio}}
-															</address>
-														</li>
-														<li>
-															<address>
-															  <strong>Talla</strong><br>
-																{{cl.cliente.profile.talla}}															  
-															</address>
-														</li>														
-													</ul>	
-												</div>
-											</div>											
-											<div class="tab-pane" id="pagos">												
-												<div class="row">
-													<section class="col col-sm-1 text-center padding-20" ng-repeat="semana in cl.misSemanas" ng-click="cl.seleccionarSemana(semana)" ng-class="($index == cl.misSemana.length) ? cl.obtenerEstatus(semana.pagada) : ''">
-														<label class="input text-center">
-															<label type="text" class="text-center">{{semana.numero}} / {{semana.anio}} | {{semana.pagada}}</label>
-														</label>
-													</section>													
-												</div>																		
-											</div>											
-										</div>
+										<br>
 									</div>
 								</div>
 							</div>													

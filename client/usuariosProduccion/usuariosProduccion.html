@@ -30,9 +30,9 @@
 			    		<label>Teléfono</label>
 				    	<input type="text" class="form-control" placeholder="Teléfono" ng-model="up.usuario.profile.telefono">
 			    	</div>
-			    	<div class="col-sm-4">
-			    		<label>Correo</label>
-				    	<input type="text" class="form-control" placeholder="Correo" ng-model="up.usuario.profile.correo">
+			    	<div class="col-sm-4" valida>
+			    		<label>Correo * </label>
+				    	<input name="correo" type="text" class="form-control" placeholder="Correo" ng-model="up.usuario.profile.correo" required>
 			    	</div>
 			    	<div class="col-sm-4">
 			    		<label>Usuario</label>

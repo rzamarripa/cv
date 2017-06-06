@@ -5,6 +5,7 @@ Meteor.publish("gerentesVenta", function(){
 */
 
 Meteor.publish("usuarios", function(options){
+	console.log(options);
 	return  Meteor.users.find(options);
 });
 

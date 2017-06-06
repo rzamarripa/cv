@@ -6,17 +6,33 @@ function UsuariosRepartoCtrl($scope, $meteor, $reactive,  $state, $stateParams, 
 	let rc = $reactive(this).attach($scope);
   this.action = true;
   this.nuevo = true;
-  
+  this.usuario = {};
 	this.validaContrasena = false;
 	this.cambiarPassword = true;
 	
+	
+	window.rc = rc;
+	
+	$(document).ready(function() {
+	  $(".select2").select2({
+		  tags: true
+	  });
+	});
+	
 	this.subscribe('usuariosReparto', ()=>{
 		return [{}]
+	});
+	
+	this.subscribe('colonias', ()=>{
+		return [{estatus : true, sucursal_id : Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : ""}];
 	});	
 
   this.helpers({
 	  usuariosProduccion : () => {
 		  return Meteor.users.find({"profile.sucursal_id" : Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "", roles : ["repartidor"]});
+	  },
+	  colonias : () => {
+		  return Colonias.find();
 	  }
   });  
   

@@ -43,18 +43,13 @@
               <abbr title="Teléfono">T:</abbr> {{cliente.profile.tel1}}
           </address>
         </a>
-        <button ui-sref="root.grupoDetalle({grupo_id : grupo._id})" ng-repeat="grupo in cliente.profile.grupos" class="btn btn-block {{grupo.classButton}}" style="text-decoration: none;" >
-	        <span class="pull-left"><i class="fa fa-group"></i> {{grupo.nombre}} - {{grupo.turno.nombre}}</span>
-	        <label class="badge {{grupo.classButton}} pull-right"> <i class="fa fa-check"></i> {{grupo.inasistenciasSemana}}/{{grupo.turno.inasistencias}}</label>
-        </button>
-<!--
+       
           <div class="contact-box-footer">
               <div class="m-t-xs btn-group">
                   <a href="/clientes/{{cliente._id}}" class="btn btn-xs btn-white"><i class="fa fa-eye"></i> Ver </a>
                   <a href="/editarcliente/{{cliente._id}}" class="btn btn-xs btn-white"><i class="fa fa-pencil"></i> Editar</a>
               </div>
           </div>
--->
 
       </div>
   </div>

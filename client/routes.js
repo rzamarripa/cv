@@ -63,9 +63,15 @@ angular.module('casserole').config(['$injector', function ($injector) {
       }
     })
     .state('anon.pagosImprimir', {
-      url: '/pagosImprimir/:pago/:alumno_id',
-      templateUrl: 'client/pagos/pagosImprimir.ng.html',
+      url: '/pagosImprimir/:sucursal_id/:folioActual/:cliente_id',
+      templateUrl: 'client/pedidos/pagosImprimir.ng.html',
       controller: 'PagosImprimirCtrl as pi',
+     // params: { 'semanas': ':semanas' , 'id' : ':id'},
+    })
+    .state('anon.pagosImprimirPagos', { 
+      url: '/pagosImprimirPagos/:sucursal_id/:folioActual/:cliente_id',
+      templateUrl: 'client/pedidos/pagosImprimirPagos.html',
+      controller: 'PagosImprimirPagosCtrl as pi',
      // params: { 'semanas': ':semanas' , 'id' : ':id'},
     });
   /***************************
@@ -142,7 +148,11 @@ angular.module('casserole').config(['$injector', function ($injector) {
     
     ///////////// HASTA AQUÍ /////////////
     
-    
+    .state('root.colonias', {
+      url: '/colonias/',
+      templateUrl: 'client/colonias/colonias.html',
+      controller: 'ColoniasCtrl as c',
+    })
     
     .state('root.dashboard', {
       url: '/dashboard',
@@ -283,7 +293,7 @@ angular.module('casserole').config(['$injector', function ($injector) {
 							return true;
 						}else{
 							return 'UNAUTHORIZED'; 
-						}					 	
+						}
          });
        }]
     	}
@@ -295,11 +305,11 @@ angular.module('casserole').config(['$injector', function ($injector) {
       resolve: {
 				"currentUser": ["$meteor", "toastr", function($meteor, toastr){
 					return $meteor.requireValidUser(function(user) {
-						if(user.roles[0] == "coordinadorAcademico" || user.roles[0] == "director" || user.roles[0] == "recepcionista" || user.roles[0] == "admin"){
+						if(user.roles[0] == "gerente" || user.roles[0] == "admin"){
 							return true;
 						}else{
 							return 'UNAUTHORIZED'; 
-						}					 	
+						}
          });
        }]
     	}
@@ -1767,13 +1777,13 @@ angular.module('casserole').config(['$injector', function ($injector) {
       }
     })
     .state('root.historialComentarios', {
-      url: '/historialComentarios/:alumno_id',
-      templateUrl: 'client/alumno/historialComentarios/historialComentarios.html',
+      url: '/historialComentarios/:cliente_id',
+      templateUrl: 'client/cliente/historialComentarios/historialComentarios.html',
       controller: 'HistorialComentariosCtrl as hc',
       resolve: {
         "currentUser": ["$meteor", "toastr", function($meteor, toastr){
           return $meteor.requireValidUser(function(user) {
-            if(user.roles[0] == "coordinadorFinanciero" || user.roles[0] == "director" || user.roles[0] == "recepcionista" || user.roles[0] == "coordinadorAcademico"){
+            if(user.roles[0] == "gerente"){
               return true;
             }else{
               return 'UNAUTHORIZED'; 

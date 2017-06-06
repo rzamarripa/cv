@@ -6,13 +6,24 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 	
 	rc = $reactive(this).attach($scope);
 	
-	
 	this.cliente = {};
 	this.fechaActual = new Date();
+	this.masInfo = false; 
+	this.ocupacion_id = "";
+	this.medio_id = "";
+	this.comentario = {};
 	window.rc = rc;
 
 	this.subscribe("ocupaciones",()=>{
-		return [{_id : this.getReactively("ocupacion_id"), estatus : true, campus_id : Meteor.user() != undefined ? Meteor.user().profile.campus_id : "" }]
+		return [{_id : this.getReactively("ocupacion_id"), estatus : true }]
+	});
+	
+	this.subscribe("ventas",()=>{
+		return [{cliente_id : this.getReactively("cliente._id")}]
+	});
+	
+	this.subscribe("mediosPublicidad",()=>{
+		return [{_id : this.getReactively("medio_id"), estatus : true }]
 	});
 	
 	this.subscribe('cliente', () => {
@@ -21,60 +32,52 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 		}];
 	});
 	
-	this.subscribe("mediosPublicidad",()=>{
-		return [{estatus:true }]
-	});
-		
 	this.helpers({
 		cliente : () => {
 			var cl = Meteor.users.findOne({_id : $stateParams.cliente_id});
 			if(cl){
 				this.ocupacion_id = cl.profile.ocupacion_id;
+				this.medio_id = cl.profile.medio_id;
+				cl.profile.ocupacion = Ocupaciones.findOne(cl.profile.ocupacion_id);
+				cl.profile.medio = MediosPublicidad.findOne(cl.profile.medio_id)
 				return cl;
 			}
 			return cl;
 		},
-		ocupaciones : () => {
-			return Ocupaciones.find();
-		},
-		mediosPublicidad : () => {
-			return MediosPublicidad.find();
+		compras : () => {
+			return Ventas.find();
 		}
 	});
 	
-	this.actualizar = function(alumno,form){
-		var alumnoTemp = Meteor.users.findOne({_id : alumno._id});
-		this.alumno.password = alumnoTemp.password;
-		this.alumno.repeatPassword = alumnoTemp.password;
+	this.actualizar = function(cliente,form){
+		var clienteTemp = Meteor.users.findOne({_id : cliente._id});
+		this.cliente.password = clienteTemp.password;
+		this.cliente.repeatPassword = clienteTemp.password;
 		//document.getElementById("contra").value = this.alumno.password;
 
 		if(form.$invalid){
 			toastr.error('Error al actualizar los datos.');
 			return;
 		}
-		var nombre = alumno.profile.nombre != undefined ? alumno.profile.nombre + " " : "";
-		var apPaterno = alumno.profile.apPaterno != undefined ? alumno.profile.apPaterno + " " : "";
-		var apMaterno = alumno.profile.apMaterno != undefined ? alumno.profile.apMaterno : "";
-		alumno.profile.nombreCompleto = nombre + apPaterno + apMaterno;
-		delete alumno.profile.repeatPassword;
-		Meteor.call('updateGerenteVenta', rc.alumno, "alumno");
+		var nombre = cliente.profile.nombre != undefined ? cliente.profile.nombre + " " : "";
+		var apPaterno = cliente.profile.apPaterno != undefined ? cliente.profile.apPaterno + " " : "";
+		var apMaterno = cliente.profile.apMaterno != undefined ? cliente.profile.apMaterno : "";
+		cliente.profile.nombreCompleto = nombre + apPaterno + apMaterno;
+		delete cliente.profile.repeatPassword;
+		Meteor.call('updateGerenteVenta', rc.cliente, "alumno");
 		toastr.success('Actualizado correctamente.');
 		$('.collapse').collapse('hide');
 		this.nuevo = true;
 		form.$setPristine();
 		form.$setUntouched();
-		$state.go('root.alumnos');
+		$state.go('root.clientes');
 	};
 	
 	this.tomarFoto = function () {
 		$meteor.getPicture().then(function(data){
-			rc.alumno.profile.fotografia = data;
+			rc.cliente.profile.fotografia = data;
 		});
 	};
-		
-	this.masInformacion = function(){
-		this.masInfo = !this.masInfo;
-	}
 
 	this.tieneFoto = function(sexo, foto){
 		if(foto === undefined){
@@ -89,65 +92,22 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
 			return foto;
 		}
 	}
-
-	this.obtenerEstatus = function(cobro){
-
-		if(cobro.estatus == 1){
-			return "bg-color-green txt-color-white";
-		}			
-		if(cobro.estatus == 5 || cobro.tmpestatus==5)
-			return "bg-color-blue txt-color-white";
-		else if(cobro.estatus == 0 && (cobro.semana >= this.semanaPago && cobro.anio >= this.anioActual)){
-			
-		}
-		else if(cobro.estatus == 3){
-			return "bg-color-blueDark txt-color-white";	
-		}
-		else if(cobro.estatus == 2){
-			return "bg-color-red txt-color-white";
-		}
-		else if(cobro.estatus == 6)
-			return "bg-color-greenLight txt-color-white";
-		else if(cobro.tiempoPago == 1 || cobro.anio < this.anioActual || (cobro.semana < this.semanaPago && cobro.anio == this.anioActual)){
-			return "bg-color-orange txt-color-white";
-		}
-				
-		return "";
-		
-	}
-	
-	this.getOcupacion = function(ocupacion_id){
-		var ocupacion = Ocupaciones.findOne(ocupacion_id);
-		if(ocupacion)
-			return ocupacion.nombre;
-	};
-  	
-	this.guardarComentario = function(alumno_id){
+	  	
+	this.guardarComentario = function(cliente_id){
 		semanaActual = moment(new Date()).isoWeek();
 		diaActual = moment(new Date()).isoWeekday();
 		this.comentario.fechaCreacion = new Date();
 		this.comentario.estatus = true;
 		this.comentario.usuarioInserto_id = Meteor.userId();
-		this.comentario.alumno_id = alumno_id;
+		this.comentario.cliente_id = cliente_id;
 		this.comentario.semana = semanaActual;
 		this.comentario.dia = diaActual;
 		
-		ComentariosAlumnos.insert(this.comentario);
+		ComentariosCliente.insert(this.comentario);
 		this.comentario = {};
 		toastr.success('Guardado correctamente.');
 	}
-	
-	this.tienePermiso = function(roles){
-		permiso = false;
-		_.each(roles, function(role){
-			if(role == Meteor.user().roles[0]){
-				permiso = true;
-			}
-		});
 		
-		return permiso;
-	}
-	
 	this.obtenerColorEstatus = function(estatus){
 	  if(estatus == 1){ //Registrado
 		  return "bg-color-blue txt-white";
@@ -169,23 +129,29 @@ function ClientesDetalleCtrl($scope, $meteor, $reactive, $state, toastr, $stateP
   }
   
   this.obtenerNombreEstatus = function(estatus){
-	  if(estatus == 1){ //Registrado
-		  return "Registrado";
+	  if(estatus == 1){
+		  return "Pendiente";
 	  }else if(estatus == 2){
-		  return "Inicio"
+		  return "En Proceso";
 	  }else if(estatus == 3){
-		  return "Pospuesto"
+		  return "Terminado";
 	  }else if(estatus == 4){
-		  return "Fantasma"
+		  return "Enviado";
 	  }else if(estatus == 5){
-		  return "Activo"
-	  }else if(estatus == 6){
-		  return "Baja"
-	  }else if(estatus == 7){
-		  return "Term.Pago"
-	  }else if(estatus == 8){
-		  return "Egresado"
+		  return "Entregado";
 	  }
+  }
+  
+  this.getEstatusNombrePago = function(estatus){
+	  if(estatus == 0){
+		  return "Sin anticipo";
+	  }else if(estatus == 1){
+		  return "Abonado";
+	  }else if(estatus == 2){
+		  return "Pagado";
+	  }else if(estatus == 3){
+		  return "Cancelado";
+	  } 
   }
   
   this.cambiarEstatus = function(estatus, classLabel){

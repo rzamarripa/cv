@@ -12,33 +12,29 @@ function HistorialComentariosCtrl($scope, $meteor, $reactive, $state, toastr, $s
 	this.semanaActual = moment(new Date()).isoWeek();
 	this.usuarios_id = [];
 	
-	this.subscribe('alumno', () => {
+	this.subscribe('cliente', () => {
 		return [{
-			id : $stateParams.alumno_id,
-			campus_id : Meteor.user() != undefined ? Meteor.user().profile.campus_id : ""
+			id : $stateParams.cliente_id
 		}];
 	});
 
-	this.subscribe("comentariosAlumnos",() => {
-		return [{ alumno_id : $stateParams.alumno_id }];
+	this.subscribe("comentariosCliente",() => {
+		return [{ cliente_id : $stateParams.cliente_id }];
 	});
 	
 	this.subscribe("usuarios",() => {
-		return [{campus_id : Meteor.user() != undefined ? Meteor.user().profile.campus_id : "", _id : { $in : this.getCollectionReactively("usuarios_id")}}];
+		return [{sucursal_id : Meteor.user() != undefined ? Meteor.user().profile.sucursal_id : "", _id : { $in : this.getCollectionReactively("usuarios_id")}}];
 	});
 	
 	this.helpers({
-		alumno : () => {
-			return Meteor.users.findOne({_id : $stateParams.alumno_id});
-		},
-		usuarios : () => {
-			
+		cliente : () => {
+			return Meteor.users.findOne({_id : $stateParams.cliente_id}); 
 		},
 		comentarios : () => {
-			var comentarios = ComentariosAlumnos.find().fetch();
+			var comentarios = ComentariosCliente.find().fetch();
 			_.each(comentarios, function(comentario){
 			  rc.usuarios_id.push(comentario.usuarioInserto_id);
-			  comentario.usuarioInserto = Meteor.users.findOne({},{fields : {"profile.nombreCompleto" : 1}})
+			  comentario.usuarioInserto = Meteor.users.findOne({},{fields : {"profile.nombreCompleto" : 1}}) 
 		  });
 		  			
 			return comentarios;

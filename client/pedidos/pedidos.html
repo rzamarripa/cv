@@ -1,4 +1,25 @@
 <h2>Listado de Pedidos</h2>
+<!-- <h2>Vendedores</h2> -->
+<div class="row well">
+	<form name="form" class="form-horizontal" role="form" novalidate style="margin: auto;">
+		<div class="col-sm-2 col-sm-offset-4 text-center" valida>
+			<label for="fechaInicial">Fecha Inicial *</label>
+			<input name="fechaInicial" date-time format="dd-MM-yyyy" class="form-control" readonly="" style="background-color: white" view="date" max-view="year" min-view="date" ng-model="p.fechaInicial" required="" />
+		</div>
+		<div class="col-sm-2 text-center" valida>
+			<label for="fechaFinal">Fecha Final *</label>
+			<input name="fechaFinal" date-time format="dd-MM-yyyy" class="form-control" readonly="" style="background-color: white" view="date" max-view="year" min-view="date" ng-model="p.fechaFinal" required="" />
+		</div>
+		<div class="col-sm-2">
+			<button class="btn btn-primary" ng-click="p.getPedidos(p.fechaInicial, p.fechaFinal)">Buscar</button>
+		</div>
+	</form>
+</div>
+<div class="row">
+	<div class="col-sm-">
+		
+	</div>
+</div>
 <div class="row">
 	<div class="col-sm-12">
 		<table class="table">
@@ -15,14 +36,14 @@
 			</tr>
 			<tr ng-repeat="venta in p.ventas">
 				<td>{{$index + 1}}</td>
-				<td>{{venta.clienteSeleccionado.nombre}} {{venta.clienteSeleccionado.apPaterno}} {{venta.clienteSeleccionado.apMaterno}}</td>
-				<td>{{venta.entrega.fecha | date:"dd-MM-yyyy"}} {{venta.entrega.hora | date:"HH:mm"}}</td>
+				<td>{{venta.clienteSeleccionado.profile.nombreCompleto}}</td>
+				<td>{{venta.entrega.fecha | date:"dd-MM-yyyy hh:mm"}}</td>
 				<td><span ng-class="">{{venta.estatusNombre}}</span></td>
 				<td><span ng-class="">{{venta.estatusNombrePago}}</span></td>
 				<td>{{venta.fechaCreacion | date:"dd-MM-yyyy HH:mm"}}</td>
 				<td>{{venta.anticipo + venta.pagado | currency}}</td>
 				<td>{{venta.saldo | currency}}</td>
-				<td>
+				<td class="text-center">
 					<div class="btn-group">
 					  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					    <span class="caret"></span>
@@ -38,6 +59,13 @@
 					  </ul>
 					</div>
 				</td>
+			</tr>
+			<tr>
+				<th colspan="5"></th>
+				<th class="text-right">Total</th>				
+				<th>{{p.pagadoTotal | currency}}</th>
+				<th>{{p.saldoTotal | currency}}</th>
+				<th></th>
 			</tr>
 		</table>
 	</div>
@@ -58,7 +86,23 @@
 					    <input name="importeAPagar" type="number" class="form-control" ng-model="p.importeAPagar" required="">
 			    	</div>
 			    </div>
-			    
+			    <fieldset>
+							<div class="form-group">
+				        <label class="col-md-2 control-label">Forma de pago</label>
+				        <div class="col-md-2">
+				          <button class="btn btn-{{p.ventaSeleccionada.formaPago == 'Efectivo' ? 'info' : 'default'}} form-control" ng-click="p.seleccionarFormaPago('Efectivo', false)">Efectivo</button>
+				        </div>
+				        <div class="col-md-2">
+				          <button class="btn btn-{{p.ventaSeleccionada.formaPago == 'Tarjeta' ? 'info' : 'default'}} form-control" ng-click="p.seleccionarFormaPago('Tarjeta', false)">Tarjeta</button>		
+				        </div>
+				        <div class="col-md-3">
+				          <button class="btn btn-{{p.ventaSeleccionada.formaPago == 'Oxxo/Trans' ? 'info' : 'default'}} form-control" ng-click="p.seleccionarFormaPago('Oxxo/Trans', true)">Oxxo/Trans</button>
+				        </div>
+				        <div class="col-md-3">
+				          <button class="btn btn-{{p.ventaSeleccionada.formaPago == 'Intercambio' ? 'info' : 'default'}} form-control" ng-click="p.seleccionarFormaPago('Intercambio', false)">Intercambio</button>
+				        </div>				        
+					    </div>
+						</fieldset>
 	        <address>
 					  <strong>Saldo: {{p.ventaSeleccionada.saldo | currency}}.</strong><br>
 					  Tipo: {{p.ventaSeleccionada.tipoEnvio}}<br>

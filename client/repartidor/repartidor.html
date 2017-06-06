@@ -1,7 +1,23 @@
 <div class="content" style="padding: 20px;">
 	<div class="row">
 		<div class="col-sm-12">
-			<h2><i class="fa fa-calendar-check-o fa-lg"></i> Listado de reparto hoy</h2>
+			<a class="btn btn-primary" ui-sref="anon.logout"><i class="fa fa-logout"></i> Cerrar Sesión</a>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="form-group">
+				<label class="label-control">Repartidores</label>
+				<select class="form-control" ng-model="r.repartidorSeleccionado" ng-change="r.cambiarRepartidor(r.repartidorSeleccionado)">
+					<option value="todos">Todos</option>
+					<option value="{{repartidor._id}}" ng-repeat="repartidor in r.usuariosReparto">{{repartidor.profile.nombreCompleto}}</option>
+				</select>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+			<h2><i class="fa fa-calendar-check-o fa-lg"></i> Listado de reparto hoy ( {{r.listaRepartoHoy.length}} )</h2>
 			<div class="row fondo-corcho" style="min-height: 300px;">
 				<div class="col-sm-3 post-it {{arreglo.claseEstatus}}" ng-repeat="arreglo in r.listaRepartoHoy">
 					<div class="titulo-post-it">
@@ -12,21 +28,22 @@
 			    	<img class="pull-right" src="/img/chincheta.png" style="margin-top:-25px; margin-left:20px;">
 			    </div>
 					<div class="cuerpo-post-it">
-						<p>El <strong>{{arreglo.descripcion | cut:true:130:' ...'}}</strong> tiene que ser entregado a <strong>{{arreglo.entrega.nombre}}</strong> en la dirección <strong>{{arreglo.entrega.direccion}}</strong> en la fecha <strong>{{arreglo.entrega.fecha | date:"dd-MM-yyyy HH:mm"}}.</strong></p>
+						<p ng-show="!arreglo.anonimo">De: {{arreglo.entrega.nombreCliente}}</p>
+						<p>El <strong>{{arreglo.descripcion | cut:true:130:' ...'}}</strong> tiene que ser entregado a <strong>{{arreglo.entrega.nombre}}</strong> en la dirección <strong>{{arreglo.entrega.direccion}}</strong> en la fecha <strong>{{arreglo.entrega.fecha | date:"dd-MM-yyyy HH:mm"}}.</strong><span ng-show="arreglo.mensajeComentario">, dejó un mensaje <strong>{{arreglo.mensajeComentario}}</strong></span></p>
 					</div>
 					<div class="post-it-pie label label-inverse pull-right" style="background-color : black;">
 						{{r.duracion(arreglo.entrega.fecha)}}
 					</div>
-					<div class="post-it-pie pull-right" ng-show="!arreglo.tomado">
+					<div class="post-it-pie pull-right" ng-show="r.repartidorSeleccionado == 'todos'">
 						<div class="project-members">
-							<a href="javascript:void(0)" ng-repeat="productor in r.productores" ng-click="r.elegirProductor(arreglo, productor)" title="{{productor.profile.nombreCompleto}}"><img style="width: 50px;" src="{{r.tieneFoto(productor.profile.sexo, productor.profile.fotografia)}}" class="online"></a>
+							<a href="javascript:void(0)" ng-repeat="repartidor in r.repartidores" ng-click="r.llevarArreglo(arreglo, repartidor)" title="{{repartidor.profile.nombreCompleto}}"><img style="width: 50px;" src="{{r.tieneFoto(repartidor.profile.sexo, repartidor.profile.fotografia)}}" class="online"></a>
 						</div>
 					</div>
 				</div>
 			</div>
-			<h2><i class="fa fa-car fa-lg"></i> Listado de enviados</h2>
+			<h2><i class="fa fa-car fa-lg"></i> Listado de enviados ( {{r.listaEnviados.length}} )</h2>
 			<div class="row fondo-corcho" style="min-height: 300px;">
-				<div class="col-sm-3 post-it-xs {{arreglo.claseEstatus}}" ng-repeat="arreglo in r.listaEnviados">
+				<div class="col-sm-3 post-it {{arreglo.claseEstatus}}" ng-repeat="arreglo in r.listaEnviados">
 					<div class="titulo-post-it">
 						<a href="#" ng-click="r.llevarArreglo(arreglo)" ng-show="arreglo.estatus == 3"><i class="fa fa-car"></i></a>
 						<span ng-show="arreglo.estatus == 3">&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -38,21 +55,18 @@
 			    	<img class="pull-right" src="/img/chincheta.png" style="margin-top:-25px; margin-left:20px;">
 			    </div>
 					<div class="cuerpo-post-it">
-						<p>El <strong>{{arreglo.descripcion | cut:true:130:' ...'}}</strong> tiene que ser entregado a <strong>{{arreglo.entrega.nombre}}</strong> en la dirección <strong>{{arreglo.entrega.direccion}}</strong> en la fecha <strong>{{arreglo.entrega.fecha | date:"dd-MM-yyyy HH:mm"}}.</strong></p>
+						<p ng-show="!arreglo.anonimo">De: {{arreglo.entrega.nombreCliente}}</p>
+						<p>El <strong>{{arreglo.descripcion | cut:true:130:' ...'}}</strong> tiene que ser entregado a <strong>{{arreglo.entrega.nombre}}</strong> en la dirección <strong>{{arreglo.entrega.direccion}}</strong> en la fecha <strong>{{arreglo.entrega.fecha | date:"dd-MM-yyyy HH:mm"}}.</strong><span ng-show="arreglo.mensajeComentario">, dejó un mensaje <strong>{{arreglo.mensajeComentario}}</strong></span> </p>
+						<p>Repartidor : {{arreglo.repartidor.nombre}}</p>
 					</div>
 					<div class="post-it-pie label label-inverse pull-right" style="background-color : black;">
 						{{r.duracion(arreglo.entrega.fecha)}}
 					</div>
-					<div class="post-it-pie pull-right" ng-show="!arreglo.tomado">
-						<div class="project-members">
-							<a href="javascript:void(0)" ng-repeat="productor in r.productores" ng-click="r.elegirProductor(arreglo, productor)" title="{{productor.profile.nombreCompleto}}"><img style="width: 50px;" src="{{r.tieneFoto(productor.profile.sexo, productor.profile.fotografia)}}" class="online"></a>
-						</div>
-					</div>
 				</div>
 			</div>
-			<h2><i class="fa fa-gift fa-lg"></i> Listado de entregados</h2>
+			<h2><i class="fa fa-gift fa-lg"></i> Listado de entregados ( {{r.listaEntregados.length}} )</h2>
 			<div class="row fondo-corcho" style="min-height: 300px;">
-				<div class="col-sm-3 post-it-xs {{arreglo.claseEstatus}}" ng-repeat="arreglo in r.listaEntregados">
+				<div class="col-sm-3 post-it {{arreglo.claseEstatus}}" ng-repeat="arreglo in r.listaEntregados">
 					<div class="titulo-post-it">
 						<a href="#" ng-click="r.llevarArreglo(arreglo)" ng-show="arreglo.estatus == 3"><i class="fa fa-car"></i></a>
 						<span ng-show="arreglo.estatus == 3">&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -64,19 +78,15 @@
 			    	<img class="pull-right" src="/img/chincheta.png" style="margin-top:-25px; margin-left:20px;">
 			    </div>
 					<div class="cuerpo-post-it">
-						<p>El <strong>{{arreglo.descripcion | cut:true:130:' ...'}}</strong> tiene que ser entregado a <strong>{{arreglo.entrega.nombre}}</strong> en la dirección <strong>{{arreglo.entrega.direccion}}</strong> en la fecha <strong>{{arreglo.entrega.fecha | date:"dd-MM-yyyy HH:mm"}}.</strong></p>
-					</div>
-					<div class="post-it-pie label label-inverse pull-right" style="background-color : black;">
-						{{r.duracion(arreglo.entrega.fecha)}}
-					</div>
-					<div class="post-it-pie pull-right" ng-show="!arreglo.tomado">
-						<div class="project-members">
-							<a href="javascript:void(0)" ng-repeat="productor in r.productores" ng-click="r.elegirProductor(arreglo, productor)" title="{{productor.profile.nombreCompleto}}"><img style="width: 50px;" src="{{r.tieneFoto(productor.profile.sexo, productor.profile.fotografia)}}" class="online"></a>
+						<p>El <strong>{{arreglo.descripcion | cut:true:130:' ...'}}</strong> tiene que ser entregado a <strong>{{arreglo.entrega.nombre}}</strong> en la dirección <strong>{{arreglo.entrega.direccion}}</strong> en la fecha <strong>{{arreglo.entrega.fecha | date:"dd-MM-yyyy HH:mm"}}.</strong><span ng-show="arreglo.mensajeComentario">, dejó un mensaje <strong>{{arreglo.mensajeComentario}}</strong></span> </p>
+						<p>Entregado por : {{arreglo.repartidor.nombre}}</p>
+						<div class="post-it-pie label label-inverse pull-right" style="background-color : black;">
+							{{r.duracion(arreglo.entrega.fecha)}}
 						</div>
 					</div>
 				</div>
 			</div>
-			<h2><i class="fa fa-calendar fa-lg"></i> Listado de reparto después</h2>
+			<h2><i class="fa fa-calendar fa-lg"></i> Listado de reparto después ( {{r.listaRepartoDespues.length}} )</h2>
 			<div class="row fondo-corcho" style="min-height: 300px;">
 				<div class="col-sm-3 post-it {{arreglo.claseEstatus}}" ng-repeat="arreglo in r.listaRepartoDespues">
 					<div class="titulo-post-it">

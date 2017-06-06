@@ -16,15 +16,15 @@ function ClientesCtrl($scope, $meteor, $reactive, $state, toastr) {
   window.rc = rc;
   
   this.subscribe('ocupaciones',()=>{
-		return [{estatus:true, campus_id : Meteor.user() != undefined ? Meteor.user().profile.campus_id : ""}]
+		return [{ estatus:true }]
 	});
 	
 	this.subscribe('cantidadClientes',()=>{
-		return [{estatus:true, region_id : Meteor.user() != undefined ? Meteor.user().profile.region_id : ""}]
+		return [{ estatus:true, region_id : Meteor.user() != undefined ? Meteor.user().profile.region_id : "" }]
 	});
 	
 	this.subscribe("mediosPublicidad",()=>{
-		return [{estatus:true }]
+		return [{ estatus:true }]
 	});
   
 	this.helpers({
@@ -44,7 +44,7 @@ function ClientesCtrl($scope, $meteor, $reactive, $state, toastr) {
 			  anio = '' + new Date().getFullYear();
 			  anio = anio.substring(2,4);
 			  if(this.getReactively("cantidad") > 0){
-			  	var usuarioOriginal = anio + Meteor.user().profile.region_clave+"0000";
+			  	var usuarioOriginal = anio + Meteor.user().profile.sucursal_clave+"0000";
 			  	var usuarioOriginalN = parseInt(usuarioOriginal);
 			  	var usuarioNueva = usuarioOriginalN+this.cantidad+1;
 			  	usuarioNueva = 'c'+usuarioNueva
@@ -52,8 +52,8 @@ function ClientesCtrl($scope, $meteor, $reactive, $state, toastr) {
 				  rc.cliente.profile.usuario = usuarioNueva;
 				  
 			  }else{
-				  rc.cliente.username = "c" + anio + Meteor.user().profile.region_clave + "0001";
-				  rc.cliente.profile.usuario = "c" + anio + Meteor.user().profile.region_clave + "0001";
+				  rc.cliente.username = "c" + anio + Meteor.user().profile.sucursal_clave + "0001";
+				  rc.cliente.profile.usuario = "c" + anio + Meteor.user().profile.sucursal_clave + "0001";
 			  }
 		  }
 	  }
@@ -78,13 +78,13 @@ function ClientesCtrl($scope, $meteor, $reactive, $state, toastr) {
 		cliente.profile.usuarioInserto_id = Meteor.userId();
 		Meteor.call('createUsuario', rc.cliente, 'cliente');
 		toastr.success('Guardado correctamente.');
-		//$state.go('root.clientes');			
+		$state.go('root.clientes');			
 		this.nuevo = true;
 	};
 	
 	this.tomarFoto = function () {
 		$meteor.getPicture({width:200, height: 200, quality: 50}).then(function(data){			
-			rc.cliente.fotografia = data;
+			rc.cliente.profile.fotografia = data;
 		})
 	};
 	

@@ -2,8 +2,9 @@ Meteor.publish("pagos", function(params){
 	return Pagos.find(params);
 });
 
-Meteor.publish("pagosAlumno",function(options){
-  return Pagos.find({alumno_id: options.alumno_id});
+Meteor.publish("pagosCliente",function(options){
+	console.log(options);
+  return Pagos.find({cliente_id: options.cliente_id, folio : parseInt(options.folioActual)});
 });
 
 Meteor.publish("pagosTotales", function(options){

@@ -1,4 +1,10 @@
 <div class="content" style="padding: 20px;">
+	<div class="row">
+		<div class="col-sm-12 pull-right">
+			<a class="btn btn-primary" ui-sref="anon.logout"><i class="fa fa fa-sign-out"></i> Cerrar Sesión</a>
+		</div>
+	</div>
+	<br/>
 	<h2>Listado de producción</h2>
 	<div class="row fondo-corcho" style="min-height: 300px;">
 		<div class="col-sm-3 post-it {{arreglo.claseEstatus}}" ng-repeat="arreglo in p.listaProduccion">
@@ -12,7 +18,12 @@
 	    	<img class="pull-right" src="/img/chincheta.png" style="margin-top:-25px; margin-left:20px;">
 	    </div>
 			<div class="cuerpo-post-it">
-				{{arreglo.descripcion | cut:true:130:' ...'}}
+				Terminar Antes de : <strong>{{arreglo.fechaTermino | date: "dd-MM-yyyy hh:mm"}}</strong><br/>
+				Fecha/Hora : <strong>{{arreglo.fechaEntrega | date: "dd-MM-yyyy hh:mm"}}</strong><br/>
+				Descripción : <strong>{{arreglo.descripcion | cut:true:130:' ...'}}</strong><br/>
+				Forma Entrega : <strong>{{arreglo.tipoEnvio}}</strong><br/>
+				Tipo Arreglo : <strong>{{arreglo.tipoProducto | capitalize}}</strong><br/>
+				Comentario : <strong>{{arreglo.mensajeComentario | capitalize}}</strong>
 			</div>
 			<div class="post-it-pie label label-inverse pull-right" style="background-color : black;" ng-show="arreglo.tomado">
 				<img style="width: 50px;" src="{{p.tieneFotoProductorArreglo(arreglo.produccion.productor_id)}}" class="online"> | {{p.duracion(arreglo.produccion.fecha)}}
@@ -25,19 +36,38 @@
 		</div>
 	</div>
 </div>
+
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Vista General del Postit</h4>
-      </div>
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content modal-backdrop">
       <div class="modal-body">
-        {{p.postitSeleccionado.descripcion}}
+	      <div class="col-sm-8 col-sm-offset-2 post-it-lg {{p.postitSeleccionado.claseEstatus}}">
+					<div class="titulo-post-it">
+						<a href="#" ng-click="p.llevarArreglo(arreglo)" ng-show="arreglo.estatus == 3"><i class="fa fa-car"></i></a>
+						<span ng-show="arreglo.estatus == 3">&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			    	<a href="#" ng-click="p.cancelar(arreglo)" ng-show="arreglo.estatus == 2"><i class="fa fa-times"></i></a>
+			    	<a href="#" ng-click="p.ver(arreglo)"><i class="fa fa-file"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+			    	<img class="pull-right" src="/img/chincheta.png" style="margin-top:-25px; margin-left:20px;">
+			    </div>
+					<div class="cuerpo-post-it">
+						<p>{{p.postitSeleccionado.descripcion}}</p>
+						<p>{{p.postitSeleccionado.entrega.direccion}}</p>
+						<p>{{p.postitSeleccionado.entrega.nombre}}</p>
+						<p>{{p.postitSeleccionado.entrega.fecha | date:"dd-MM-yyyy HH:mm"}}</p>
+					</div>
+					<div class="post-it-pie label label-inverse pull-right" style="background-color : black;">
+						{{p.duracion(p.postitSeleccionado.entrega.fecha)}}
+					</div>
+					<div class="post-it-pie pull-right" ng-show="!arreglo.tomado">
+						<div class="project-members">
+							<a href="javascript:void(0)" ng-repeat="productor in p.productores" ng-click="p.elegirProductor(arreglo, productor)" title="{{productor.profile.nombreCompleto}}"><img style="width: 50px;" src="{{p.tieneFoto(productor.profile.sexo, productor.profile.fotografia)}}" class="online"></a>
+						</div>
+					</div>
+				</div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="p.postitSeleccionado = {};">Cerrar</button>
       </div>
     </div>
   </div>

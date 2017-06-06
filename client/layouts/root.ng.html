@@ -29,10 +29,6 @@
 					</li>
 					<li class="divider"></li>
 					<li>
-						<a href="javascript:void(0);" ui-sref="root.cambiarSeccion" class="padding-10 padding-top-0 padding-bottom-0" ><i class="fa fa-building"></i> Cambiar <u>E</u>scuela</a>
-					</li>
-					<li class="divider"></li>
-					<li>
 						<a full-screen href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0" data-action="launchFullscreen"><i class="fa fa-arrows-alt"></i> Pantalla <u>C</u>ompleta</a>
 					</li>
 					<li class="divider"></li>
@@ -51,20 +47,10 @@
       </span>
     </div>
     
-    
-    
-    <div class="btn-header transparent pull-right" ng-show="currentUser.roles[0] != 'alumno'">
-      <span>
-        <a ui-sref="root.cambiarSeccion" title="Cambiar Sección">
-          <i class="fa fa-building"></i>
-        </a>
-      </span>
-    </div>
-    
     <div class="btn-header transparent pull-right">
       <span>
         <a ui-sref="anon.logout" title="Cerrar Sesión">
-          <i class="fa fa-sign-{{ro.isLoggedIn() ? 'out' : 'in'}}"></i>
+          <i class="fa fa-sign-{{currentUser ? 'out' : 'in'}}"></i>
         </a>
       </span>
     </div>
@@ -83,10 +69,10 @@
   <div class="login-info">
 		<span ng-if="ro.usuarioActual._id">
 			<a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
-				<img ng-if="ro.usuarioActual.profile.fotografia" ng-src="{{ro.usuarioActual.profile.fotografia}}" alt="yo" class="online"> 
+				<img ng-if="ro.usuarioActual.profile.fotografia" ng-src="{{ro.tieneFoto(usuarioActual.profile.sexo, usuarioActual.profile.fotografia)}}" alt="yo" class="online"> 
 				<img ng-if="!ro.usuarioActual.profile.fotografia" src="/img/avatars/male.png" alt="yo" class="online"> 
 				<span>
-					{{ro.usuarioActual.profile.nombre}} {{ro.usuarioActual.profile.apPaterno}} {{ro.usuarioActual.profile.apMaterno}}
+					{{ro.usuarioActual.profile.nombreCompleto}}
 				</span>
 			</a>			
 		</span>
@@ -103,8 +89,8 @@
 		</span> 
 		</span>
 	  <ol class="breadcrumb pull-right" ng-show="currentUser.roles[0] != 'alumno'">
-		  <li>{{ro.seccion.descripcion}}</li>
-			<li class="hidden-xs">{{ro.campus.clave}} - {{ro.campus.descripcion}}</li>
+		  <li>{{ro.sucursal.descripcion}}</li>
+			<li class="hidden-xs">{{ro.sucursal.clave}} - {{ro.sucursal.descripcion}}</li>
 		</ol>
   </div>
   <div id="content" ui-view></div>

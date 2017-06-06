@@ -27,7 +27,7 @@ function MediosPublicidadCtrl($scope, $meteor, $reactive, $state, toastr) {
   });
     
   this.nuevo = true;
-  this.nuevamedios = function()
+  this.nuevoMedio = function()
   {
 	   	this.action = true;
 	    this.nuevo = !this.nuevo;
@@ -42,10 +42,8 @@ function MediosPublicidadCtrl($scope, $meteor, $reactive, $state, toastr) {
 			MediosPublicidad.insert(this.medios);
 			toastr.success('Guardado correctamente.');
 			this.medios = {};
-			$('.collapse').collapse('hide');
+			//$('.collapse').collapse('hide');
 			this.nuevo = true;
-			//form.$setPristine();
-	  //  form.$setUntouched();
 	};
 	
 	this.editar = function(id)
@@ -66,8 +64,6 @@ function MediosPublicidadCtrl($scope, $meteor, $reactive, $state, toastr) {
 			toastr.success('Actualizado correctamente.');
 			$('.collapse').collapse('hide');
 			this.nuevo = true;
-			// form.$setPristine();
-	  //   form.$setUntouched();	
 	};
 		
 	this.cambiarEstatus = function(id)

@@ -1,10 +1,12 @@
-<h2>Unidades</h2>
+<h2>Colonias</h2>
 <div class="row">
 	<div class="col-sm-12">
-		<!-- <a class="btn btn-{{uni.nuevo == true ? 'primary' : 'danger'}}" role="button" data-toggle="collapse" 
-			href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" id="nuevoobra" ng-click="uni.nuevoObra()">
-		 {{uni.nuevo == true ? 'Nuevo' : 'Cancelar'}}
-		</a> -->
+<!--
+		<a class="btn btn-{{c.nuevo == true ? 'primary' : 'danger'}}" role="button" data-toggle="collapse" 
+			href="#collapseExample" aria-expanded="false" aria-controls="collapseExample" ng-click="c.nuevaColonia()">
+		 {{c.nuevo == true ? 'Nuevo' : 'Cancelar'}}
+		</a>
+-->
 	
 			<form class="form-horizontal" role="form" data-parsley-validate>
 	    	 <div class="well">
@@ -12,7 +14,7 @@
 	    	 		<div class="col-sm-12">
 	    	 			<div class="col-sm-3">
 	    	 				<label>Nombre</label>
-					    	<input type="text" class="form-control" placeholder="Nombre de Unidad" ng-model="uni.unidad.nombre" capitalized >
+					    	<input type="text" class="form-control" placeholder="Nombre de la Colonia" ng-model="c.colonia.nombre" capitalized >
 	    	 			</div>
 	    	 		</div>
 	    	 	</div><br/>
@@ -20,8 +22,8 @@
 					<div class="row">
 						
 						<div class="col-sm-12">
-							<input type="submit" ng-click="uni.guardar(uni.unidad)" value="Guardar" class="btn btn-primary" ng-show="uni.action">
-							<input type="submit" ng-click="uni.actualizar(uni.unidad)" value="Actualizar" class="btn btn-primary" ng-show="!uni.action">	
+							<input type="submit" ng-click="c.guardar(c.colonia)" value="Guardar" class="btn btn-primary" ng-show="c.action">
+							<input type="submit" ng-click="c.actualizar(c.colonia)" value="Actualizar" class="btn btn-primary" ng-show="!c.action">	
 						</div>
 					</div>
 
@@ -40,7 +42,7 @@
 			<thead>
 				<tr>
 					<th width="10%">No.</th>
-					<th width="20%"><div class="text-center">Nombre</div></th>
+					<th><div class="text-center">Nombre</div></th>
 					<th width="10%">
 						<div class="text-center">
 							Estatus
@@ -54,15 +56,15 @@
 				</tr>
 			</thead>
 			<tbody>
-		    <tr ng-repeat="unidad in uni.unidades">
+		    <tr ng-repeat="colonia in c.colonias">
 			    <td><div class="text-center">{{$index + 1}}</div></td>
-			    <td><div class="text-center">{{unidad.nombre}}</div></td>
+			    <td><div class="text-center">{{colonia.nombre}}</div></td>
 			    <td>
 				    <div class="text-center">
-				    	<span ng-if="unidad.estatus" class="label label-success">
+				    	<span ng-if="colonia.estatus" class="label label-success">
 							  Activo
 							</span>
-							<span ng-if="!unidad.estatus" class="label label-danger">
+							<span ng-if="!colonia.estatus" class="label label-danger">
 							  Inactivo
 							</span>
 				    </div>
@@ -75,8 +77,8 @@
 							    <span class="sr-only">Toggle Dropdown</span>
 							  </button>
 							  <ul class="dropdown-menu text-left">
-							    <li><a href="#" ng-click="uni.editar(unidad._id)"><i class="fa fa-pencil"></i> Editar</a></li>
-							  <li><a href="#" ng-click="uni.cambiarEstatus(unidad._id)"><i class="fa fa-trash"></i> Desactivar</a></li>
+							    <li><a href="#" ng-click="c.editar(colonia._id)"><i class="fa fa-pencil"></i> Editar</a></li>
+							  <li><a href="#" ng-click="c.cambiarEstatus(colonia._id)"><i class="fa fa-trash"></i> Desactivar</a></li>
 							  </ul>
 							</div>
 				    </div>				    

@@ -8,7 +8,6 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 	this.venta = {};
 	this.venta.detalle = [];
 	this.venta.total = 0;
-	this.venta.anticipo = 0;
 	this.venta.saldo = 0;
 	this.buscando = false;
   this.hoy = new Date();
@@ -18,8 +17,13 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
   this.nuevo = true; 
   this.clienteSeleccionado = {};
   this.anticipoCero = false;
+  this.venta.anonimo = false;
 
 	this.subscribe('productos',()=>{
+		return [{estatus:true, sucursal_id : Meteor.user() ? Meteor.user().profile.sucursal_id : ""}] 
+  });
+  
+  this.subscribe('colonias',()=>{
 		return [{estatus:true, sucursal_id : Meteor.user() ? Meteor.user().profile.sucursal_id : ""}] 
   });
   
@@ -54,11 +58,14 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 	  },
 	  unidades : () => {
 		  return Unidades.find();
+	  },
+	  colonias : () => {
+		  return Colonias.find();
 	  }
   });
   
   	
-	this.guardar = function(venta)
+	this.guardar = function(venta, form)
 	{
 		_.each(rc.venta.detalleProducto, function(producto, indice){
 			delete producto.$$hashKey;
@@ -72,14 +79,26 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 		rc.venta.sucursal_id = Meteor.user().profile.sucursal_id;
 		rc.venta.estatus = 1;
 		rc.venta.fechaCreacion = new Date();
-		rc.venta.folio = folioActual;
+		rc.venta.folios = [folioActual];
 		rc.venta.pagado = 0;
+		rc.venta.anticipo = parseFloat(rc.venta.anticipo);
+		rc.venta.entrega.nombreCliente = rc.clienteSeleccionado.profile.nombreCompleto;
 		
 		console.log("datos del pedido", rc.venta);
+		
+		if(form.$invalid){
+      toastr.error('Error al guardar los datos.');
+      return;
+	  }
 		
 		if(rc.venta.anticipo <= 0 && rc.anticipoCero == false){
 			rc.anticipoCero = true;
 			return
+		}
+		
+		if(rc.venta.formaPago == undefined){
+			toastr.warning("Seleccione la forma de pago");
+			return;
 		}
 		
 		if(rc.venta.anticipo <= 0){
@@ -91,6 +110,12 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 		}else{
 			//Pago anticipo
 			rc.venta.estatusPago = 1;
+		}
+		
+		if(rc.clienteSeleccionado.profile.estatus == "1"){
+			rc.clienteSeleccionado.profile.estatus == "2";
+			
+			Meteor.users.update({_id : rc.clienteSeleccionado._id},{$set : {profile : rc.clienteSeleccionado.profile}});
 		}
 
 		var venta_id = Ventas.insert(rc.venta);
@@ -122,6 +147,9 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 		$('.collapse').collapse('hide');
 		this.nuevo = true;
 		//$state.go('root.productos');
+		
+		var url = $state.href("anon.pagosImprimir",{sucursal_id : venta.sucursal_id, folioActual : folioActual, cliente_id : venta.cliente_id},{newTab : true});
+		window.open(url,'_blank');
 	};
 	
 	this.editar = function(id)
@@ -195,12 +223,85 @@ function NuevoPedidoCtrl($scope, $meteor, $reactive, $state, $stateParams, toast
 		  });
 	  }
 	  console.log(producto);
-	  
-	  
 	  rc.venta.total += producto.importe;
   }
   
-  this.calcularSaldo = function(){
-	  rc.venta.saldo = (rc.venta.anticipo - rc.venta.total) * -1;
+  this.calcularSaldo = function(anticipo){
+	  console.log(rc.venta.anticipo);
+	  rc.venta.saldo = (parseFloat(rc.venta.anticipo) - rc.venta.total) * -1;
   }
+  
+  this.quitar = function(indice){	  
+	  var arreglo = rc.venta.detalle[indice];
+		rc.venta.total -= arreglo.importe; 
+		
+		rc.venta.detalle.splice(indice, 1);
+  }
+  
+  this.seleccionarFormaPago = function(formaPago, archivo){
+	  if(formaPago == 'Intercambio'){
+		  var contrasena = prompt("Escriba la contraseña del Gerente", "");
+		  Meteor.apply("validarContrasena", [Meteor.user().username, contrasena], function(error, result){
+			  if(result){
+				  
+			  }else{
+				  alert("No puede elegir intercambio, contraseña incorrecta.");
+				  rc.venta.formaPago = undefined;
+				  $scope.$apply();
+			  }
+		  });
+	  }else{
+		  rc.venta.formaPago = formaPago;
+	  }
+	  rc.archivo = archivo;
+  }
+  
+  this.almacenaImagen = function(imagen){	
+		rc.venta.comprobante = imagen;
+	}
+  
+  $(document).ready( function() {
+		var comprobante = document.getElementById('comprobante');			
+		var fileDisplayArea1 = document.getElementById('fileDisplayArea1');
+		//JavaScript para agregar la imagen
+		comprobante.addEventListener('change', function(e) {
+			var file = comprobante.files[0];
+			var imageType;
+			if (file.type == "application/pdf")
+					imageType = /application.*/;
+			else
+					imageType = /image.*/;
+			//console.log(imageType);
+			if (file.type.match(imageType)) {
+				if (file.size <= 1000000)
+				{
+					var reader = new FileReader();
+					reader.onload = function(e) {
+						rc.almacenaImagen(reader.result);
+					}
+					reader.readAsDataURL(file);
+				}else {
+					toastr.error("Error el archivo supera 1 MB");
+					return;
+				}
+			} else {
+				fileDisplayArea1.innerHTML = "File not supported!";
+			}			
+		});
+	});
+	
+	this.publicoGeneral = function(){
+		rc.buscar.nombreCliente = "publico";
+		if(this.buscar.nombreCliente.length >= 3){
+			rc.buscando = true;
+		}else{
+			rc.buscando = false;
+		}
+	}
+	
+	this.esAnonimo = function(venta){
+		if(rc.venta.anonimo == true){
+			venta.entrega.nombre = "";
+		}
+	}
 };
